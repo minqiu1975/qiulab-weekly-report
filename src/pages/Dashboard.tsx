@@ -117,6 +117,7 @@ export default function Dashboard() {
   })();
 
   const latestWeekLabel = getLatestWeekLabel();
+  // 使用静态TREND_LABELS长度计算期数（避免动态标签中的重复/脏数据干扰）
   const latestWeekNumber = TREND_LABELS.length;
 
   const latestAssessments = [...MOCK_ASSESSMENTS]
@@ -129,23 +130,29 @@ export default function Dashboard() {
   const statusChanges = getPersonStatusChanges(currentWeekLabel);
   const activePersons = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left' && p.status !== 'inactive');
 
-  // 从动态数据中读取最新一周的上报情况，找出未提交周报的人
-  const notSubmittedLastWeek = (() => {
+  // 从动态数据中读取最新一周的上报情况，找出未提交周报的人，同时收集有风险成员ID
+  const { notSubmittedLastWeek, atRiskMembers } = (() => {
     try {
       const dynTrends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}') as Record<string, Record<string, { progress: number; problems: number; characterTag: string; summary: string }>>;
       const latestWeek = getLatestWeekLabel();
       const weekData = dynTrends[latestWeek];
-      if (!weekData || Object.keys(weekData).length === 0) return [];
+      if (!weekData || Object.keys(weekData).length === 0) {
+        return { notSubmittedLastWeek: [] as Array<{ id: string; name: string }>, atRiskMembers: [] as string[] };
+      }
       // 找出 active 成员中未提交的人
       const notSubmitted: Array<{ id: string; name: string }> = [];
+      const atRisk: string[] = [];
       for (const person of activePersons) {
         const personTrend = weekData[person.id] || weekData[person.name];
         if (personTrend && personTrend.characterTag === '未提交') {
           notSubmitted.push({ id: person.id, name: person.name });
         }
+        if (personTrend && personTrend.problems > 0) {
+          atRisk.push(person.id);
+        }
       }
-      return notSubmitted;
-    } catch { return []; }
+      return { notSubmittedLastWeek: notSubmitted, atRiskMembers: atRisk };
+    } catch { return { notSubmittedLastWeek: [] as Array<{ id: string; name: string }>, atRiskMembers: [] as string[] }; }
   })();
   const newCount = statusChanges.filter((s) => s.type === 'new').length;
   const leftCount = statusChanges.filter((s) => s.type === 'left').length;
@@ -154,10 +161,10 @@ export default function Dashboard() {
   const vacationCount = statusChanges.filter((s) => s.type === 'vacation').length;
 
   const stats = [
-    { label: '活跃成员总数', value: totalPeople, icon: Users, color: 'text-blue-600', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', ring: 'ring-blue-100' },
-    { label: '本周上报人数', value: submittedCount, icon: FileCheck, color: 'text-emerald-600', bg: 'bg-gradient-to-br from-emerald-500 to-teal-600', ring: 'ring-emerald-100' },
-    { label: '需关注人数', value: problemCount, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-gradient-to-br from-orange-500 to-red-600', ring: 'ring-red-100' },
-    { label: '平均工作量评分', value: avgWorkload, icon: BarChart3, color: 'text-cyan-600', bg: 'bg-gradient-to-br from-cyan-500 to-blue-600', ring: 'ring-cyan-100' },
+    { label: '活跃成员总数', value: totalPeople, icon: Users, color: 'text-blue-600', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', ring: 'ring-blue-100', href: '' as string },
+    { label: '本周上报人数', value: submittedCount, icon: FileCheck, color: 'text-emerald-600', bg: 'bg-gradient-to-br from-emerald-500 to-teal-600', ring: 'ring-emerald-100', href: '' as string },
+    { label: '需关注人数', value: problemCount, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-gradient-to-br from-orange-500 to-red-600', ring: 'ring-red-100', href: atRiskMembers.length > 0 ? `/analysis?filter=risk&riskIds=${atRiskMembers.join(',')}` : '' as string },
+    { label: '平均工作量评分', value: avgWorkload, icon: BarChart3, color: 'text-cyan-600', bg: 'bg-gradient-to-br from-cyan-500 to-blue-600', ring: 'ring-cyan-100', href: '' as string },
   ];
 
   // 角色分组统计（排除 inactive）
@@ -219,19 +226,30 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => {
           const Icon = s.icon;
+          const isClickable = s.href && s.href.length > 0;
+          const cardContent = (
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-11 h-11 rounded-xl ${s.bg} flex items-center justify-center shadow-md ring-2 ${s.ring} group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-slate-800 group-hover:text-slate-900 transition-colors">{s.value}</div>
+                  <div className="text-xs text-slate-500 group-hover:text-slate-600 transition-colors">{s.label}</div>
+                </div>
+              </div>
+            </CardContent>
+          );
+          if (isClickable) {
+            return (
+              <Card key={s.label} className="border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer p-0" onClick={() => navigate(s.href)}>
+                {cardContent}
+              </Card>
+            );
+          }
           return (
             <Card key={s.label} className="border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group cursor-default">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 rounded-xl ${s.bg} flex items-center justify-center shadow-md ring-2 ${s.ring} group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-slate-800 group-hover:text-slate-900 transition-colors">{s.value}</div>
-                    <div className="text-xs text-slate-500 group-hover:text-slate-600 transition-colors">{s.label}</div>
-                  </div>
-                </div>
-              </CardContent>
+              {cardContent}
             </Card>
           );
         })}

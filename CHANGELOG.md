@@ -1,5 +1,28 @@
 # QiuLab 周报分析系统 - 修改日志
 
+## 2026-05-25: 修复期数显示，新增需关注成员一键跳转
+
+### 修改文件
+
+#### `src/data/mockTrends.ts`
+- 补全 TREND_LABELS：添加 `2026.05.15`、`2026.05.22`，从16期修正为18期
+- 同时修正 `2026.02.12` → `2026.02.13`（周五日期）
+
+#### `src/pages/Dashboard.tsx`
+- 修复期数计算：`latestWeekNumber` 使用 `TREND_LABELS.length`（18期），不再受动态标签脏数据干扰
+- 新增 `atRiskMembers` 列表收集：从动态数据中读取 `problems > 0` 的成员ID
+- 「需关注人数」统计卡片改为可点击，点击跳转到 `/analysis?filter=risk&riskIds=...`
+- 卡片渲染逻辑区分可点击/不可点击状态
+
+#### `src/pages/AnalysisPage.tsx`
+- 支持 `filter=risk` URL 参数：读取 `riskIds` 参数构建风险成员ID集合
+- 筛选模式下 Select 下拉框只显示有风险成员，隐藏"全部人员"选项
+- 自动选中第一位风险成员，自动加载其AI分析
+- 新增红色提示条「仅显示需关注成员 (N人)」+「清除筛选」按钮
+- 风险筛选模式下隐藏已出站/已毕业分组
+
+---
+
 ## 2026-05-25: 集成 PAINT Lab Logo，统一品牌名为 QiuLab
 
 ### 修改文件

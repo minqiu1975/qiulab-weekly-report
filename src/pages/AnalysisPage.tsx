@@ -12,7 +12,7 @@ import { usePersons } from '../hooks/usePersons';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from 'recharts';
-import { UserSearch, Printer, CalendarDays, History, ChevronDown, ChevronRight } from 'lucide-react';
+import { UserSearch, Printer, CalendarDays, History, ChevronDown, ChevronRight, AlertTriangle } from 'lucide-react';
 
 const COLORS = ['#059669', '#d97706', '#dc2626'];
 
@@ -599,6 +599,27 @@ export default function AnalysisPage() {
   const [selectedId, setSelectedId] = useState(searchParams.get('person') || '');
   const ALL_PERSONS = usePersons();
 
+  // 支持从 Dashboard 跳转的 filter=risk 参数
+  const filterMode = searchParams.get('filter') || '';
+  const riskIdsParam = searchParams.get('riskIds') || '';
+  const riskIdSet = useMemo(() => {
+    if (filterMode === 'risk' && riskIdsParam) {
+      return new Set(riskIdsParam.split(','));
+    }
+    return null;
+  }, [filterMode, riskIdsParam]);
+
+  // 如果 filter=risk 且未选中任何人，自动选中第一个风险成员
+  useMemo(() => {
+    if (filterMode === 'risk' && riskIdSet && !selectedId) {
+      const firstRiskPerson = ALL_PERSONS.find((p) => riskIdSet.has(p.id));
+      if (firstRiskPerson) {
+        setSelectedId(firstRiskPerson.id);
+        setSearchParams({ filter: 'risk', riskIds: riskIdsParam, person: firstRiskPerson.id });
+      }
+    }
+  }, [filterMode, riskIdSet, selectedId, ALL_PERSONS, riskIdsParam, setSearchParams]);
+
   // 直接从 localStorage 读取最新评估（静态+动态合并），不使用 useMemo 缓存
   // 确保上传新周报后自动显示最新数据
   const assessment = (() => {
@@ -680,15 +701,32 @@ export default function AnalysisPage() {
                 <UserSearch className="w-4 h-4 text-cyan-600" />
                 选择人员
               </label>
+              {/* 风险筛选模式提示 */}
+              {filterMode === 'risk' && (
+                <div className="mb-3 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700 font-medium flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  仅显示需关注成员 ({riskIdSet?.size || 0}人)
+                  <button
+                    className="ml-auto text-red-500 hover:text-red-700 underline"
+                    onClick={() => { setSearchParams({}); }}
+                  >
+                    清除筛选
+                  </button>
+                </div>
+              )}
               <Select value={selectedId} onValueChange={handleSelect}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="选择一位团队成员" />
+                  <SelectValue placeholder={filterMode === 'risk' ? '选择需关注成员' : '选择一位团队成员'} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__all">全部人员</SelectItem>
+                  {filterMode !== 'risk' && <SelectItem value="__all">全部人员</SelectItem>}
                   {/* 在职人员按角色分组 */}
                   {ROLE_ORDER.map((role) => {
-                    const persons = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left' && p.role === role);
+                    let persons = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left' && p.role === role);
+                    // 风险筛选模式下只显示有风险成员
+                    if (filterMode === 'risk' && riskIdSet) {
+                      persons = persons.filter((p) => riskIdSet.has(p.id));
+                    }
                     if (persons.length === 0) return null;
                     if (role === 'phd') {
                       // 博士生按入学年级分组
@@ -724,7 +762,7 @@ export default function AnalysisPage() {
                     );
                   })}
                   {/* 已出站/已毕业 */}
-                  {(() => {
+                  {filterMode !== 'risk' && (() => {
                     const alumni = ALL_PERSONS.filter((p) => p.status === 'inactive' || p.role === 'alumni');
                     if (alumni.length === 0) return null;
                     return (
