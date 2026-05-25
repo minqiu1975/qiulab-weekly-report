@@ -12,6 +12,7 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import logoImg from '../assets/logo.jpg';
 import KimiVersionDisplay from './KimiVersionDisplay';
 
 const navItems = [
@@ -35,7 +36,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2.5">
             <img
-              src="/logo.jpg"
+              src={logoImg}
               alt="PAINT Lab"
               className="h-9 w-auto rounded-md bg-white/10 object-contain"
             />

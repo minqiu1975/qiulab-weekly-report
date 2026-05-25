@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
+import logoImg from '../assets/logo.jpg';
 
 const AUTH_STORAGE_KEY = 'qiulab_auth_token';
 const PASSWORD_STORAGE_KEY = 'qiulab_custom_password_hash';
@@ -129,7 +130,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center rounded-2xl bg-white/5 p-2 mb-4">
             <img
-              src="/logo.jpg"
+              src={logoImg}
               alt="PAINT Lab"
               className="h-14 w-auto rounded-xl object-contain"
             />
@@ -201,10 +202,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           </form>
         </div>
 
-        {/* Footer hint */}
-        <p className="text-center text-slate-500 text-xs mt-6">
-          默认密码：QiuLab2026 · 登录后可在设置页面修改
-        </p>
+        {/* Footer */}
       </div>
     </div>
   );
