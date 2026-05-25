@@ -1,5 +1,29 @@
 # QiuLab 周报分析系统 - 修改日志
 
+## 2026-05-25: 修复深度分析跨浏览器同步 Bug
+
+### Bug 描述
+在浏览器A中对成员进行深度分析后，浏览器B中打开同一成员页面，显示的是旧的分析结果（日期为旧日期），新分析没有同步过来。
+
+### 根因
+`cloudStorage.ts` 的 `loadAllData()` 方法中，`deepAnalyses` 的合并逻辑：
+```js
+deepAnalyses: { ...cloud.deepAnalyses, ...local.deepAnalyses }
+```
+**总是用本地数据覆盖云端数据**，没有根据 `lastModified` 时间戳判断哪边更新。
+
+### 修复
+改为根据时间戳判断：
+```js
+deepAnalyses: useCloud
+  ? { ...local.deepAnalyses, ...cloud.deepAnalyses }  // 云端更新，云端覆盖本地
+  : { ...cloud.deepAnalyses, ...local.deepAnalyses }   // 本地更新，本地覆盖云端
+```
+
+**修改文件**：`src/services/cloudStorage.ts` 第667行
+
+---
+
 ## 2026-05-25: 修复期数显示，新增需关注成员一键跳转
 
 ### 修改文件

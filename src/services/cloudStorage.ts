@@ -664,7 +664,9 @@ class CloudStorageService {
         history: mergedHistory,
         labels: [...new Set([...(cloud.dynamic?.labels || []), ...(local.dynamic?.labels || [])])].sort(),
         uploadedDates: [...new Set([...(cloud.dynamic?.uploadedDates || []), ...(local.dynamic?.uploadedDates || [])])].sort(),
-        deepAnalyses: { ...cloud.dynamic?.deepAnalyses, ...local.dynamic?.deepAnalyses },
+        deepAnalyses: useCloud
+          ? { ...local.dynamic?.deepAnalyses, ...cloud.dynamic?.deepAnalyses }
+          : { ...cloud.dynamic?.deepAnalyses, ...local.dynamic?.deepAnalyses },
       };
 
       // uploads：合并两边的上传记录
