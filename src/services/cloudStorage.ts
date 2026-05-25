@@ -657,8 +657,10 @@ class CloudStorageService {
       for (const personName of allHistoryPersons) {
         const cloudPerson = cloud.dynamic?.history?.[personName] || {};
         const localPerson = local.dynamic?.history?.[personName] || {};
-        // 深层合并：保留双方所有的 weekDate
-        mergedHistory[personName] = { ...cloudPerson, ...localPerson };
+        // 深层合并：保留双方所有的 weekDate，同一天的根据时间戳决定覆盖方向
+        mergedHistory[personName] = useCloud
+          ? { ...localPerson, ...cloudPerson }
+          : { ...cloudPerson, ...localPerson };
       }
 
       const mergedDynamic = {

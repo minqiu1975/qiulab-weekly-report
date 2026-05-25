@@ -1,5 +1,29 @@
 # QiuLab 周报分析系统 - 修改日志
 
+## 2026-05-25: 修复周报历史摘要跨浏览器同步 Bug
+
+### Bug 描述
+浏览器A上传周报并分析后，浏览器B刷新看不到更新。具体表现为同一成员的历史摘要对比内容不同。
+
+### 根因
+`cloudStorage.ts` 的 `loadAllData()` 中，`history` 合并逻辑：
+```js
+mergedHistory[personName] = { ...cloudPerson, ...localPerson }
+```
+**总是用本地旧数据覆盖云端新数据**，没有根据 `useCloud` 时间戳判断。
+
+### 修复
+改为根据时间戳判断：
+```js
+mergedHistory[personName] = useCloud
+  ? { ...localPerson, ...cloudPerson }  // 云端新：云端覆盖本地
+  : { ...cloudPerson, ...localPerson }; // 本地新：本地覆盖云端
+```
+
+**修改文件**：`src/services/cloudStorage.ts` 第661行
+
+---
+
 ## 2026-05-25: 修复设置页面修改入组时间后分析页面不更新
 
 ### 问题
