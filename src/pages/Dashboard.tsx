@@ -242,7 +242,7 @@ export default function Dashboard() {
           );
           if (isClickable) {
             return (
-              <Card key={s.label} className="border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer p-0" onClick={() => navigate(s.href)}>
+              <Card key={s.label} className="border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer" onClick={() => navigate(s.href)}>
                 {cardContent}
               </Card>
             );
