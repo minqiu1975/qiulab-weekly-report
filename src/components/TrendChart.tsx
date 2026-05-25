@@ -59,17 +59,17 @@ export default function TrendChart({ trend }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4">
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={data}>
+          <ResponsiveContainer width="100%" height={320}>
+            <LineChart data={data} margin={{ top: 5, right: 60, bottom: 5, left: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="weekLabel" tick={{ fontSize: 12 }} />
-              <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
+              <XAxis dataKey="weekLabel" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={60} interval={0} />
+              <YAxis width={45} domain={[0, 100]} tick={{ fontSize: 12 }} />
               <Tooltip
                 contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="workloadScore" name="工作量评分" stroke="#0891b2" strokeWidth={2} dot={{ r: 4 }} />
-              <Line type="monotone" dataKey="progressScore" name="进展评分" stroke="#059669" strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="workloadScore" name="工作量评分" stroke="#0891b2" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="progressScore" name="进展评分" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
@@ -83,18 +83,18 @@ export default function TrendChart({ trend }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4">
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={data}>
+          <ResponsiveContainer width="100%" height={320}>
+            <LineChart data={data} margin={{ top: 5, right: 60, bottom: 5, left: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="weekLabel" tick={{ fontSize: 12 }} />
-              <YAxis yAxisId="left" domain={[0, 100]} tick={{ fontSize: 12 }} />
-              <YAxis yAxisId="right" orientation="right" domain={[0, 10]} tick={{ fontSize: 12 }} />
+              <XAxis dataKey="weekLabel" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={60} interval={0} />
+              <YAxis yAxisId="left" width={45} domain={[0, 100]} tick={{ fontSize: 12 }} />
+              <YAxis yAxisId="right" orientation="right" width={45} domain={[0, 10]} tick={{ fontSize: 12 }} />
               <Tooltip
                 contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line yAxisId="left" type="monotone" dataKey="problemCount" name="问题数量" stroke="#dc2626" strokeWidth={2} dot={{ r: 4 }} />
-              <Line yAxisId="right" type="monotone" dataKey="overallScore" name="综合评分(0-10)" stroke="#7c3aed" strokeWidth={2} dot={{ r: 4 }} />
+              <Line yAxisId="left" type="monotone" dataKey="problemCount" name="问题数量" stroke="#dc2626" strokeWidth={2} dot={{ r: 3 }} />
+              <Line yAxisId="right" type="monotone" dataKey="overallScore" name="综合评分(0-10)" stroke="#7c3aed" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
