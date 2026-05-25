@@ -345,6 +345,12 @@ function reactivateMember(memberId: string): boolean {
       members[idx].group = members[idx].role; // 恢复 group
       localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
       localStorage.setItem('qlab_last_modified', new Date().toISOString());
+      // 触发云端同步（延迟避免阻塞UI）
+      if (cloudStorage.isCloudEnabled()) {
+        setTimeout(() => {
+          cloudStorage.saveAllData(cloudStorage.loadFromLocal()).catch(() => {});
+        }, 100);
+      }
       return true;
     }
   } catch { /* ignore */ }
@@ -420,6 +426,13 @@ function saveNewMember(
     localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
     localStorage.setItem('qlab_last_modified', new Date().toISOString());
     notifyPersonsUpdated();
+
+    // 触发云端同步（延迟避免阻塞UI）
+    if (cloudStorage.isCloudEnabled()) {
+      setTimeout(() => {
+        cloudStorage.saveAllData(cloudStorage.loadFromLocal()).catch(() => {});
+      }, 100);
+    }
 
     return { id: newId, name };
   } catch (e) {

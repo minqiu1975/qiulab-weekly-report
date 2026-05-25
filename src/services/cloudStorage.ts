@@ -620,12 +620,14 @@ class CloudStorageService {
         // 构建 id → person 的映射
         const localMap = new Map((local.persons || []).map((p: any) => [p.id, p]));
         const cloudMap = new Map((cloud.persons || []).map((p: any) => [p.id, p]));
-        // 始终以云端为主（确保所有浏览器一致），本地只补充云端没有的人员
-        const mergedMap = new Map(cloudMap);
-        for (const [id, person] of localMap) {
+        // 根据时间戳判断哪边更新：云端新则云端优先，本地新则本地优先
+        const mergedMap = useCloud ? new Map(cloudMap) : new Map(localMap);
+        const secondaryMap = useCloud ? localMap : cloudMap;
+        for (const [id, person] of secondaryMap) {
           if (!mergedMap.has(id)) {
-            mergedMap.set(id, person); // 本地独有人员补充进来
+            mergedMap.set(id, person); // 补充对方独有的人员
           }
+          // 双方都有的人员，以时间戳新的一方为准（已在初始化时确定）
         }
         return Array.from(mergedMap.values());
       })();

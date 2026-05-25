@@ -1,5 +1,59 @@
 # QiuLab 周报分析系统 - 修改日志
 
+## 2026-05-25: 全面审查并修复跨浏览器同步机制
+
+### 审查范围
+团队成员编辑、深度分析保存、周报上传并分析、新增成员、成员状态激活、种子数据导入、系统配置更改
+
+### 发现的 Bug 及修复
+
+#### Bug 1: `deepAnalyses` 合并逻辑（最严重）
+- **文件**: `src/services/cloudStorage.ts:667`
+- **问题**: `{ ...cloud.deepAnalyses, ...local.deepAnalyses }` 总是用本地覆盖云端
+- **修复**: 根据 `useCloud` 时间戳判断哪边更新
+- **影响**: 深度分析结果无法跨浏览器同步
+
+#### Bug 2: 新增成员后不触发云端同步
+- **文件**: `src/components/ReportUploader.tsx:420` (`saveNewMember`)
+- **问题**: 保存新成员到 localStorage 后只调用 `notifyPersonsUpdated()`（仅通知同浏览器页面），未调用 `cloudStorage.saveAllData()`
+- **修复**: 添加 `cloudStorage.saveAllData()` 调用
+- **影响**: 从周报中发现并添加的新成员无法同步到其他浏览器
+
+#### Bug 3: 成员状态激活后不触发云端同步
+- **文件**: `src/components/ReportUploader.tsx:346` (`reactivateMember`)
+- **问题**: 同上，只更新 localStorage 未触发云端同步
+- **修复**: 添加 `cloudStorage.saveAllData()` 调用
+- **影响**: 将非活跃成员重新标记为活跃后无法同步
+
+#### Bug 4: `persons` 合并逻辑缺陷
+- **文件**: `src/services/cloudStorage.ts:619-631`
+- **问题**: 合并时"始终以云端为主"，本地编辑的成员信息（研究方向、状态等）无法覆盖云端
+- **修复**: 根据 `useCloud` 时间戳判断：云端新则云端优先，本地新则本地优先
+- **影响**: 在 SettingsPage 编辑成员信息后，其他浏览器无法看到最新编辑
+
+#### Bug 5: 种子数据导入后不同步
+- **文件**: `src/App.tsx:25`
+- **问题**: 首次加载导入深度分析种子数据后更新 `qlab_last_modified`，但未触发云端同步
+- **修复**: 导入完成后调用 `cloudStorage.saveAllData()`
+- **影响**: 新浏览器首次打开时导入的种子数据无法同步到其他浏览器
+
+### 确认正确的功能（无需修复）
+
+| 功能 | 文件 | 同步机制 | 状态 |
+|------|------|----------|------|
+| 深度分析保存 | `DeepAnalysisPanel.tsx:177` | `saveDeepAnalysis()` + `cloudStorage.saveAllData()` | ✅ 正确 |
+| 团队成员编辑 | `SettingsPage.tsx:843` | `syncToCloud()` → `cloudStorage.saveAllData()` | ✅ 正确 |
+| 周报上传解析 | `ReportUploader.tsx:803` | `cloudStorage.loadAllData()` → `saveAllData()` | ✅ 正确 |
+| 应用启动同步 | `App.tsx:56` | `cloudStorage.loadAllData()` 自动拉取 | ✅ 正确 |
+| 数据迁移 | `DataMigrationPanel.tsx` | 手动触发，已正确处理 | ✅ 正确 |
+
+### 修改文件
+- `src/services/cloudStorage.ts` - deepAnalyses 合并 + persons 合并
+- `src/components/ReportUploader.tsx` - saveNewMember + reactivateMember 添加云端同步
+- `src/App.tsx` - 种子数据导入后触发云端同步
+
+---
+
 ## 2026-05-25: 修复深度分析跨浏览器同步 Bug
 
 ### Bug 描述
