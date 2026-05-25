@@ -1,5 +1,21 @@
 # QiuLab 周报分析系统 - 修改日志
 
+## 2026-05-25: 修复设置页面修改入组时间后分析页面不更新
+
+### 问题
+在 SettingsPage 修改成员入组时间（`joinDate`）后，AnalysisPage 仍显示旧的入组时间。
+
+### 根因
+`src/hooks/usePersons.ts` 中的 `StoredMember` 接口缺少 `joinDate` 字段，`mergeWithLocalStorage()` 函数没有合并 `joinDate`。
+- SettingsPage 保存了 `joinDate` 到 localStorage
+- 但 usePersons Hook 读取时忽略了 `joinDate`，始终使用静态数据中的旧值
+
+### 修复
+- `StoredMember` 接口：添加 `joinDate?: string`
+- `mergeWithLocalStorage()`：添加 `joinDate: stored.joinDate ?? p.joinDate`
+
+---
+
 ## 2026-05-25: 全面审查并修复跨浏览器同步机制
 
 ### 审查范围

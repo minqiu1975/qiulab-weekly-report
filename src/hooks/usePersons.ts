@@ -15,6 +15,7 @@ interface StoredMember {
   subRole: string;
   researchDirection: string;
   status: string;
+  joinDate?: string;
   enrollmentYear?: number;
   programDuration?: number;
   exitDate?: string;
@@ -41,6 +42,7 @@ function mergeWithLocalStorage(staticPersons: Person[]): Person[] {
         role: (stored.role as Person['role']) || p.role,
         roleLabel: stored.roleLabel ?? p.roleLabel,
         subRole: stored.subRole ?? p.subRole,
+        joinDate: stored.joinDate ?? p.joinDate,
         enrollmentYear: stored.enrollmentYear ?? p.enrollmentYear,
         programDuration: stored.programDuration ?? p.programDuration,
         exitDate: stored.exitDate ?? p.exitDate,
