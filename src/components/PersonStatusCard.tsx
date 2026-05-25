@@ -1,6 +1,7 @@
 import type { Person } from '../types';
 import { getPersonRiskLevel } from '../data/mockPersons';
 import { User, Microscope, GraduationCap } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 
 interface Props {
   person: Person;
@@ -38,35 +39,46 @@ export default function PersonStatusCard({ person, onClick }: Props) {
   const roleAbbr = getRoleAbbreviation(person.subRole);
 
   return (
-    <button
-      onClick={() => onClick?.(person)}
-      className={`w-full text-left rounded-lg border ${config.border} ${config.bg} p-3 transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98]`}
-    >
-      {/* 第一行：图标 + 名字（不截断） + 角色缩写 + 状态 */}
-      <div className="flex items-center gap-2 min-w-0">
-        <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
-          <RoleIcon className="w-4 h-4 text-slate-600" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center flex-wrap gap-x-1.5 gap-y-0.5">
-            {/* 名字：绝对不允许截断 */}
-            <span className="font-medium text-sm text-slate-800 whitespace-nowrap">{person.name}</span>
-            {/* 角色缩写 */}
-            {roleAbbr && (
-              <span className="text-[10px] px-1 py-0.5 rounded bg-slate-200/70 text-slate-500 whitespace-nowrap">
-                {roleAbbr}
-              </span>
-            )}
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={() => onClick?.(person)}
+          className={`w-full text-left rounded-lg border ${config.border} ${config.bg} p-3 transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98]`}
+        >
+          {/* 第一行：图标 + 名字（不截断） + 角色缩写 + 状态 */}
+          <div className="flex items-center gap-2 min-w-0">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${config.bg === 'bg-emerald-50' ? 'bg-emerald-100' : config.bg === 'bg-amber-50' ? 'bg-amber-100' : 'bg-red-100'}`}>
+              <RoleIcon className={`w-4 h-4 ${config.text}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center flex-wrap gap-x-1.5 gap-y-0.5">
+                {/* 名字：绝对不允许截断 */}
+                <span className="font-medium text-sm text-slate-800 whitespace-nowrap">{person.name}</span>
+                {/* 角色缩写 */}
+                {roleAbbr && (
+                  <span className="text-[10px] px-1 py-0.5 rounded bg-slate-200/70 text-slate-500 whitespace-nowrap">
+                    {roleAbbr}
+                  </span>
+                )}
+              </div>
+              {/* 研究方向：允许截断 */}
+              <div className="text-[11px] text-slate-500 truncate">{person.researchDirection}</div>
+            </div>
+            {/* 状态指示器：固定宽度，不压缩 */}
+            <div className="flex items-center gap-1 flex-shrink-0 self-start mt-0.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
+              <span className={`text-[10px] font-medium ${config.text} whitespace-nowrap hidden sm:inline`}>{config.label}</span>
+            </div>
           </div>
-          {/* 研究方向：允许截断 */}
-          <div className="text-[11px] text-slate-500 truncate">{person.researchDirection}</div>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" sideOffset={4} className="max-w-[240px]">
+        <div className="space-y-1">
+          <p className="font-medium text-xs">{person.name} · {roleAbbr}</p>
+          <p className="text-[11px] opacity-90">{person.researchDirection}</p>
+          <p className="text-[10px] opacity-70">状态: {config.label}</p>
         </div>
-        {/* 状态指示器：固定宽度，不压缩 */}
-        <div className="flex items-center gap-1 flex-shrink-0 self-start mt-0.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
-          <span className={`text-[10px] font-medium ${config.text} whitespace-nowrap hidden sm:inline`}>{config.label}</span>
-        </div>
-      </div>
-    </button>
+      </TooltipContent>
+    </Tooltip>
   );
 }

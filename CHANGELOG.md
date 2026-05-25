@@ -1,5 +1,21 @@
 # QLab 周报分析系统 - 修改日志
 
+## 2026-05-25: Dashboard UI 视觉优化
+
+### 修改文件
+
+#### `src/pages/Dashboard.tsx`
+- **统计卡片**: 图标容器添加渐变色背景（blue→indigo、emerald→teal、orange→red、cyan→blue），添加 `hover:shadow-lg hover:-translate-y-0.5` 悬停动画
+- **页面标题**: 添加渐变色文字效果 `bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent`，副标题显示当前期数和日期
+- **角色分布卡片**: 每个角色添加专属渐变色图标（研究员:cyan→blue、助研:sky→blue、博后:indigo→purple、博士生:emerald→teal、本科生:amber→orange、访问学生:violet→purple），添加悬停动画
+- **AI研判摘要**: 添加空状态提示（图标 + "暂无 AI 研判数据" + "上传周报并分析后将在此显示"）
+
+#### `src/components/PersonStatusCard.tsx`
+- **研究方向 Tooltip**: 鼠标悬停卡片时显示 Tooltip，展示完整姓名、角色、研究方向和状态
+- **图标颜色**: 状态图标背景色和文字色与风险级别一致（绿色/橙色/红色）
+
+---
+
 ## 2026-05-25: 验证并修复「新增成员」和「周报自动发现新成员」功能
 
 ### 背景

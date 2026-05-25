@@ -23,6 +23,11 @@ import {
   FileDown,
   Printer,
   RefreshCw,
+  FlaskConical,
+  GraduationCap,
+  BookOpen,
+  UserCog,
+  Microscope,
 } from 'lucide-react';
 import { cloudStorage } from '../services/cloudStorage';
 
@@ -149,14 +154,25 @@ export default function Dashboard() {
   const vacationCount = statusChanges.filter((s) => s.type === 'vacation').length;
 
   const stats = [
-    { label: '活跃成员总数', value: totalPeople, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: '本周上报人数', value: submittedCount, icon: FileCheck, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: '需关注人数', value: problemCount, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
-    { label: '平均工作量评分', value: avgWorkload, icon: BarChart3, color: 'text-cyan-600', bg: 'bg-cyan-50' },
+    { label: '活跃成员总数', value: totalPeople, icon: Users, color: 'text-blue-600', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', ring: 'ring-blue-100' },
+    { label: '本周上报人数', value: submittedCount, icon: FileCheck, color: 'text-emerald-600', bg: 'bg-gradient-to-br from-emerald-500 to-teal-600', ring: 'ring-emerald-100' },
+    { label: '需关注人数', value: problemCount, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-gradient-to-br from-orange-500 to-red-600', ring: 'ring-red-100' },
+    { label: '平均工作量评分', value: avgWorkload, icon: BarChart3, color: 'text-cyan-600', bg: 'bg-gradient-to-br from-cyan-500 to-blue-600', ring: 'ring-cyan-100' },
   ];
 
   // 角色分组统计（排除 inactive）
   const roleStats = useMemo(() => getRoleDistribution(ALL_PERSONS), [ALL_PERSONS]);
+
+  // 角色分布图标和颜色配置
+  const ROLE_VISUALS: Record<string, { icon: typeof FlaskConical; gradient: string; ring: string }> = {
+    researcher: { icon: FlaskConical, gradient: 'bg-gradient-to-br from-cyan-500 to-blue-600', ring: 'ring-cyan-100' },
+    associate_researcher: { icon: Microscope, gradient: 'bg-gradient-to-br from-teal-500 to-cyan-600', ring: 'ring-teal-100' },
+    assistant_researcher: { icon: FlaskConical, gradient: 'bg-gradient-to-br from-sky-500 to-blue-600', ring: 'ring-sky-100' },
+    postdoc: { icon: Microscope, gradient: 'bg-gradient-to-br from-indigo-500 to-purple-600', ring: 'ring-indigo-100' },
+    phd: { icon: GraduationCap, gradient: 'bg-gradient-to-br from-emerald-500 to-teal-600', ring: 'ring-emerald-100' },
+    undergraduate: { icon: BookOpen, gradient: 'bg-gradient-to-br from-amber-500 to-orange-600', ring: 'ring-amber-100' },
+    visitor: { icon: UserCog, gradient: 'bg-gradient-to-br from-violet-500 to-purple-600', ring: 'ring-violet-100' },
+  };
 
   const statusConfig = {
     completed: { label: '已完成', className: 'bg-emerald-100 text-emerald-700' },
@@ -168,7 +184,10 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
+        <div>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Dashboard</h1>
+          <p className="text-xs text-slate-400 mt-0.5">团队概况 · 第{latestWeekNumber}期 ({latestWeekLabel})</p>
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleSync}
@@ -201,15 +220,15 @@ export default function Dashboard() {
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <Card key={s.label} className="border-slate-200">
+            <Card key={s.label} className="border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group cursor-default">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg ${s.bg} flex items-center justify-center`}>
-                    <Icon className={`w-5 h-5 ${s.color}`} />
+                  <div className={`w-11 h-11 rounded-xl ${s.bg} flex items-center justify-center shadow-md ring-2 ${s.ring} group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-slate-800">{s.value}</div>
-                    <div className="text-xs text-slate-500">{s.label}</div>
+                    <div className="text-2xl font-bold text-slate-800 group-hover:text-slate-900 transition-colors">{s.value}</div>
+                    <div className="text-xs text-slate-500 group-hover:text-slate-600 transition-colors">{s.label}</div>
                   </div>
                 </div>
               </CardContent>
@@ -229,15 +248,22 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="px-4 pb-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-              {roleStats.map((rs) => (
-                <div
-                  key={rs.key}
-                  className="flex flex-col items-center justify-center p-3 rounded-lg bg-slate-50 border border-slate-100"
-                >
-                  <span className="text-xl font-bold text-slate-800">{rs.count}</span>
-                  <span className="text-xs text-slate-500 mt-1">{rs.label}</span>
-                </div>
-              ))}
+              {roleStats.map((rs) => {
+                const visual = ROLE_VISUALS[rs.key];
+                const RoleIcon = visual?.icon || Users;
+                return (
+                  <div
+                    key={rs.key}
+                    className="flex flex-col items-center justify-center p-3 rounded-xl bg-white border border-slate-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-default"
+                  >
+                    <div className={`w-9 h-9 rounded-lg ${visual?.gradient || 'bg-gradient-to-br from-slate-400 to-slate-600'} flex items-center justify-center shadow-sm ring-2 ${visual?.ring || 'ring-slate-100'} group-hover:scale-110 transition-transform duration-300 mb-2`}>
+                      <RoleIcon className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-xl font-bold text-slate-800 group-hover:text-slate-900 transition-colors">{rs.count}</span>
+                    <span className="text-xs text-slate-500 mt-0.5">{rs.label}</span>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -387,6 +413,13 @@ export default function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-4 space-y-3">
+              {latestAssessments.length === 0 && (
+                <div className="text-center py-6">
+                  <Sparkles className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm text-slate-400">暂无 AI 研判数据</p>
+                  <p className="text-xs text-slate-400 mt-1">上传周报并分析后将在此显示</p>
+                </div>
+              )}
               {latestAssessments.map((a) => {
                 const rc =
                   a.riskLevel === 'high'
