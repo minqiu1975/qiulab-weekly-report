@@ -97,9 +97,12 @@ export function saveDynamicTrends(
   personTrends: Record<string, WeekTrend>
 ): void {
   const all = lsGet<DynamicTrends>(KEYS.TRENDS, {});
+  const prevCount = Object.keys(all[weekDate] || {}).length;
+  const newCount = Object.keys(personTrends).length;
   all[weekDate] = personTrends;
   lsSet(KEYS.TRENDS, all);
   addWeekLabel(weekDate);
+  console.log(`[DEBUG saveDynamicTrends] weekDate=${weekDate}, prevCount=${prevCount}, newCount=${newCount}, keys=[${Object.keys(personTrends).slice(0,5).join(',')}${Object.keys(personTrends).length > 5 ? '...' : ''}]`);
 }
 
 /** 获取某人的完整趋势数据（静态 + 动态合并） */
@@ -148,12 +151,14 @@ export function saveDynamicHistory(
   personSummaries: Record<string, string>
 ): void {
   const all = lsGet<DynamicHistory>(KEYS.HISTORY, {});
+  const names = Object.keys(personSummaries);
   for (const [name, summary] of Object.entries(personSummaries)) {
     if (!all[name]) all[name] = {};
     all[name][weekDate] = summary;
   }
   lsSet(KEYS.HISTORY, all);
   addWeekLabel(weekDate);
+  console.log(`[DEBUG saveDynamicHistory] weekDate=${weekDate}, count=${names.length}, keys=[${names.slice(0,5).join(',')}${names.length > 5 ? '...' : ''}]`);
 }
 
 /** 获取某人的历史摘要（静态 + 动态合并），最新在前
@@ -167,8 +172,11 @@ export function getMergedPersonHistory(
   personId?: string
 ): { week: string; summary: string }[] {
   const dynamicHistory = lsGet<DynamicHistory>(KEYS.HISTORY, {});
+  // DEBUG: 记录查询参数和可用 keys
+  console.log(`[DEBUG getMergedPersonHistory] personName=${personName}, personId=${personId}, historyKeys=[${Object.keys(dynamicHistory).slice(0,10).join(',')}${Object.keys(dynamicHistory).length > 10 ? '...' : ''}]`);
   // 动态数据保存时用的是 personId，读取时同时尝试 personId 和人名
   const personDynamic = dynamicHistory[personId || ''] || dynamicHistory[personName] || {};
+  console.log(`[DEBUG getMergedPersonHistory] found weeks for ${personId || personName}: [${Object.keys(personDynamic).join(',')}]`);
 
   // 合并静态和动态数据
   const mergedMap = new Map<string, string>();

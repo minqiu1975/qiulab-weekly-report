@@ -791,6 +791,19 @@ export default function ReportUploader() {
     addWeekLabel(weekDate);
     localStorage.setItem('qlab_last_modified', new Date().toISOString());
 
+    // DEBUG: 验证 localStorage 实际写入的内容
+    try {
+      const savedTrends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}');
+      const savedHistory = JSON.parse(localStorage.getItem('qlab_dynamic_history') || '{}');
+      const trendKeys = Object.keys(savedTrends[weekDate] || {});
+      const historyKeys = Object.keys(savedHistory).filter(k => savedHistory[k]?.[weekDate]);
+      console.log(`[DEBUG ReportUploader] weekDate=${weekDate}, trends saved=${trendKeys.length}, history saved=${historyKeys.length}`);
+      console.log(`[DEBUG ReportUploader] sample trends:`, trendKeys.slice(0, 3).map(k => `${k}:${(savedTrends[weekDate][k] as any)?.characterTag || '?'}`));
+      console.log(`[DEBUG ReportUploader] sample history:`, historyKeys.slice(0, 3).map(k => `${k}:${savedHistory[k]?.[weekDate]?.slice(0, 20)}...`));
+    } catch (e) {
+      console.error('[DEBUG ReportUploader] failed to verify save:', e);
+    }
+
     // 保存上传历史记录（用两份文件的名称）
     if (savedResearcherFile) {
       addUploadHistory({

@@ -663,6 +663,8 @@ class CloudStorageService {
           : { ...cloudPerson, ...localPerson };
       }
 
+      console.log(`[DEBUG loadAllData] useCloud=${useCloud}, cloudMod=${cloudModified}, localMod=${localModified}, trendsWeeks=[${Object.keys(mergedTrends).slice(-3).join(',')}], historyPersons=${Object.keys(mergedHistory).length}`);
+
       const mergedDynamic = {
         trends: mergedTrends,
         history: mergedHistory,
@@ -706,7 +708,7 @@ class CloudStorageService {
   }
 
   loadFromLocal(): AppData {
-    return {
+    const data = {
       persons: lsGet<Person[]>(LS_KEYS.PERSONS, []),
       weekData: lsGet<StoredWeekData[]>(LS_KEYS.WEEK_DATA, []),
       uploads: lsGet<UploadRecord[]>(LS_KEYS.UPLOADS, []),
@@ -722,6 +724,9 @@ class CloudStorageService {
       // lastModified 空表示从未修改过，云端永远优先
       lastModified: lsGet<string>('qlab_last_modified', '') || '',
     };
+    const trendWeeks = Object.keys(data.dynamic.trends);
+    console.log(`[DEBUG loadFromLocal] persons=${data.persons.length}, trendsWeeks=[${trendWeeks.slice(-3).join(',')}], historyPersons=${Object.keys(data.dynamic.history).length}, labels=${data.dynamic.labels.length}, lastMod=${data.lastModified || 'empty'}`);
+    return data;
   }
 
   // ---------- 数据保存 ----------
