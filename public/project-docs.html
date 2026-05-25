@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QiuLab周报分析系统 - 项目文档</title>
+<style>
+:root{--c:#0f172a;--c2:#1e293b;--c3:#334155;--g:#f8fafc;--b:#e2e8f0;--a:#0891b2;--a2:#06b6d4;--r:#dc2626;--y:#d97706;--g2:#059669;--w:#fff;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;background:var(--g);color:var(--c);line-height:1.7}
+a{color:var(--a);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:20px}
+header{background:linear-gradient(135deg,var(--c) 0%,var(--c2) 100%);color:#fff;padding:48px 0;text-align:center}
+header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+header p{font-size:15px;opacity:.85}
+nav{background:var(--w);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.nav-inner a{display:block;padding:12px 16px;font-size:13px;color:var(--c3);border-bottom:2px solid transparent;white-space:nowrap;transition:.2s}
+.nav-inner a:hover,.nav-inner a.active{color:var(--a);border-bottom-color:var(--a);text-decoration:none}
+.section{background:var(--w);border-radius:12px;padding:32px;margin:20px 0;border:1px solid var(--b)}
+.section h2{font-size:20px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--c)}
+.section h2 .icon{width:28px;height:28px;border-radius:6px;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+.section h3{font-size:16px;font-weight:600;margin:24px 0 12px;color:var(--c2)}
+.section h4{font-size:14px;font-weight:600;margin:16px 0 8px;color:var(--c3)}
+p{margin-bottom:12px;font-size:14px}
+ul,ol{margin:8px 0 8px 20px;font-size:14px}
+li{margin:4px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:500;margin-right:4px}
+.tag-green{background:#d1fae5;color:#065f46}
+.tag-blue{background:#cffafe;color:#155e75}
+.tag-amber{background:#fef3c7;color:#92400e}
+.tag-red{background:#fee2e2;color:#991b1b}
+.tag-purple{background:#f3e8ff;color:#6b21a8}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--b)}
+th{background:var(--g);font-weight:600;color:var(--c3);font-size:12px}
+tr:hover{background:#f8fafc}
+code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;font-family:"SF Mono",Monaco,monospace}
+pre{background:var(--c2);color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;font-size:12px;line-height:1.6;margin:12px 0}
+pre code{background:none;padding:0;color:inherit}
+.download-box{background:linear-gradient(135deg,#cffafe 0%,#e0f2fe 100%);border:1px solid #67e8f9;border-radius:12px;padding:24px;text-align:center;margin:16px 0}
+.download-box h3{font-size:16px;margin-bottom:8px}
+.download-box p{font-size:13px;color:var(--c3);margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:.2s}
+.btn-primary{background:var(--a);color:#fff}
+.btn-primary:hover{background:#0e7490;text-decoration:none}
+.btn-secondary{background:var(--c3);color:#fff}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:640px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.card-sm{background:var(--g);border-radius:8px;padding:16px;border:1px solid var(--b)}
+.card-sm h4{font-size:13px;margin:0 0 6px}
+.card-sm p{font-size:12px;color:var(--c3);margin:0}
+.hint{background:#fef3c7;border-left:3px solid var(--y);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:13px}
+.tip{background:#d1fae5;border-left:3px solid var(--g2);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:13px}
+hr{border:none;border-top:1px solid var(--b);margin:24px 0}
+footer{text-align:center;padding:32px;color:var(--c3);font-size:12px}
+summary{cursor:pointer;font-weight:600;padding:8px 0}
+details[open] summary{margin-bottom:8px}
+.step{display:flex;gap:12px;margin:12px 0}
+.step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.step-content{flex:1}
+.step-content h4{margin:0 0 4px;font-size:14px}
+.step-content p{margin:0;font-size:13px;color:var(--c3)}
+.file-tree{font-family:monospace;font-size:13px;line-height:1.8;background:var(--g);padding:16px;border-radius:8px}
+.file-tree .dir{color:var(--a);font-weight:600}
+.file-tree .file{color:var(--c3)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>QiuLab周报分析系统</h1>
+  <p>完整项目文档 &mdash; 版本 2.0 &mdash; 2026.05.20</p>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#overview" class="active">项目概述</a>
+    <a href="#features">功能清单</a>
+    <a href="#architecture">技术架构</a>
+    <a href="#data">数据说明</a>
+    <a href="#quickstart">快速上手</a>
+    <a href="#maintenance">维护指南</a>
+    <a href="#download">源码下载</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 项目概述 ============ -->
+<div class="section" id="overview">
+  <h2><span class="icon">1</span>项目概述</h2>
+  <p><strong>QiuLab周报分析系统</strong>是为仇旻教授实验室（西湖大学）定制的周报管理与AI分析平台。系统支持32位实验室成员（研究员、博士后、博士生、本科生、访问学生）的周报上传、AI深度分析、趋势追踪、团队评估和跨设备数据同步。</p>
+
+  <h3>核心能力</h3>
+  <div class="grid-3">
+    <div class="card-sm">
+      <h4>周报上传与分析</h4>
+      <p>上传docx格式周报，Kimi k2.6自动为32人逐一分析并生成个性化研究建议</p>
+    </div>
+    <div class="card-sm">
+      <h4>趋势可视化</h4>
+      <p>每人独立趋势图，叠加静态基线与动态上传数据，支持16个时间点到最新周报</p>
+    </div>
+    <div class="card-sm">
+      <h4>AI深度分析</h4>
+      <p>每位成员可单独调用Kimi k2.6生成深度分析（进展/热点/建议/风险）</p>
+    </div>
+    <div class="card-sm">
+      <h4>团队评估</h4>
+      <p>6维度AI研判报告（工作负荷/质量/问题诊断/路径分析/行动建议/成果预测）</p>
+    </div>
+    <div class="card-sm">
+      <h4>云端同步</h4>
+      <p>Supabase云端同步，支持Edge/Firefox跨设备数据共享</p>
+    </div>
+    <div class="card-sm">
+      <h4>成员管理</h4>
+      <p>7类角色（研究员/副研/助研/博后/博士/本科/访问），支持编辑和新增</p>
+    </div>
+  </div>
+
+  <h3>访问信息</h3>
+  <table>
+    <tr><th>项目</th><th>内容</th></tr>
+    <tr><td>项目名称</td><td>QiuLab周报分析系统</td></tr>
+    <tr><td>当前版本</td><td>v2.0</td></tr>
+    <tr><td>访问密码</td><td><code>QiuLab2026</code></td></tr>
+    <tr><td>内置API</td><td>Kimi k2.6（已固化实验室共享Key）</td></tr>
+    <tr><td>云端同步</td><td>Supabase（qlab-sync项目）</td></tr>
+    <tr><td>技术栈</td><td>React 19 + TypeScript + Vite + Tailwind CSS + Recharts</td></tr>
+  </table>
+</div>
+
+<!-- ============ 功能清单 ============ -->
+<div class="section" id="features">
+  <h2><span class="icon">2</span>功能清单</h2>
+
+  <h3>Dashboard 首页</h3>
+  <ul>
+    <li>团队概览统计（总人数/评估人数/高风险/本周异常）</li>
+    <li>个人评估分数条形图</li>
+    <li>团队评分分布饼图（优秀/良好/需改进，含成员名字Tooltip）</li>
+    <li>最近上传文件列表（动态读取，非硬编码）</li>
+    <li>生成全组数据PDF报告（自动取最新一期数据）</li>
+    <li>"同步数据"按钮（手动触发云端拉取）</li>
+  </ul>
+
+  <h3>周报上传</h3>
+  <ul>
+    <li>双文件上传（研究员+博后版 / 博士生版）</li>
+    <li>docx纯文本解析（mammoth库）</li>
+    <li>重复检测（自动识别已上传日期，支持覆盖确认）</li>
+    <li>显示完整文件名（非截断）</li>
+    <li>AI批量分析（32人并行，每批5人，调用Kimi k2.6）</li>
+    <li>费用估算（~470 tokens/人，~0.005元/人）</li>
+    <li>新成员自动检测（周报中发现不在成员列表的人名）</li>
+    <li>上传历史记录（按周报日期分组显示）</li>
+  </ul>
+
+  <h3>趋势分析</h3>
+  <ul>
+    <li>32人独立趋势图</li>
+    <li>静态基线（10点）+ 动态数据（占位填充）合并显示</li>
+    <li>16个X轴标签完整显示到最新上传日期</li>
+    <li>多指标（进展/问题数/性格标签）</li>
+  </ul>
+
+  <h3>深度分析</h3>
+  <ul>
+    <li>调用Kimi k2.6真实API（非模拟）</li>
+    <li>分析结果持久化保存（localStorage + 云端同步）</li>
+    <li>重新分析不销毁旧结果（确认后才覆盖）</li>
+    <li>32人预生成分析数据（seed-deep-analyses.json）</li>
+  </ul>
+
+  <h3>分析页面</h3>
+  <ul>
+    <li>AI综合研判报告（6维度：进展/问题/路径/行动/文献/预测）</li>
+    <li>最近一周摘要（静态+动态合并）</li>
+    <li>历史摘要对比（最近4期）</li>
+    <li>成员个人评分卡片（与团队分布同栏显示）</li>
+    <li>深度分析按钮（Kimi k2.6实时调用）</li>
+  </ul>
+
+  <h3>设置页面</h3>
+  <ul>
+    <li>团队成员管理（编辑/新增/角色修改）</li>
+    <li>6类角色标签（研究员/副研/助研/博后/博士/本科/访问）</li>
+    <li>入学年份选择（2020-2035）</li>
+    <li>Kimi API配置（端点选择+Key覆盖）</li>
+    <li>云端同步配置（Supabase/百度网盘）</li>
+    <li>数据迁移（JSON导出/导入）</li>
+    <li>密码修改</li>
+  </ul>
+</div>
+
+<!-- ============ 技术架构 ============ -->
+<div class="section" id="architecture">
+  <h2><span class="icon">3</span>技术架构</h2>
+
+  <h3>文件结构</h3>
+  <div class="file-tree">
+<span class="dir">app/</span>
+  <span class="file">index.html</span>              入口HTML
+  <span class="file">package.json</span>           依赖配置
+  <span class="file">vite.config.ts</span>         Vite配置
+  <span class="file">tailwind.config.js</span>   Tailwind配置
+  <span class="file">tsconfig.json</span>        TypeScript配置
+  <span class="dir">src/</span>
+    <span class="dir">components/</span>          UI组件
+      <span class="file">Navbar.tsx</span>         导航栏
+      <span class="file">Sidebar.tsx</span>        侧边栏
+      <span class="file">ReportUploader.tsx</span> 周报上传分析
+      <span class="file">DeepAnalysisPanel.tsx</span> 深度分析面板
+      <span class="file">AssessmentPanel.tsx</span>  研判报告面板
+      <span class="file">TrendChart.tsx</span>     趋势图表
+      <span class="file">PdfReportGenerator.tsx</span> PDF报告
+      <span class="file">DataMigrationPanel.tsx</span> 数据迁移
+      <span class="dir">ui/</span>               shadcn/ui组件
+    <span class="dir">pages/</span>               页面
+      <span class="file">Dashboard.tsx</span>      首页
+      <span class="file">UploadPage.tsx</span>   上传页面
+      <span class="file">AnalysisPage.tsx</span> 分析页面
+      <span class="file">TrendsPage.tsx</span>   趋势页面
+      <span class="file">SettingsPage.tsx</span> 设置页面
+    <span class="dir">data/</span>                静态数据
+      <span class="file">mockPersons.ts</span>     32人成员数据
+      <span class="file">mockTrends.ts</span>      趋势基线数据
+      <span class="file">mockAssessments.ts</span> 评估数据
+    <span class="dir">lib/</span>                 工具库
+      <span class="file">dynamicStorage.ts</span>  动态数据存取
+      <span class="file">kimiApi.ts</span>         Kimi API调用
+    <span class="dir">services/</span>            服务层
+      <span class="file">cloudStorage.ts</span>    云端同步
+    <span class="dir">hooks/</span>               React Hooks
+      <span class="file">usePersons.ts</span>      人员管理Hook
+    <span class="dir">types/</span>               类型定义
+  <span class="dir">public/</span>                静态资源
+    <span class="file">seed-deep-analyses.json</span> 32人预生成分析
+  <span class="dir">dist/</span>                  构建产物（部署用）
+  </div>
+
+  <h3>技术栈</h3>
+  <table>
+    <tr><th>层级</th><th>技术</th><th>版本</th></tr>
+    <tr><td>框架</td><td>React</td><td>19</td></tr>
+    <tr><td>语言</td><td>TypeScript</td><td>5.x</td></tr>
+    <tr><td>构建工具</td><td>Vite</td><td>6.x</td></tr>
+    <tr><td>样式</td><td>Tailwind CSS</td><td>3.x</td></tr>
+    <tr><td>UI组件</td><td>shadcn/ui</td><td>-</td></tr>
+    <tr><td>图表</td><td>Recharts</td><td>2.x</td></tr>
+    <tr><td>路由</td><td>React Router (HashRouter)</td><td>7.x</td></tr>
+    <tr><td>docx解析</td><td>mammoth</td><td>1.x</td></tr>
+    <tr><td>PDF生成</td><td>jspdf + html2canvas</td><td>-</td></tr>
+    <tr><td>API</td><td>Kimi k2.6 (Moonshot)</td><td>-</td></tr>
+    <tr><td>云端</td><td>Supabase</td><td>-</td></tr>
+  </table>
+</div>
+
+<!-- ============ 数据说明 ============ -->
+<div class="section" id="data">
+  <h2><span class="icon">4</span>数据说明</span></h2>
+
+  <h3>数据存储方式</h3>
+  <p>所有数据存储在浏览器 <strong>localStorage</strong> 中，通过云端同步实现跨设备共享。</p>
+
+  <h3>localStorage Key 清单</h3>
+  <table>
+    <tr><th>Key</th><th>数据内容</th><th>类型</th></tr>
+    <tr><td><code>qlab_persons_v5</code></td><td>团队成员信息</td><td>JSON数组</td></tr>
+    <tr><td><code>qlab_dynamic_trends</code></td><td>动态趋势数据（周→人→趋势）</td><td>JSON对象</td></tr>
+    <tr><td><code>qlab_dynamic_history</code></td><td>动态历史摘要（周→人→摘要）</td><td>JSON对象</td></tr>
+    <tr><td><code>qlab_dynamic_labels</code></td><td>趋势图X轴日期标签</td><td>JSON数组</td></tr>
+    <tr><td><code>qlab_uploaded_dates</code></td><td>已上传周报日期</td><td>JSON数组</td></tr>
+    <tr><td><code>qlab_uploads</code></td><td>上传历史记录</td><td>JSON数组</td></tr>
+    <tr><td><code>qlab_deep_analyses</code></td><td>深度分析结果</td><td>JSON对象</td></tr>
+    <tr><td><code>qlab_last_modified</code></td><td>最后修改时间戳</td><td>ISO字符串</td></tr>
+    <tr><td><code>qlab_moonshot_api_key</code></td><td>Kimi API Key（可选覆盖）</td><td>字符串</td></tr>
+    <tr><td><code>qlab_moonshot_api_url</code></td><td>API端点（cn/ai）</td><td>字符串</td></tr>
+    <tr><td><code>qlab_sync_config</code></td><td>云端同步配置</td><td>JSON对象</td></tr>
+  </table>
+
+  <h3>云端同步表</h3>
+  <p>Supabase项目 <code>qlab-sync</code>，表 <code>qlab_data</code>，字段：</p>
+  <ul>
+    <li><code>data</code> - JSONB，包含 persons, dynamic, version, lastModified</li>
+    <li><code>updated_at</code> - 更新时间</li>
+    <li><code>created_at</code> - 创建时间</li>
+  </ul>
+</div>
+
+<!-- ============ 快速上手 ============ -->
+<div class="section" id="quickstart">
+  <h2><span class="icon">5</span>快速上手</span></h2>
+
+  <h3>部署网站</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>获取源码</h4>
+      <p>下载页面底部的 <strong>qiulab-weekly-report-system.zip</strong> 源码包</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>安装依赖</h4>
+      <pre><code>cd app
+npm install</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>本地开发</h4>
+      <pre><code>npm run dev</code></pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>构建部署</h4>
+      <pre><code>npm run build
+# 将 dist/ 目录部署到任何静态托管平台</code></pre>
+    </div>
+  </div>
+
+  <h3>首次使用</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>登录</h4>
+      <p>打开网站，输入密码 <code>QiuLab2026</code></p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>导入数据（可选）</h4>
+      <p>从原网站导出JSON → 新网站设置→数据迁移→导入JSON</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>配置云端同步（推荐）</h4>
+      <p>设置→系统配置→启用云端同步，确保跨设备数据同步</p>
+    </div>
+  </div>
+
+  <h3>日常使用</h3>
+  <div class="grid-2">
+    <div class="card-sm">
+      <h4>上传周报</h4>
+      <p>上传→选择两份docx→自动分析→查看结果</p>
+    </div>
+    <div class="card-sm">
+      <h4>深度分析</h4>
+      <p>分析→选择成员→点击深度分析→查看AI建议</p>
+    </div>
+    <div class="card-sm">
+      <h4>查看趋势</h4>
+      <p>趋势→选择成员→查看历史趋势变化</p>
+    </div>
+    <div class="card-sm">
+      <h4>管理团队</h4>
+      <p>设置→团队成员→编辑/新增成员</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 维护指南 ============ -->
+<div class="section" id="maintenance">
+  <h2><span class="icon">6</span>维护指南</h2>
+
+  <h3>常见问题排查</h3>
+  <details>
+    <summary>分析页面不显示最新周报数据</summary>
+    <p>检查 <code>qlab_dynamic_trends</code> 和 <code>qlab_dynamic_labels</code> 是否有最新日期的数据。确保上传后 localStorage 已更新。</p>
+  </details>
+  <details>
+    <summary>趋势图只显示到4月3日/3月27日</summary>
+    <p>检查 <code>PERSON_BASELINE_TRENDS</code> 中是否有足够数据点（需16个）。或检查 <code>getMergedPersonTrend</code> 是否正确合并动态数据。</p>
+  </details>
+  <details>
+    <summary>深度分析结果丢失</summary>
+    <p>检查 <code>qlab_deep_analyses</code> 是否有数据。确保分析完成后调用了 <code>saveDeepAnalysis()</code>。</p>
+  </details>
+  <details>
+    <summary>云端同步失败</summary>
+    <p>检查 Supabase 配置是否正确。检查浏览器控制台网络请求是否返回401/403。确认使用的是正确的API端点（cn/ai）。</p>
+  </details>
+  <details>
+    <summary>新成员检测误报</summary>
+    <p>检查 <code>detectNamesFromReport</code> 函数的排除词库是否完整。可根据实际周报格式调整正则表达式。</p>
+  </details>
+
+  <h3>修改代码后重建</h3>
+  <pre><code>npm run build
+# dist/ 目录即为新的部署包</code></pre>
+
+  <h3>关键文件修改指南</h3>
+  <table>
+    <tr><th>修改目标</th><th>文件</th></tr>
+    <tr><td>添加新成员到静态数据</td><td><code>src/data/mockPersons.ts</code></td></tr>
+    <tr><td>修改趋势基线数据</td><td><code>src/data/mockTrends.ts</code></td></tr>
+    <tr><td>修改评估数据</td><td><code>src/data/mockAssessments.ts</code></td></tr>
+    <tr><td>修改Kimi API配置</td><td><code>src/lib/kimiApi.ts</code></td></tr>
+    <tr><td>修改静态历史摘要</td><td><code>src/pages/AnalysisPage.tsx</code> (PERSON_HISTORY)</td></tr>
+    <tr><td>修改页面布局/功能</td><td><code>src/pages/*.tsx</code></td></tr>
+    <tr><td>修改UI组件</td><td><code>src/components/*.tsx</code></td></tr>
+  </table>
+
+  <div class="tip">
+    <strong>提示：</strong>在Kimi新对话中，给出项目文档URL和源码包URL，即可继续编辑和维护。参考下方"新对话提示词"。
+  </div>
+</div>
+
+<!-- ============ 下载 ============ -->
+<div class="section" id="download">
+  <h2><span class="icon">7</span>源码下载</h2>
+
+  <div class="download-box">
+    <h3>完整项目源码包</h3>
+    <p>包含全部源代码、配置文件、静态数据。下载后解压即可 npm install && npm run dev 启动开发。</p>
+    <a href="qiulab-weekly-report-system.zip" class="btn btn-primary" download>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      下载源码包 (qiulab-weekly-report-system.zip)
+    </a>
+  </div>
+
+  <div class="download-box" style="background:linear-gradient(135deg,#f3e8ff 0%,#e0f2fe 100%);border-color:#c084fc">
+    <h3 style="color:#581c87">迁移指南</h3>
+    <p style="color:#6b21a8">详细的网站迁移、数据导出导入、跨平台部署说明。</p>
+    <a href="MIGRATION_GUIDE.md" class="btn" style="background:#7c3aed;color:#fff" download>
+      下载迁移指南 (MIGRATION_GUIDE.md)
+    </a>
+  </div>
+
+  <h3>GitHub方式（推荐持续维护）</h3>
+  <pre><code># 1. 创建新GitHub仓库
+# 2. 将app/目录推送到仓库
+cd app
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/YOUR_USERNAME/qiulab-weekly-report.git
+git push -u origin main
+
+# 3. 连接自动部署（Vercel/Netlify/Cloudflare Pages）
+# 4. 之后每次 git push 自动部署</code></pre>
+</div>
+
+<!-- ============ 新对话提示词 ============ -->
+<div class="section">
+  <h2><span class="icon">8</span>在新对话中继续维护</h2>
+
+  <div class="tip">
+    以下提示词可直接复制到新的Kimi对话中使用。
+  </div>
+
+  <h3>提示词模板</h3>
+  <pre style="background:#f0fdf4;border:1px solid #86efac"><code>请继续维护QiuLab周报分析系统。项目信息如下：
+
+【项目文档】https://gcckqirgrzpn4.ok.kimi.link/project-docs.html
+【源码包】https://gcckqirgrzpn4.ok.kimi.link/qiulab-weekly-report-system.zip
+
+请下载源码包并阅读项目文档了解系统架构和功能。我需要你帮我做以下事情：
+[在这里描述具体需求，例如：]
+- 修复某个bug
+- 添加新功能
+- 修改页面布局
+- 更新成员数据
+
+技术要求：
+- React 19 + TypeScript + Vite + Tailwind CSS
+- 使用Recharts做图表
+- 所有数据通过localStorage存储
+- Kimi API调用走src/lib/kimiApi.ts模块
+- 修改后npm run build构建，dist/目录部署</code></pre>
+
+  <h3>可用的URL（新对话中告诉Kimi）</h3>
+  <table>
+    <tr><th>资源</th><th>URL</th></tr>
+    <tr><td>项目文档</td><td><code>https://gcckqirgrzpn4.ok.kimi.link/project-docs.html</code></td></tr>
+    <tr><td>源码包ZIP</td><td><code>https://gcckqirgrzpn4.ok.kimi.link/qiulab-weekly-report-system.zip</code></td></tr>
+    <tr><td>迁移指南</td><td><code>https://gcckqirgrzpn4.ok.kimi.link/MIGRATION_GUIDE.md</code></td></tr>
+  </table>
+</div>
+
+</div>
+
+<footer>
+  <p>QiuLab周报分析系统 v2.0 | 仇旻教授实验室 | 西湖大学</p>
+  <p style="margin-top:4px">项目文档生成时间：2026年5月20日</p>
+</footer>
+
+<script>
+// 导航高亮
+const navLinks=document.querySelectorAll('.nav-inner a');
+const sections=document.querySelectorAll('.section');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)current=s.id});
+  navLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current)});
+});
+</script>
+</body>
+</html>
