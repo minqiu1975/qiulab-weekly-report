@@ -812,7 +812,7 @@ async function syncToCloud(members: TeamMember[]): Promise<void> {
   const now = new Date().toISOString();
   // 1. 先保存 persons 和 lastModified 到本地
   localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
-  localStorage.setItem('qlab_last_modified', now);
+  localStorage.setItem('qlab_last_modified', JSON.stringify(now));
 
   // 2. 调用 loadAllData 拉取云端数据并合并（保留其他浏览器的 dynamic 数据）
   //    如果失败（网络问题），继续推送本地数据，不要中断
@@ -824,7 +824,7 @@ async function syncToCloud(members: TeamMember[]): Promise<void> {
 
   // 3. 重新设置 persons 和 lastModified（确保人员修改不丢失）
   localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
-  localStorage.setItem('qlab_last_modified', now);
+  localStorage.setItem('qlab_last_modified', JSON.stringify(now));
 
   // 4. 推送合并后的数据（正确 persons + 合并后的完整 dynamic）到云端
   await cloudStorage.saveAllData(cloudStorage.loadFromLocal());
@@ -834,7 +834,7 @@ function saveMembers(members: TeamMember[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
     // 更新 lastModified，确保 loadAllData 知道本地有最新编辑
-    localStorage.setItem('qlab_last_modified', new Date().toISOString());
+    localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
     // 通知其他页面人员数据已更新
     window.dispatchEvent(new CustomEvent('qlab-persons-updated'));
 

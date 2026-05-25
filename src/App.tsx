@@ -23,7 +23,7 @@ function useSeedDeepAnalyses() {
       .then(data => {
         if (data?.deepAnalyses && Object.keys(data.deepAnalyses).length > 0) {
           localStorage.setItem('qlab_deep_analyses', JSON.stringify(data.deepAnalyses));
-          localStorage.setItem('qlab_last_modified', new Date().toISOString());
+          localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
           console.log(`[Seed] 已导入 ${Object.keys(data.deepAnalyses).length} 人的深度分析数据`);
           // 种子数据导入后同步到云端，确保其他浏览器也能获取
           if (cloudStorage.isCloudEnabled()) {

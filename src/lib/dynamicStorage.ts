@@ -234,7 +234,7 @@ export function saveDeepAnalysis(data: DeepAnalysisData): void {
   all[data.personId] = data;
   lsSet(KEYS.DEEP_ANALYSES, all);
   // 同时更新 lastModified 以便云端同步能检测到变化
-  localStorage.setItem('qlab_last_modified', new Date().toISOString());
+  localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
 }
 
 /** 获取某个成员的深度分析结果 */
@@ -253,7 +253,7 @@ export function removeDeepAnalysis(personId: string): void {
   const all = lsGet<Record<string, DeepAnalysisData>>(KEYS.DEEP_ANALYSES, {});
   delete all[personId];
   lsSet(KEYS.DEEP_ANALYSES, all);
-  localStorage.setItem('qlab_last_modified', new Date().toISOString());
+  localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
 }
 
 // ─── 清理 ───

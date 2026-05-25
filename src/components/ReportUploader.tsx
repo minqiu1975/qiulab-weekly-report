@@ -344,7 +344,7 @@ function reactivateMember(memberId: string): boolean {
       members[idx].status = 'active';
       members[idx].group = members[idx].role; // 恢复 group
       localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
-      localStorage.setItem('qlab_last_modified', new Date().toISOString());
+      localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
       // 触发云端同步（延迟避免阻塞UI）
       if (cloudStorage.isCloudEnabled()) {
         setTimeout(() => {
@@ -424,7 +424,7 @@ function saveNewMember(
 
     members.push(newMember);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
-    localStorage.setItem('qlab_last_modified', new Date().toISOString());
+    localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
     notifyPersonsUpdated();
 
     // 触发云端同步（延迟避免阻塞UI）
@@ -789,7 +789,8 @@ export default function ReportUploader() {
     saveDynamicHistory(weekDate, personSummaries);
     addUploadedDate(weekDate);
     addWeekLabel(weekDate);
-    localStorage.setItem('qlab_last_modified', new Date().toISOString());
+    // 使用 JSON.stringify 与 cloudStorage.saveToLocal 保持一致
+    localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
 
     // DEBUG: 验证 localStorage 实际写入的内容
     try {
