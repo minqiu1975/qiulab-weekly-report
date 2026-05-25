@@ -63,13 +63,15 @@ export default function TrendChart({ trend }: Props) {
             <LineChart data={data} margin={{ top: 5, right: 60, bottom: 5, left: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="weekLabel" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={60} interval={0} />
-              <YAxis width={45} domain={[0, 100]} tick={{ fontSize: 12 }} />
+              <YAxis yAxisId="left" width={45} domain={[0, 100]} tick={{ fontSize: 12 }} />
+              {/* 不可见占位右侧Y轴，确保与下方双Y轴图表的绘图区域宽度一致 */}
+              <YAxis yAxisId="right" orientation="right" width={45} domain={[0, 10]} tick={{ fill: 'transparent' }} axisLine={{ stroke: 'transparent' }} />
               <Tooltip
                 contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
               />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="workloadScore" name="工作量评分" stroke="#0891b2" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="progressScore" name="进展评分" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
+              <Line yAxisId="left" type="monotone" dataKey="workloadScore" name="工作量评分" stroke="#0891b2" strokeWidth={2} dot={{ r: 3 }} />
+              <Line yAxisId="left" type="monotone" dataKey="progressScore" name="进展评分" stroke="#059669" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
