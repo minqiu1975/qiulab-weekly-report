@@ -44,6 +44,35 @@ function useCloudSync() {
   useEffect(() => {
     let cancelled = false;
 
+    // 清理残留的无效日期标签（2026.02.13 已被更正为 2026.02.12）
+    try {
+      const dynLabels = JSON.parse(localStorage.getItem('qlab_dynamic_labels') || '[]') as string[];
+      if (dynLabels.includes('2026.02.13')) {
+        const cleaned = dynLabels.filter(l => l !== '2026.02.13');
+        localStorage.setItem('qlab_dynamic_labels', JSON.stringify(cleaned));
+        console.log('[Cleanup] 移除残留的动态标签 2026.02.13');
+      }
+      // 同时清理动态趋势和历史中的 2026.02.13 数据
+      const dynTrends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}') as Record<string, unknown>;
+      if (dynTrends['2026.02.13']) {
+        delete dynTrends['2026.02.13'];
+        localStorage.setItem('qlab_dynamic_trends', JSON.stringify(dynTrends));
+        console.log('[Cleanup] 移除残留的动态趋势 2026.02.13');
+      }
+      const dynHistory = JSON.parse(localStorage.getItem('qlab_dynamic_history') || '{}') as Record<string, Record<string, string>>;
+      let historyCleaned = false;
+      for (const person of Object.keys(dynHistory)) {
+        if (dynHistory[person]?.['2026.02.13']) {
+          delete dynHistory[person]['2026.02.13'];
+          historyCleaned = true;
+        }
+      }
+      if (historyCleaned) {
+        localStorage.setItem('qlab_dynamic_history', JSON.stringify(dynHistory));
+        console.log('[Cleanup] 移除残留的动态历史 2026.02.13');
+      }
+    } catch { /* ignore */ }
+
     async function doSync() {
       try {
         // 强制重新初始化 provider（避免 Firefox 等浏览器 constructor 中 provider 为 null）

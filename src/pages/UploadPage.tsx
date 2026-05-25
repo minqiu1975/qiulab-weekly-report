@@ -12,7 +12,11 @@ function formatSize(bytes: number): string {
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  const tzOffset = -d.getTimezoneOffset();
+  const tzSign = tzOffset >= 0 ? '+' : '-';
+  const tzHours = String(Math.abs(Math.floor(tzOffset / 60))).padStart(2, '0');
+  const tzMinutes = String(Math.abs(tzOffset % 60)).padStart(2, '0');
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')} (UTC${tzSign}${tzHours}:${tzMinutes})`;
 }
 
 function UploadHistoryPanel() {
