@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Lock, Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
 
 const AUTH_STORAGE_KEY = 'qiulab_auth_token';
 const PASSWORD_STORAGE_KEY = 'qiulab_custom_password_hash';
@@ -127,8 +127,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       <div className="w-full max-w-md">
         {/* Logo / Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 shadow-lg shadow-teal-500/20 mb-4">
-            <Lock className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center rounded-2xl bg-white/5 p-2 mb-4">
+            <img
+              src="/logo.jpg"
+              alt="PAINT Lab"
+              className="h-14 w-auto rounded-xl object-contain"
+            />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             仇旻实验室周报系统

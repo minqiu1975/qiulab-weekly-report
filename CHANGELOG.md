@@ -1,4 +1,21 @@
-# QLab 周报分析系统 - 修改日志
+# QiuLab 周报分析系统 - 修改日志
+
+## 2026-05-25: 集成 PAINT Lab Logo，统一品牌名为 QiuLab
+
+### 修改文件
+
+#### 品牌统一
+- `src/lib/dynamicStorage.ts`: QLab-WID → QiuLab-WID
+- `src/components/Footer.tsx`: QLab-WID → QiuLab-WID
+- `src/services/cloudStorage.ts`: QLab-WID → QiuLab-WID, X-QLab-Version → X-QiuLab-Version
+- `CHANGELOG.md`: QLab → QiuLab
+
+#### Logo 集成
+- `public/logo.jpg`: 新增 PAINT Lab logo 图片
+- `src/components/Navbar.tsx`: 导航栏左侧用 logo 图片替代 FlaskConical 图标
+- `src/components/AuthGuard.tsx`: 登录页标题区域展示 PAINT Lab logo
+
+---
 
 ## 2026-05-25: Dashboard UI 视觉优化
 
@@ -249,7 +266,7 @@ Firefox 修改 → syncToCloud → loadAllData（云端较新）→ 本地 perso
 
 ---
 
-# QLab 周报分析系统 - 修改日志
+# QiuLab 周报分析系统 - 修改日志
 
 ## 2026-05-24: 检测周报中非活跃成员并提示更新状态
 

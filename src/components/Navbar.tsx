@@ -11,7 +11,6 @@ import {
   Settings,
   Menu,
   X,
-  FlaskConical,
 } from 'lucide-react';
 import KimiVersionDisplay from './KimiVersionDisplay';
 
@@ -34,9 +33,13 @@ export default function Navbar() {
     <nav className="bg-[#1e293b] text-white sticky top-0 z-50 shadow-md">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <FlaskConical className="w-6 h-6 text-cyan-400" />
-            <span className="text-lg font-bold tracking-wide">QiuLab周报分析</span>
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/logo.jpg"
+              alt="PAINT Lab"
+              className="h-9 w-auto rounded-md bg-white/10 object-contain"
+            />
+            <span className="text-lg font-bold tracking-wide">周报分析</span>
           </div>
 
           <div className="hidden md:flex items-center gap-1">

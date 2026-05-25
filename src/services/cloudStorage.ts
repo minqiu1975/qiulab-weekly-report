@@ -1,5 +1,5 @@
 /**
- * QLab-WID 统一云端存储服务 - 多Provider架构
+ * QiuLab-WID 统一云端存储服务 - 多Provider架构
  * 
  * 支持多种云端存储Provider，实现跨设备数据同步：
  * 1. localStorage 模式（默认）- 数据保存在浏览器本地
@@ -260,7 +260,7 @@ class RestApiProvider implements CloudProvider {
     return {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.apiKey}`,
-      'X-QLab-Version': '1.0',
+      'X-QiuLab-Version': '1.0',
     };
   }
 

@@ -1,5 +1,5 @@
 /**
- * QLab-WID 动态数据存储系统
+ * QiuLab-WID 动态数据存储系统
  *
  * 存储用户上传周报后生成的动态趋势数据和历史摘要。
  * 与静态基线数据（mockTrends.ts, mockAssessments.ts）合并后展示。
