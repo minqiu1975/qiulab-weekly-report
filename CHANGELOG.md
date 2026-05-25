@@ -1,5 +1,44 @@
 # QLab 周报分析系统 - 修改日志
 
+## 2026-05-25: 验证并修复「新增成员」和「周报自动发现新成员」功能
+
+### 背景
+验证 plan.md 中规划的两个待办功能的实现状态。
+
+### 验证结果
+
+**功能1: SettingsPage - 新增成员** — ✅ 已完整实现（代码已存在，无需新增）
+
+实现位置：`src/pages/SettingsPage.tsx` 第893-942行（逻辑）和第1002-1153行（UI）
+
+- 团队成员表格上方有「新增成员」按钮
+- 点击展开表单：姓名（必填）、角色类别、入学年份（学生）、学制（博士生）、研究方向、入组日期
+- `generateNewId(role)` 根据角色自动生成ID（d前缀博士生，x前缀本科生，p前缀其他）
+- `confirmAdd()` 保存到 localStorage 并通过 `saveMembers()` 触发云端同步
+- 保存后调用 `notifyPersonsUpdated()` 通知所有页面刷新
+
+**功能2: ReportUploader - 周报自动发现新成员** — ✅ 已完整实现（代码已存在，无需新增）
+
+实现位置：`src/components/ReportUploader.tsx`
+
+- `detectNamesFromReport(fullText, existingNames)`（第129-270行）：从周报文本智能提取人名
+  - 匹配带编号前缀的行（如 "1. 严巍"）
+  - 大量排除词库过滤工作内容短语（200+个动词、技术术语、研究方向）
+  - 常见姓氏验证 + 后续行工作内容检查
+- `saveNewMember()`（第369-420行）：保存新成员到 localStorage
+- `loadCurrentMembers()`（第354-366行）：加载当前成员列表
+- `new_members` phase UI（第1092-1188行）：显示检测到的新成员，可选择角色（默认当年入职博士生），可输入研究方向
+- 在 `proceedWithParse()` 中集成检测流程（第512-523行）
+
+### 修复
+
+#### `src/components/ReportUploader.tsx` - `saveNewMember()`
+- 修复：为博士生/本科生新成员添加 `programDuration` 字段（博士默认5年，本科默认4年）
+- 修复：根据 `enrollmentYear + programDuration` 自动生成 `graduationDate`（如 2026 + 5 = `2031-06-30`）
+- 之前：新成员缺少这两个字段，导致后续分析中博士生学制信息和毕业时间规划无法正确显示
+
+---
+
 ## 2026-05-24: 添加「强制本地上传」按钮
 
 ### 需求

@@ -394,6 +394,13 @@ function saveNewMember(
     const newId = `${prefix}${maxId + 1}`;
 
     const currentYear = new Date().getFullYear();
+    const isStudent = role === 'phd' || role === 'undergraduate';
+    const enrollmentYear = isStudent ? currentYear : undefined;
+    const programDuration = role === 'phd' ? 5 : role === 'undergraduate' ? 4 : undefined;
+    const graduationDate = isStudent && enrollmentYear && programDuration
+      ? `${enrollmentYear + programDuration}-06-30`
+      : undefined;
+
     const newMember = {
       id: newId,
       name,
@@ -404,7 +411,9 @@ function saveNewMember(
       joinDate: new Date().toISOString().slice(0, 10),
       status: 'active',
       group: role === 'alumni' ? 'alumni' : role,
-      enrollmentYear: (role === 'phd' || role === 'undergraduate') ? currentYear : undefined,
+      enrollmentYear,
+      programDuration,
+      graduationDate,
     };
 
     members.push(newMember);
