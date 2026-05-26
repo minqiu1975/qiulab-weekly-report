@@ -53,7 +53,7 @@ export default function LiteratureSearch() {
             </Button>
           </div>
           <div className="flex gap-2 mt-3 flex-wrap">
-            {['钙钛矿', '拓扑光子学', '光计算', '超表面', '量子光源'].map((kw) => (
+            {['SiC超透镜', '冰刻技术', 'AR光波导', '拓扑光子学', '光计算', '钙钛矿', '超表面', '飞秒激光加工'].map((kw) => (
               <button
                 key={kw}
                 onClick={() => { setQuery(kw); setHasSearched(true); }}
