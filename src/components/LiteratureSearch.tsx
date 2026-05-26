@@ -1,5 +1,4 @@
-import { useState, useMemo } from 'react';
-import { searchLiterature, MOCK_LITERATURE, getAllKeywords } from '../data/mockLiterature';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
@@ -7,40 +6,64 @@ import { Badge } from './ui/badge';
 import {
   Search,
   BookOpen,
-  Quote,
-  ExternalLink,
   Calendar,
   User,
 } from 'lucide-react';
 
-/** 从查询中提取匹配到的关键词 */
-function getMatchedKeywords(item: import('../types').LiteratureItem, query: string): string[] {
-  const q = query.toLowerCase().trim();
-  if (!q) return [];
-  return item.keywords.filter((kw) => kw.toLowerCase().includes(q));
+interface Paper {
+  id: number;
+  title: string;
+  authors: string[];
+  journal: string;
+  year: number;
 }
 
 export default function LiteratureSearch() {
   const [query, setQuery] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
+  const [allPapers, setAllPapers] = useState<Paper[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 从 papers.json 加载数据
+  useEffect(() => {
+    fetch('/papers.json')
+      .then(r => r.json())
+      .then(data => {
+        setAllPapers(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
-    return searchLiterature(query);
-  }, [query]);
+    const q = query.toLowerCase().trim();
+    return allPapers.filter((item) => {
+      if (item.title.toLowerCase().includes(q)) return true;
+      if (item.authors.some((a: string) => a.toLowerCase().includes(q))) return true;
+      if (item.journal?.toLowerCase().includes(q)) return true;
+      if (String(item.year).includes(q)) return true;
+      return false;
+    });
+  }, [query, allPapers]);
 
   const handleSearch = () => {
     setHasSearched(true);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+    if (e.key === 'Enter') handleSearch();
   };
 
-  // 动态获取中文关键词作为推荐标签
-  const suggestKeywords = useMemo(() => getAllKeywords(), []);
+  if (loading) {
+    return (
+      <div className="text-center py-12 text-slate-400 text-sm">
+        加载论文数据中...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -50,7 +73,7 @@ export default function LiteratureSearch() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="输入中文关键词（如：SiC超透镜、冰刻技术）或英文搜索..."
+                placeholder={`搜索 ${allPapers.length} 篇论文... 输入标题、作者、期刊或年份`}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -63,7 +86,7 @@ export default function LiteratureSearch() {
             </Button>
           </div>
           <div className="flex gap-2 mt-3 flex-wrap">
-            {suggestKeywords.map((kw) => (
+            {['SiC', 'metalens', 'ice lithography', 'perovskite', 'photonic', 'plasmonic', 'AR waveguide', 'femtosecond', 'metalens'].map((kw) => (
               <button
                 key={kw}
                 onClick={() => { setQuery(kw); setHasSearched(true); }}
@@ -81,21 +104,28 @@ export default function LiteratureSearch() {
           <CardHeader className="py-3 px-4">
             <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
               <BookOpen className="w-4 h-4 text-cyan-600" />
-              推荐文献 ({MOCK_LITERATURE.length}篇)
+              论文列表 ({allPapers.length}篇)
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <div className="space-y-3">
-              {MOCK_LITERATURE.slice(0, 6).map((item) => (
+            <div className="space-y-3 max-h-[600px] overflow-y-auto">
+              {allPapers.slice(0, 20).map((item) => (
                 <LiteratureCard key={item.id} item={item} query="" />
               ))}
+              {allPapers.length > 20 && (
+                <p className="text-center text-xs text-slate-400 py-2">
+                  ... 还有 {allPapers.length - 20} 篇论文，请使用搜索功能查找
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
       ) : results.length === 0 ? (
         <div className="text-center py-12 text-slate-400 text-sm">
           <p>未找到相关文献</p>
-          <p className="text-xs mt-1">可尝试关键词：SiC超透镜、冰刻技术、AR光波导、拓扑光子学、光计算、钙钛矿、超表面、飞秒激光加工</p>
+          <p className="text-xs mt-1">
+            可尝试关键词：SiC, metalens, ice lithography, perovskite, photonic, plasmonic, topological
+          </p>
         </div>
       ) : (
         <Card className="border-slate-200">
@@ -106,7 +136,7 @@ export default function LiteratureSearch() {
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[600px] overflow-y-auto">
               {results.map((item) => (
                 <LiteratureCard key={item.id} item={item} query={query} />
               ))}
@@ -118,79 +148,38 @@ export default function LiteratureSearch() {
   );
 }
 
-function LiteratureCard({ item, query }: { item: import('../types').LiteratureItem; query: string }) {
-  const [expanded, setExpanded] = useState(false);
-  const matchedKws = useMemo(() => getMatchedKeywords(item, query), [item, query]);
+function LiteratureCard({ item, query }: { item: Paper; query: string }) {
+  // 高亮匹配的文本
+  const highlight = (text: string, q: string) => {
+    if (!q) return text;
+    const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, i) =>
+      regex.test(part) ? <mark key={i} className="bg-cyan-100 text-cyan-800 rounded px-0.5">{part}</mark> : part
+    );
+  };
 
   return (
     <div className="p-3 rounded-lg bg-slate-50 border border-slate-100 hover:border-cyan-200 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          {/* 中文标题 */}
-          <h3 className="text-sm font-medium text-slate-900 leading-snug">{item.zhTitle}</h3>
-          {/* 英文标题（小字） */}
-          <p className="text-[11px] text-slate-500 mt-0.5 italic truncate">{item.title}</p>
-        </div>
-        <a
-          href={item.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-cyan-600 hover:text-cyan-700 flex-shrink-0 mt-0.5"
-        >
-          <ExternalLink className="w-4 h-4" />
-        </a>
-      </div>
-
-      {/* 关键词标签 */}
-      {item.keywords.length > 0 && (
-        <div className="flex gap-1 mt-1.5 flex-wrap">
-          {item.keywords.slice(0, 4).map((kw) => (
-            <Badge
-              key={kw}
-              variant="outline"
-              className={`text-[10px] px-1 py-0 h-4 ${matchedKws.includes(kw) ? 'border-cyan-300 bg-cyan-50 text-cyan-700' : 'text-slate-400'}`}
-            >
-              {kw}
+          <h3 className="text-sm font-medium text-slate-900 leading-snug">
+            {query ? highlight(item.title, query) : item.title}
+          </h3>
+          <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
+            <span className="flex items-center gap-1">
+              <User className="w-3 h-3" />
+              {item.authors.slice(0, 3).join(', ')}{item.authors.length > 3 ? ' et al.' : ''}
+            </span>
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              {item.year}
+            </span>
+            <Badge variant="outline" className="text-[10px] px-1">
+              {item.journal}
             </Badge>
-          ))}
-          {item.keywords.length > 4 && (
-            <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 text-slate-400">
-              +{item.keywords.length - 4}
-            </Badge>
-          )}
+          </div>
         </div>
-      )}
-
-      <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
-        <span className="flex items-center gap-1">
-          <User className="w-3 h-3" />
-          {item.authors.slice(0, 2).join(', ')}{item.authors.length > 2 ? ' et al.' : ''}
-        </span>
-        <span className="flex items-center gap-1">
-          <Calendar className="w-3 h-3" />
-          {item.year}
-        </span>
-        <Badge variant="outline" className="text-[10px] px-1">{item.source}</Badge>
-      </div>
-      <div className="mt-2">
-        <p className={`text-xs text-slate-600 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
-          {item.abstract}
-        </p>
-        {item.abstract.length > 120 && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs text-cyan-600 hover:text-cyan-700 mt-1"
-          >
-            {expanded ? '收起' : '展开摘要'}
-          </button>
-        )}
-      </div>
-      <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
-        <span className="flex items-center gap-1">
-          <Quote className="w-3 h-3" />
-          被引 {item.citationCount} 次
-        </span>
-        <span className="text-cyan-600 font-medium">相关度 {item.relevanceScore}%</span>
       </div>
     </div>
   );
