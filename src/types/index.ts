@@ -153,6 +153,8 @@ export interface PersonTrend {
 export interface LiteratureItem {
   id: string;
   title: string;
+  /** 中文标题（用于搜索和展示） */
+  zhTitle: string;
   authors: string[];
   abstract: string;
   year: number;
@@ -160,6 +162,8 @@ export interface LiteratureItem {
   url: string;
   citationCount: number;
   relevanceScore: number;
+  /** 搜索关键词（中英文，用于标签搜索） */
+  keywords: string[];
 }
 
 export interface CollaborationNode {
