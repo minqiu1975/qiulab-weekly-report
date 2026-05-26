@@ -16,6 +16,26 @@ interface Paper {
   authors: string[];
   journal: string;
   year: number;
+  keywords?: string[];
+}
+
+/** 高亮匹配文本 */
+function Highlight({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) return <>{text}</>;
+  const q = query.toLowerCase();
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const parts = text.split(regex);
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === q ? (
+          <mark key={i} className="bg-cyan-100 text-cyan-800 rounded px-0.5">{part}</mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
 }
 
 export default function LiteratureSearch() {
@@ -28,41 +48,51 @@ export default function LiteratureSearch() {
   useEffect(() => {
     fetch('/papers.json')
       .then(r => r.json())
-      .then(data => {
+      .then((data: Paper[]) => {
         setAllPapers(data);
         setLoading(false);
       })
-      .catch(() => {
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
+  // 搜索逻辑：匹配标题、作者、期刊、年份、关键词
   const results = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase().trim();
     return allPapers.filter((item) => {
+      // 1. 英文标题（忽略大小写）
       if (item.title.toLowerCase().includes(q)) return true;
-      if (item.authors.some((a: string) => a.toLowerCase().includes(q))) return true;
+      // 2. 作者
+      if (item.authors.some((a) => a.toLowerCase().includes(q))) return true;
+      // 3. 期刊
       if (item.journal?.toLowerCase().includes(q)) return true;
+      // 4. 年份
       if (String(item.year).includes(q)) return true;
+      // 5. 关键词（中英文）
+      if (item.keywords?.some((kw) => kw.toLowerCase().includes(q))) return true;
       return false;
     });
   }, [query, allPapers]);
 
-  const handleSearch = () => {
-    setHasSearched(true);
-  };
+  const handleSearch = () => setHasSearched(true);
+  const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === 'Enter') handleSearch(); };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSearch();
-  };
+  // 热门关键词（中英文混合）
+  const hotKeywords = useMemo(() => {
+    const kwSet = new Set<string>();
+    allPapers.forEach((p) => {
+      p.keywords?.forEach((kw) => {
+        // 只保留中文关键词和短英文关键词
+        if (/[\u4e00-\u9fff]/.test(kw) || kw.length <= 12) {
+          kwSet.add(kw);
+        }
+      });
+    });
+    return Array.from(kwSet).slice(0, 12);
+  }, [allPapers]);
 
   if (loading) {
-    return (
-      <div className="text-center py-12 text-slate-400 text-sm">
-        加载论文数据中...
-      </div>
-    );
+    return <div className="text-center py-12 text-slate-400 text-sm">加载论文数据中...</div>;
   }
 
   return (
@@ -73,7 +103,7 @@ export default function LiteratureSearch() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder={`搜索 ${allPapers.length} 篇论文... 输入标题、作者、期刊或年份`}
+                placeholder={`搜索 ${allPapers.length} 篇论文... 中英文标题、作者、关键词`}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -85,21 +115,25 @@ export default function LiteratureSearch() {
               搜索
             </Button>
           </div>
-          <div className="flex gap-2 mt-3 flex-wrap">
-            {['SiC', 'metalens', 'ice lithography', 'perovskite', 'photonic', 'plasmonic', 'AR waveguide', 'femtosecond', 'metalens'].map((kw) => (
-              <button
-                key={kw}
-                onClick={() => { setQuery(kw); setHasSearched(true); }}
-                className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-cyan-100 hover:text-cyan-700 transition-colors"
-              >
-                {kw}
-              </button>
-            ))}
-          </div>
+          {/* 热门关键词标签 */}
+          {hotKeywords.length > 0 && (
+            <div className="flex gap-2 mt-3 flex-wrap">
+              {hotKeywords.map((kw) => (
+                <button
+                  key={kw}
+                  onClick={() => { setQuery(kw); setHasSearched(true); }}
+                  className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-cyan-100 hover:text-cyan-700 transition-colors"
+                >
+                  {kw}
+                </button>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {!hasSearched ? (
+      {/* 初始状态：显示论文列表 */}
+      {!hasSearched && (
         <Card className="border-slate-200">
           <CardHeader className="py-3 px-4">
             <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
@@ -114,20 +148,26 @@ export default function LiteratureSearch() {
               ))}
               {allPapers.length > 20 && (
                 <p className="text-center text-xs text-slate-400 py-2">
-                  ... 还有 {allPapers.length - 20} 篇论文，请使用搜索功能查找
+                  ... 还有 {allPapers.length - 20} 篇，请使用搜索功能
                 </p>
               )}
             </div>
           </CardContent>
         </Card>
-      ) : results.length === 0 ? (
+      )}
+
+      {/* 搜索后无结果 */}
+      {hasSearched && results.length === 0 && (
         <div className="text-center py-12 text-slate-400 text-sm">
           <p>未找到相关文献</p>
           <p className="text-xs mt-1">
-            可尝试关键词：SiC, metalens, ice lithography, perovskite, photonic, plasmonic, topological
+            可尝试关键词：SiC、metalens、冰刻、钙钛矿、光子学、等离激元、光波导
           </p>
         </div>
-      ) : (
+      )}
+
+      {/* 搜索结果 */}
+      {hasSearched && results.length > 0 && (
         <Card className="border-slate-200">
           <CardHeader className="py-3 px-4">
             <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
@@ -149,23 +189,29 @@ export default function LiteratureSearch() {
 }
 
 function LiteratureCard({ item, query }: { item: Paper; query: string }) {
-  // 高亮匹配的文本
-  const highlight = (text: string, q: string) => {
-    if (!q) return text;
-    const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    const parts = text.split(regex);
-    return parts.map((part, i) =>
-      regex.test(part) ? <mark key={i} className="bg-cyan-100 text-cyan-800 rounded px-0.5">{part}</mark> : part
-    );
-  };
-
   return (
     <div className="p-3 rounded-lg bg-slate-50 border border-slate-100 hover:border-cyan-200 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
+          {/* 标题 */}
           <h3 className="text-sm font-medium text-slate-900 leading-snug">
-            {query ? highlight(item.title, query) : item.title}
+            <Highlight text={item.title} query={query} />
           </h3>
+          {/* 关键词标签 */}
+          {item.keywords && item.keywords.length > 0 && (
+            <div className="flex gap-1 mt-1.5 flex-wrap">
+              {item.keywords.slice(0, 5).map((kw) => (
+                <Badge
+                  key={kw}
+                  variant="outline"
+                  className={`text-[10px] px-1 py-0 h-4 ${kw.toLowerCase().includes(query.toLowerCase()) && query ? 'border-cyan-300 bg-cyan-50 text-cyan-700' : 'text-slate-500'}`}
+                >
+                  {kw}
+                </Badge>
+              ))}
+            </div>
+          )}
+          {/* 作者、年份、期刊 */}
           <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
             <span className="flex items-center gap-1">
               <User className="w-3 h-3" />

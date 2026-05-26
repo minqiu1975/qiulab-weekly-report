@@ -10,7 +10,13 @@
       "Min Qiu"
     ],
     "journal": "Advanced Optical Materials",
-    "year": 2025
+    "year": 2025,
+    "keywords": [
+      "飞秒激光",
+      "femtosecond",
+      "激光",
+      "laser"
+    ]
   },
   {
     "id": 342,
@@ -26,7 +32,17 @@
       "Min Qiu"
     ],
     "journal": "Advanced Materials",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "碳化硅",
+      "SiC",
+      "超透镜",
+      "metalens",
+      "激光",
+      "laser",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 340,
@@ -39,7 +55,11 @@
       "Min Qiu"
     ],
     "journal": "Case Studies in Thermal Engineering",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 338,
@@ -56,7 +76,8 @@
       "Min Qiu"
     ],
     "journal": "Advanced Science",
-    "year": 2024
+    "year": 2024,
+    "keywords": []
   },
   {
     "id": 336,
@@ -71,7 +92,8 @@
       "Min Qiu"
     ],
     "journal": "PhotoniX",
-    "year": 2024
+    "year": 2024,
+    "keywords": []
   },
   {
     "id": 335,
@@ -82,7 +104,8 @@
       "Min Qiu"
     ],
     "journal": "pp.L020101",
-    "year": 2024
+    "year": 2024,
+    "keywords": []
   },
   {
     "id": 334,
@@ -93,7 +116,11 @@
       "Min Qiu"
     ],
     "journal": "pp.24304-24316",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 333,
@@ -113,7 +140,11 @@
       "Daru Chen"
     ],
     "journal": "IEEE Transactions on Instrumentation and Measurement",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 332,
@@ -130,7 +161,11 @@
       "Min Qiu"
     ],
     "journal": "Physical Review B",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "碳化硅",
+      "SiC"
+    ]
   },
   {
     "id": 331,
@@ -150,7 +185,19 @@
       "Xiaoshuang Chen"
     ],
     "journal": "Laser & Photonics Reviews",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "飞秒激光",
+      "femtosecond",
+      "超透镜",
+      "metalens",
+      "光子学",
+      "photonic",
+      "激光",
+      "laser",
+      "石墨烯",
+      "graphene"
+    ]
   },
   {
     "id": 330,
@@ -167,7 +214,11 @@
       "Min Qiu"
     ],
     "journal": "Microelectronic Engineering",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "冰刻技术",
+      "ice lithography"
+    ]
   },
   {
     "id": 329,
@@ -181,7 +232,11 @@
       "Min Qiu"
     ],
     "journal": "pp.112180",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "冰刻技术",
+      "ice lithography"
+    ]
   },
   {
     "id": 328,
@@ -197,7 +252,13 @@
       "Min Qiu"
     ],
     "journal": "pp.5610-5617",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "超透镜",
+      "metalens",
+      "钙钛矿",
+      "perovskite"
+    ]
   },
   {
     "id": 327,
@@ -208,7 +269,13 @@
       "Min Qiu"
     ],
     "journal": "pp.2305121",
-    "year": 2024
+    "year": 2024,
+    "keywords": [
+      "力传感器",
+      "force sensor",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 321,
@@ -220,7 +287,8 @@
       "Min Qiu"
     ],
     "journal": "Microelectronic Engineering",
-    "year": 2023
+    "year": 2023,
+    "keywords": []
   },
   {
     "id": 318,
@@ -235,7 +303,11 @@
       "Pieter Geiregat"
     ],
     "journal": "Journal of Applied Physics",
-    "year": 2023
+    "year": 2023,
+    "keywords": [
+      "碳化硅",
+      "SiC"
+    ]
   },
   {
     "id": 300,
@@ -248,7 +320,13 @@
       "Min Qiu"
     ],
     "journal": "Nature Communications",
-    "year": 2023
+    "year": 2023,
+    "keywords": [
+      "激光",
+      "laser",
+      "结构色",
+      "structural color"
+    ]
   },
   {
     "id": 299,
@@ -263,7 +341,8 @@
       "Min Qiu"
     ],
     "journal": "pp.026005",
-    "year": 2022
+    "year": 2022,
+    "keywords": []
   },
   {
     "id": 298,
@@ -295,7 +374,17 @@
       "Min Qiu"
     ],
     "journal": "pp.653-664",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "飞秒激光",
+      "femtosecond",
+      "等离激元",
+      "plasmonic",
+      "激光",
+      "laser",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 297,
@@ -309,7 +398,11 @@
       "Min Qiu"
     ],
     "journal": "pp.7449-7456",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "钙钛矿",
+      "perovskite"
+    ]
   },
   {
     "id": 295,
@@ -328,7 +421,11 @@
       "Min Qiu"
     ],
     "journal": "pp.107692",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "钙钛矿",
+      "perovskite"
+    ]
   },
   {
     "id": 294,
@@ -343,7 +440,13 @@
       "Min Qiu"
     ],
     "journal": "pp.25536-25543",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "激光",
+      "laser",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 293,
@@ -357,7 +460,8 @@
       "Min Qiu"
     ],
     "journal": "Iss.14 pp.1-11",
-    "year": 2022
+    "year": 2022,
+    "keywords": []
   },
   {
     "id": 292,
@@ -369,7 +473,13 @@
       "Min Qiu"
     ],
     "journal": "pp.189",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "激光",
+      "laser"
+    ]
   },
   {
     "id": 291,
@@ -390,7 +500,11 @@
       "Min Qiu"
     ],
     "journal": "pp.9045-9052",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "冰刻技术",
+      "ice lithography"
+    ]
   },
   {
     "id": 290,
@@ -408,7 +522,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 1-9",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 289,
@@ -423,7 +541,8 @@
       "Min Qiu"
     ],
     "journal": "pp.171107",
-    "year": 2022
+    "year": 2022,
+    "keywords": []
   },
   {
     "id": 288,
@@ -438,7 +557,11 @@
       "Min Qiu"
     ],
     "journal": "pp.103440",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 287,
@@ -453,7 +576,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 2112894",
-    "year": 2022
+    "year": 2022,
+    "keywords": []
   },
   {
     "id": 286,
@@ -465,7 +589,11 @@
       "Min Qiu"
     ],
     "journal": "pp.2100561",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 285,
@@ -475,7 +603,15 @@
       "Min Qiu"
     ],
     "journal": "pp.1887-1895",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "碳化硅",
+      "SiC",
+      "等离激元",
+      "plasmonic",
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 284,
@@ -488,7 +624,8 @@
       "Min Qiu"
     ],
     "journal": "pp.122269",
-    "year": 2022
+    "year": 2022,
+    "keywords": []
   },
   {
     "id": 283,
@@ -501,7 +638,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 2479-2483",
-    "year": 2022
+    "year": 2022,
+    "keywords": []
   },
   {
     "id": 282,
@@ -512,7 +650,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1652-1658",
-    "year": 2022
+    "year": 2022,
+    "keywords": [
+      "冰刻技术",
+      "ice lithography"
+    ]
   },
   {
     "id": 281,
@@ -526,7 +668,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1-35",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 280,
@@ -544,7 +690,11 @@
       "Qiang Li"
     ],
     "journal": "pp.1290-1295",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 279,
@@ -562,7 +712,8 @@
       "Min Qiu"
     ],
     "journal": "pp.4125-4131",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 278,
@@ -579,7 +730,8 @@
       "Min Qiu"
     ],
     "journal": "pp.274-282",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 277,
@@ -596,7 +748,8 @@
       "Qiang Li"
     ],
     "journal": "pp.2100645",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 276,
@@ -610,7 +763,11 @@
       "Qiang Li"
     ],
     "journal": "pp.2000391",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "隐身",
+      "camouflage"
+    ]
   },
   {
     "id": 275,
@@ -626,7 +783,8 @@
       "Anpan Han"
     ],
     "journal": "pp.1-22",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 274,
@@ -641,7 +799,8 @@
       "Min Qiu"
     ],
     "journal": "pp.1-10",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 273,
@@ -659,7 +818,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1-8",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 272,
@@ -677,7 +840,8 @@
       "Min Qiu"
     ],
     "journal": "pp.977-983",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 271,
@@ -694,7 +858,8 @@
       "Federico Capasso"
     ],
     "journal": "pp.409-414",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 270,
@@ -711,7 +876,15 @@
       "Min Qiu"
     ],
     "journal": "pp.1-8",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "激光",
+      "laser",
+      "隐身",
+      "camouflage",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 269,
@@ -729,7 +902,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 3879-3886",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 268,
@@ -747,7 +924,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 5269-5276",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 267,
@@ -762,7 +943,11 @@
       "Min Qiu"
     ],
     "journal": "pp.9797058",
-    "year": 2021
+    "year": 2021,
+    "keywords": [
+      "钙钛矿",
+      "perovskite"
+    ]
   },
   {
     "id": 266,
@@ -775,7 +960,8 @@
       "Min Qiu"
     ],
     "journal": "pp.148265",
-    "year": 2021
+    "year": 2021,
+    "keywords": []
   },
   {
     "id": 265,
@@ -789,7 +975,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 22473-22477",
-    "year": 2020
+    "year": 2020,
+    "keywords": []
   },
   {
     "id": 264,
@@ -806,7 +993,11 @@
       "Min Qiu"
     ],
     "journal": "pp.8841-8846",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 263,
@@ -826,7 +1017,11 @@
       "Min Qiu"
     ],
     "journal": "pp.241105",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 262,
@@ -841,7 +1036,8 @@
       "Min Qiu"
     ],
     "journal": "pp.115627",
-    "year": 2020
+    "year": 2020,
+    "keywords": []
   },
   {
     "id": 261,
@@ -862,7 +1058,8 @@
       "ChengWei Qiu"
     ],
     "journal": "pp.2000030",
-    "year": 2020
+    "year": 2020,
+    "keywords": []
   },
   {
     "id": 260,
@@ -877,7 +1074,8 @@
       "Federico Capasso"
     ],
     "journal": "pp.436-440",
-    "year": 2020
+    "year": 2020,
+    "keywords": []
   },
   {
     "id": 259,
@@ -888,7 +1086,8 @@
       "Min Qiu"
     ],
     "journal": "pp.013901",
-    "year": 2020
+    "year": 2020,
+    "keywords": []
   },
   {
     "id": 258,
@@ -899,7 +1098,11 @@
       "Min Qiu"
     ],
     "journal": "pp.064052",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 257,
@@ -909,7 +1112,8 @@
       "Min Qiu"
     ],
     "journal": "pp.268-269",
-    "year": 2020
+    "year": 2020,
+    "keywords": []
   },
   {
     "id": 256,
@@ -923,7 +1127,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1436-1443",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 255,
@@ -941,7 +1149,13 @@
       "Min Qiu"
     ],
     "journal": "pp.1-8",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "隐身",
+      "camouflage",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 254,
@@ -956,7 +1170,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1177-1183",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 253,
@@ -969,7 +1187,13 @@
       "Min Qiu"
     ],
     "journal": "pp.111251",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "冰刻技术",
+      "ice lithography",
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 252,
@@ -984,7 +1208,15 @@
       "Min Qiu"
     ],
     "journal": "pp.104449",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "隐身",
+      "camouflage",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 251,
@@ -999,7 +1231,11 @@
       "Min Qiu"
     ],
     "journal": "pp.063902",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 250,
@@ -1014,7 +1250,11 @@
       "Min Qiu"
     ],
     "journal": "pp.114667",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 249,
@@ -1033,7 +1273,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1900162",
-    "year": 2020
+    "year": 2020,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 248,
@@ -1044,7 +1288,13 @@
       "Min Qiu"
     ],
     "journal": "pp.865-871",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "冰刻技术",
+      "ice lithography",
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 247,
@@ -1059,7 +1309,11 @@
       "Min Qiu"
     ],
     "journal": "pp.44030",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 246,
@@ -1073,7 +1327,11 @@
       "Min Qiu"
     ],
     "journal": "pp.93505",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 245,
@@ -1085,7 +1343,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1900595",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "石墨烯",
+      "graphene"
+    ]
   },
   {
     "id": 244,
@@ -1097,7 +1359,11 @@
       "Min Qiu. Marin Soljačić"
     ],
     "journal": "pp.1168-1174",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "碳化硅",
+      "SiC"
+    ]
   },
   {
     "id": 243,
@@ -1114,7 +1380,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 103998",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 242,
@@ -1129,7 +1399,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 1800807",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 241,
@@ -1148,7 +1422,11 @@
       "Min Qiu"
     ],
     "journal": "pp.1900162",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 240,
@@ -1169,7 +1447,13 @@
       "MV Zyuzin"
     ],
     "journal": "Journal of Physics: Conference Series 1410",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "碳化硅",
+      "SiC",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 239,
@@ -1180,7 +1464,8 @@
       "Min Qiu"
     ],
     "journal": "arXiv preprint arXiv:1909.03386",
-    "year": 2019
+    "year": 2019,
+    "keywords": []
   },
   {
     "id": 238,
@@ -1195,7 +1480,13 @@
       "Qiang Li"
     ],
     "journal": "Advanced Electronic Materials",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "纳米加工",
+      "nanofabrication",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 237,
@@ -1220,7 +1511,13 @@
       "Dong Xiang"
     ],
     "journal": "Light: Science & Applications",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 236,
@@ -1240,7 +1537,8 @@
       "Zhichao Ruan"
     ],
     "journal": "pp. 034043",
-    "year": 2019
+    "year": 2019,
+    "keywords": []
   },
   {
     "id": 235,
@@ -1254,7 +1552,8 @@
       "Min Qiu"
     ],
     "journal": "Science Advances",
-    "year": 2019
+    "year": 2019,
+    "keywords": []
   },
   {
     "id": 234,
@@ -1268,7 +1567,11 @@
       "Min Qiu"
     ],
     "journal": "ACS nano",
-    "year": 2019
+    "year": 2019,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 233,
@@ -1284,7 +1587,8 @@
       "Sergey I Bozhevolnyi"
     ],
     "journal": "pp. 396",
-    "year": 2019
+    "year": 2019,
+    "keywords": []
   },
   {
     "id": 232,
@@ -1301,7 +1605,13 @@
       "Min Qiu"
     ],
     "journal": "\" Tunable narrowband mid-infrared thermal emitter with a bilayer cavity enhanced Tamm plasmon\". Optics Letters",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 231,
@@ -1318,7 +1628,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 4989-4992",
-    "year": 2018
+    "year": 2018,
+    "keywords": []
   },
   {
     "id": 230,
@@ -1332,7 +1643,17 @@
       "Min Qiu"
     ],
     "journal": "Laser & Photonics Reviews",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "超透镜",
+      "metalens",
+      "光子学",
+      "photonic",
+      "激光",
+      "laser",
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 229,
@@ -1344,7 +1665,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 23918-23925",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 228,
@@ -1359,7 +1684,8 @@
       "Marin Soljačić"
     ],
     "journal": "pp. 4125-4131",
-    "year": 2018
+    "year": 2018,
+    "keywords": []
   },
   {
     "id": 227,
@@ -1375,7 +1701,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 5036–5041",
-    "year": 2018
+    "year": 2018,
+    "keywords": []
   },
   {
     "id": 226,
@@ -1390,7 +1717,13 @@
       "Min Qiu"
     ],
     "journal": "pp. 1–10",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "隐身",
+      "camouflage",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 225,
@@ -1402,7 +1735,13 @@
       "Min Qiu"
     ],
     "journal": "pp. 2312-2320",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 224,
@@ -1416,7 +1755,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 17772-17780",
-    "year": 2018
+    "year": 2018,
+    "keywords": []
   },
   {
     "id": 223,
@@ -1433,7 +1773,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 2422-2425",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 222,
@@ -1448,7 +1792,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 1295-1298",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 221,
@@ -1462,7 +1810,11 @@
       "Qiang Li"
     ],
     "journal": "Advanced Electronic Materials",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 220,
@@ -1481,7 +1833,11 @@
       "Qiang Li"
     ],
     "journal": "pp. 4415-4420",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 219,
@@ -1498,7 +1854,13 @@
       "Qiang Li"
     ],
     "journal": "pp. 071108",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 218,
@@ -1512,7 +1874,11 @@
       "Qiang Li"
     ],
     "journal": "pp.4279-4287",
-    "year": 2018
+    "year": 2018,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 217,
@@ -1527,7 +1893,11 @@
       "Qiang Li"
     ],
     "journal": "Optics Letters",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 216,
@@ -1541,7 +1911,8 @@
       "M. J. Ni"
     ],
     "journal": "Applied Energy",
-    "year": 2017
+    "year": 2017,
+    "keywords": []
   },
   {
     "id": 215,
@@ -1555,7 +1926,8 @@
       "Min Qiu"
     ],
     "journal": "AIP Advances",
-    "year": 2017
+    "year": 2017,
+    "keywords": []
   },
   {
     "id": 214,
@@ -1568,7 +1940,15 @@
       "Min Qiu"
     ],
     "journal": "The Journal of Physical Chemistry C",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "碳化硅",
+      "SiC",
+      "等离激元",
+      "plasmonic",
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 213,
@@ -1582,7 +1962,11 @@
       "H. Jang"
     ],
     "journal": "Optics Express",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 212,
@@ -1594,7 +1978,13 @@
       "F. J. García de Abajo"
     ],
     "journal": "ACS Nano",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 211,
@@ -1608,7 +1998,13 @@
       "Min Qiu"
     ],
     "journal": "",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 210,
@@ -1623,7 +2019,11 @@
       "S. H. Fan"
     ],
     "journal": "Nature Communications",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 209,
@@ -1642,7 +2042,13 @@
       "Qiang Li"
     ],
     "journal": "IEEE Photonics Journal",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 208,
@@ -1657,7 +2063,13 @@
       "Y. S. Kivshar"
     ],
     "journal": "Physical Review B",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "碳化硅",
+      "SiC",
+      "超透镜",
+      "metalens"
+    ]
   },
   {
     "id": 207,
@@ -1672,7 +2084,11 @@
       "Min Qiu"
     ],
     "journal": "Nano Letters",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 206,
@@ -1687,7 +2103,13 @@
       "Min Qiu"
     ],
     "journal": "",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "超透镜",
+      "metalens",
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 205,
@@ -1704,7 +2126,13 @@
       "Qiang Li"
     ],
     "journal": "pp. 101101",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 204,
@@ -1720,7 +2148,8 @@
       "Qiang Li"
     ],
     "journal": "pp. 081101",
-    "year": 2017
+    "year": 2017,
+    "keywords": []
   },
   {
     "id": 203,
@@ -1735,7 +2164,11 @@
       "Min Qiu"
     ],
     "journal": "Physical Review Letters",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "碳化硅",
+      "SiC"
+    ]
   },
   {
     "id": 202,
@@ -1750,7 +2183,11 @@
       "Min Qiu"
     ],
     "journal": "Light: Science & Applications",
-    "year": 2017
+    "year": 2017,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 201,
@@ -1761,7 +2198,8 @@
       "Min Qiu"
     ],
     "journal": "",
-    "year": 2016
+    "year": 2016,
+    "keywords": []
   },
   {
     "id": 200,
@@ -1776,7 +2214,8 @@
       "Min Qiu"
     ],
     "journal": "Scientific Reports",
-    "year": 2016
+    "year": 2016,
+    "keywords": []
   },
   {
     "id": 199,
@@ -1790,7 +2229,15 @@
       "Lech Wosinski"
     ],
     "journal": "IEEE Photonics Technology Letters",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 198,
@@ -1810,7 +2257,8 @@
       "N. A. Gippius"
     ],
     "journal": "Phys. Rev. B",
-    "year": 2016
+    "year": 2016,
+    "keywords": []
   },
   {
     "id": 197,
@@ -1824,7 +2272,13 @@
       "Min Qiu"
     ],
     "journal": "IEEE Photonics Journal",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 196,
@@ -1839,7 +2293,11 @@
       "Min Qiu"
     ],
     "journal": "Applied Physics Letters",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "碳化硅",
+      "SiC"
+    ]
   },
   {
     "id": 195,
@@ -1855,7 +2313,13 @@
       "Min Qiu"
     ],
     "journal": "Applied Physics Letters",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "碳化硅",
+      "SiC",
+      "激光",
+      "laser"
+    ]
   },
   {
     "id": 194,
@@ -1877,7 +2341,11 @@
       "D. X. Zhang"
     ],
     "journal": "Applied Optics",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 193,
@@ -1888,7 +2356,13 @@
       "Min Qiu"
     ],
     "journal": "Scientific Reports",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 192,
@@ -1900,7 +2374,8 @@
       "Min Qiu"
     ],
     "journal": "Nanoscale",
-    "year": 2016
+    "year": 2016,
+    "keywords": []
   },
   {
     "id": 191,
@@ -1916,7 +2391,11 @@
       "Min Qiu"
     ],
     "journal": "",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 190,
@@ -1927,7 +2406,11 @@
       "Qiang Li"
     ],
     "journal": "",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 189,
@@ -1939,7 +2422,11 @@
       "Boyang Ding"
     ],
     "journal": "Plasmonics",
-    "year": 2016
+    "year": 2016,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 188,
@@ -1952,7 +2439,11 @@
       "Min Qiu"
     ],
     "journal": "J. Nanophoton",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 187,
@@ -1969,7 +2460,11 @@
       "Min Qiu"
     ],
     "journal": "Appl. Phys. Lett",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 186,
@@ -1984,7 +2479,11 @@
       "Qiang Li"
     ],
     "journal": "Scientific Reports 5",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 185,
@@ -1998,7 +2497,8 @@
       "Zhichao Ruan"
     ],
     "journal": "pp 5513–5518",
-    "year": 2015
+    "year": 2015,
+    "keywords": []
   },
   {
     "id": 184,
@@ -2012,7 +2512,11 @@
       "Boyang Ding"
     ],
     "journal": "J. Phys. Chem. C",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 183,
@@ -2025,7 +2529,8 @@
       "Boyang Ding"
     ],
     "journal": "Phys. Status Solidi B",
-    "year": 2015
+    "year": 2015,
+    "keywords": []
   },
   {
     "id": 182,
@@ -2036,7 +2541,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 031109",
-    "year": 2015
+    "year": 2015,
+    "keywords": []
   },
   {
     "id": 181,
@@ -2049,7 +2555,11 @@
       "Min Yan"
     ],
     "journal": "pp. 15031",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 180,
@@ -2061,7 +2571,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 305104",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 179,
@@ -2074,7 +2588,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 1-8",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 178,
@@ -2087,7 +2605,11 @@
       "Min Qiu"
     ],
     "journal": "pp 911-918",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 177,
@@ -2099,7 +2621,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 064103",
-    "year": 2015
+    "year": 2015,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 176,
@@ -2111,7 +2637,11 @@
       "Min Qiu"
     ],
     "journal": "Optics Express",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 175,
@@ -2122,7 +2652,8 @@
       "Richard J Blaikie"
     ],
     "journal": "Optics Express",
-    "year": 2014
+    "year": 2014,
+    "keywords": []
   },
   {
     "id": 174,
@@ -2137,7 +2668,11 @@
       "Min Qiu"
     ],
     "journal": "Optics Express",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 173,
@@ -2153,7 +2688,15 @@
       "Qiang Li & Min Qiu"
     ],
     "journal": "pp. 1-4",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "激光",
+      "laser",
+      "热管理",
+      "thermal",
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 172,
@@ -2165,7 +2708,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 045414",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 171,
@@ -2178,7 +2725,8 @@
       "Min Yan"
     ],
     "journal": "pp. 061110",
-    "year": 2014
+    "year": 2014,
+    "keywords": []
   },
   {
     "id": 170,
@@ -2193,7 +2741,11 @@
       "Min Qiu"
     ],
     "journal": "Optics Letters",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 169,
@@ -2205,7 +2757,11 @@
       "Shanhui Fan"
     ],
     "journal": "Optics Letters",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 168,
@@ -2221,7 +2777,8 @@
       "Min Qiu"
     ],
     "journal": "pp.221107",
-    "year": 2014
+    "year": 2014,
+    "keywords": []
   },
   {
     "id": 167,
@@ -2234,7 +2791,11 @@
       "Min Qiu"
     ],
     "journal": "Optics Letters",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 166,
@@ -2247,7 +2808,15 @@
       "Min Qiu"
     ],
     "journal": "pp 1197-1205",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 165,
@@ -2260,7 +2829,11 @@
       "L Wosinski"
     ],
     "journal": "pp. 8490-8502",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 164,
@@ -2277,7 +2850,8 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2014
+    "year": 2014,
+    "keywords": []
   },
   {
     "id": 163,
@@ -2289,7 +2863,15 @@
       "Min Qiu"
     ],
     "journal": "Plasmonics",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal",
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 162,
@@ -2303,7 +2885,11 @@
       "Min Qiu"
     ],
     "journal": "Optics Letters",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 161,
@@ -2314,7 +2900,11 @@
       "Min Qiu"
     ],
     "journal": "Journal of Optics",
-    "year": 2014
+    "year": 2014,
+    "keywords": [
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 160,
@@ -2329,7 +2919,8 @@
       "Min Qiu"
     ],
     "journal": "Nanoscale",
-    "year": 2014
+    "year": 2014,
+    "keywords": []
   },
   {
     "id": 159,
@@ -2341,7 +2932,11 @@
       "Min Qiu"
     ],
     "journal": "pp. 261108",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 158,
@@ -2355,7 +2950,11 @@
       "J.Y"
     ],
     "journal": "pp. 4500608",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 157,
@@ -2366,7 +2965,11 @@
       "E.; Yang Xu ; Min Qiu; Xing-Chang Wei; Er-Ping Li"
     ],
     "journal": "pp. 4601809",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 156,
@@ -2378,7 +2981,15 @@
       "Min Qiu"
     ],
     "journal": "Journal of Lightwave Technology",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 155,
@@ -2390,7 +3001,11 @@
       "Min Qiu"
     ],
     "journal": "Optics Express",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 154,
@@ -2401,7 +3016,11 @@
       "Min Qiu"
     ],
     "journal": "Phys. Lett. A",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "色心",
+      "color center"
+    ]
   },
   {
     "id": 153,
@@ -2416,7 +3035,8 @@
       "Min Qiu"
     ],
     "journal": "pp. 2247-2249",
-    "year": 2013
+    "year": 2013,
+    "keywords": []
   },
   {
     "id": 152,
@@ -2430,7 +3050,13 @@
       "Qiang Li"
     ],
     "journal": "Opt. Express 21",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 151,
@@ -2442,7 +3068,11 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express 21",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 150,
@@ -2455,7 +3085,8 @@
       "Min Qiu"
     ],
     "journal": "Appl. Phys. Lett",
-    "year": 2013
+    "year": 2013,
+    "keywords": []
   },
   {
     "id": 149,
@@ -2465,7 +3096,11 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 148,
@@ -2479,7 +3114,8 @@
       "Min Yan"
     ],
     "journal": "pp. 6697-6706",
-    "year": 2013
+    "year": 2013,
+    "keywords": []
   },
   {
     "id": 147,
@@ -2494,7 +3130,11 @@
       "CW Qiu"
     ],
     "journal": "Nanoscale",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 146,
@@ -2507,7 +3147,13 @@
       "Min Qiu"
     ],
     "journal": "pp. 1639-1644",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 145,
@@ -2518,7 +3164,13 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express 21",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 144,
@@ -2530,7 +3182,8 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2013
+    "year": 2013,
+    "keywords": []
   },
   {
     "id": 143,
@@ -2542,7 +3195,13 @@
       "Zouhdi. S"
     ],
     "journal": "Opt. Lett",
-    "year": 2012
+    "year": 2012,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "纳米加工",
+      "nanofabrication"
+    ]
   },
   {
     "id": 142,
@@ -2556,7 +3215,11 @@
       "Y"
     ],
     "journal": "Appl. Phys. Lett",
-    "year": 2012
+    "year": 2012,
+    "keywords": [
+      "色心",
+      "color center"
+    ]
   },
   {
     "id": 141,
@@ -2568,7 +3231,15 @@
       "Min Qiu"
     ],
     "journal": "ACS Nano",
-    "year": 2012
+    "year": 2012,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "纳米加工",
+      "nanofabrication",
+      "热管理",
+      "thermal"
+    ]
   },
   {
     "id": 140,
@@ -2582,7 +3253,13 @@
       "Min Qiu"
     ],
     "journal": "IEEE Journal of Selected Topics in Quantum Electronics",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "色心",
+      "color center"
+    ]
   },
   {
     "id": 139,
@@ -2598,7 +3275,8 @@
       "Y. Su"
     ],
     "journal": "Electron. Lett.",
-    "year": 2011
+    "year": 2011,
+    "keywords": []
   },
   {
     "id": 138,
@@ -2611,7 +3289,13 @@
       "Alexander M. Bratkovsky"
     ],
     "journal": "Opt. Express 19",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 137,
@@ -2625,7 +3309,15 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "热管理",
+      "thermal",
+      "金纳米颗粒",
+      "gold nanoparticle"
+    ]
   },
   {
     "id": 136,
@@ -2636,7 +3328,8 @@
       "Min Qiu"
     ],
     "journal": "J. Opt. Soc. Am. A",
-    "year": 2011
+    "year": 2011,
+    "keywords": []
   },
   {
     "id": 135,
@@ -2650,7 +3343,11 @@
       "Limin Tong"
     ],
     "journal": "Phys. Rev. A",
-    "year": 2013
+    "year": 2013,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 134,
@@ -2663,7 +3360,8 @@
       "Min Qiu"
     ],
     "journal": "J. Appl. Phys",
-    "year": 2011
+    "year": 2011,
+    "keywords": []
   },
   {
     "id": 133,
@@ -2675,7 +3373,13 @@
       "Min Qiu"
     ],
     "journal": "J. Opt.",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 132,
@@ -2687,7 +3391,11 @@
       "Min Qiu"
     ],
     "journal": "J. Opt.",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 131,
@@ -2698,7 +3406,11 @@
       "Min Qiu"
     ],
     "journal": "Phys. Rev. B",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 130,
@@ -2709,7 +3421,11 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 129,
@@ -2720,7 +3436,8 @@
       "Min Qiu"
     ],
     "journal": "J. Opt.",
-    "year": 2010
+    "year": 2010,
+    "keywords": []
   },
   {
     "id": 128,
@@ -2733,7 +3450,13 @@
       "Min Qiu"
     ],
     "journal": "Opt. Comm.",
-    "year": 2011
+    "year": 2011,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 127,
@@ -2744,7 +3467,11 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "隐身",
+      "camouflage"
+    ]
   },
   {
     "id": 126,
@@ -2762,7 +3489,13 @@
       "Min Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 125,
@@ -2776,7 +3509,11 @@
       "Y. Zhang"
     ],
     "journal": "Opt. Express",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 124,
@@ -2789,7 +3526,11 @@
       "Min Qiu"
     ],
     "journal": "Opt. Lett.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 123,
@@ -2799,7 +3540,13 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 122,
@@ -2813,7 +3560,11 @@
       "Min Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 121,
@@ -2824,7 +3575,8 @@
       "L. Zhou"
     ],
     "journal": "Front. Phys. China",
-    "year": 2010
+    "year": 2010,
+    "keywords": []
   },
   {
     "id": 120,
@@ -2835,7 +3587,11 @@
       "Min Qiu"
     ],
     "journal": "Front. Phys. China",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 119,
@@ -2850,7 +3606,11 @@
       "and J. Y. Andersson"
     ],
     "journal": "Appl. Phys. Lett.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "色心",
+      "color center"
+    ]
   },
   {
     "id": 118,
@@ -2863,7 +3623,13 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "等离激元",
+      "plasmonic",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 117,
@@ -2876,7 +3642,8 @@
       "Min Qiu"
     ],
     "journal": "Opt. Express.",
-    "year": 2010
+    "year": 2010,
+    "keywords": []
   },
   {
     "id": 116,
@@ -2888,7 +3655,11 @@
       "Min Qiu"
     ],
     "journal": "Opt. Comm.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 115,
@@ -2899,7 +3670,11 @@
       "Min Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
-    "year": 2010
+    "year": 2010,
+    "keywords": [
+      "隐身",
+      "camouflage"
+    ]
   },
   {
     "id": 114,
@@ -2910,7 +3685,13 @@
       "Min Qiu"
     ],
     "journal": "Photonics Letters of Poland",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 113,
@@ -2923,7 +3704,11 @@
       "Y. Su"
     ],
     "journal": "Electron. Lett.",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 112,
@@ -2940,7 +3725,13 @@
       "L. M. Tong"
     ],
     "journal": "Nano Lett.",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "光子学",
+      "photonic",
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 111,
@@ -2951,7 +3742,8 @@
       "Min Qiu"
     ],
     "journal": "J. Opt. Soc. Am. B",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 110,
@@ -2966,7 +3758,11 @@
       "Min Qiu"
     ],
     "journal": "J. Lightwave Technol.",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "光子学",
+      "photonic"
+    ]
   },
   {
     "id": 109,
@@ -2981,7 +3777,8 @@
       "Y. Su"
     ],
     "journal": "Appl. Opt.",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 108,
@@ -2997,7 +3794,8 @@
       "Y.K. Su"
     ],
     "journal": "J. Lightwave Technol.",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 107,
@@ -3013,7 +3811,8 @@
       "Y.K. Su"
     ],
     "journal": "Opt. Communications",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 106,
@@ -3028,7 +3827,8 @@
       "L. Zhou"
     ],
     "journal": "Phys. Rev. A",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 105,
@@ -3043,7 +3843,11 @@
       "L.M. Tong"
     ],
     "journal": "Appl. Opt.",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "光波导",
+      "waveguide"
+    ]
   },
   {
     "id": 104,
@@ -3057,7 +3861,8 @@
       "L.M. Tong"
     ],
     "journal": "Opt. Express",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 103,
@@ -3069,7 +3874,11 @@
       "Min Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "等离激元",
+      "plasmonic"
+    ]
   },
   {
     "id": 102,
@@ -3080,7 +3889,8 @@
       "Min Qiu"
     ],
     "journal": "Phys. Rev. B",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 101,
@@ -3094,7 +3904,8 @@
       "Y.K. Su"
     ],
     "journal": "Chin. Opt. Lett.",
-    "year": 2009
+    "year": 2009,
+    "keywords": []
   },
   {
     "id": 100,
@@ -3107,6 +3918,10 @@
       "Y.K. Su"
     ],
     "journal": "J. Opt. A: Pure Appl. Opt.",
-    "year": 2009
+    "year": 2009,
+    "keywords": [
+      "隐身",
+      "camouflage"
+    ]
   }
 ]
