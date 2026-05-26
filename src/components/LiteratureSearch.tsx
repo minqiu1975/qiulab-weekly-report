@@ -44,15 +44,22 @@ export default function LiteratureSearch() {
   const [allPapers, setAllPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 从 papers.json 加载数据
+  // 从 papers.json 加载数据（使用相对路径适配子路径部署）
   useEffect(() => {
-    fetch('/papers.json')
-      .then(r => r.json())
+    fetch('./papers.json')
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((data: Paper[]) => {
+        console.log('[Literature] Loaded', data.length, 'papers');
         setAllPapers(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error('[Literature] Failed to load papers:', err);
+        setLoading(false);
+      });
   }, []);
 
   // 搜索逻辑：匹配标题、作者、期刊、年份、关键词
