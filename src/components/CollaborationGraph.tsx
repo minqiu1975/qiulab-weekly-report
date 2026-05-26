@@ -1,70 +1,114 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { CollaborationNode } from '../types';
-import { MOCK_COLLABORATIONS } from '../data/mockCollaborations';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Badge } from './ui/badge';
-import { Users, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Users, ZoomIn, ZoomOut, RotateCcw, Loader2 } from 'lucide-react';
 
-interface SimNode extends CollaborationNode {
+interface CollabNode {
+  id: string;
+  name: string;
+  paperCount: number;
+  group: string;
   x: number;
   y: number;
   vx: number;
   vy: number;
 }
 
+interface CollabData {
+  nodes: { id: string; name: string; paperCount: number; group: string }[];
+  links: { source: string; target: string; value: number }[];
+}
+
+const GROUP_COLORS: Record<string, string> = {
+  core: '#d97706',
+  active: '#0891b2',
+  contributor: '#10b981',
+};
+
+const GROUP_LABELS: Record<string, string> = {
+  core: '核心作者 (≥20篇)',
+  active: '活跃作者 (10-19篇)',
+  contributor: '贡献作者 (3-9篇)',
+};
+
 interface Props {
   width?: number;
   height?: number;
+  onNodeHover?: (name: string | null) => void;
 }
 
-export default function CollaborationGraph({ width = 800, height = 500 }: Props) {
+export default function CollaborationGraph({ width = 800, height = 520, onNodeHover }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
-  const nodesRef = useRef<SimNode[]>([]);
+  const nodesRef = useRef<CollabNode[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [data, setData] = useState<CollabData | null>(null);
+  const [loading, setLoading] = useState(true);
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
 
+  // 加载真实论文合作数据
+  useEffect(() => {
+    fetch('./collaboration.json')
+      .then((r) => r.json())
+      .then((d: CollabData) => {
+        setData(d);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   const initNodes = useCallback(() => {
+    if (!data) return;
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = Math.min(width, height) * 0.35;
+    const radius = Math.min(width, height) * 0.3;
 
-    nodesRef.current = MOCK_COLLABORATIONS.nodes.map((n, i) => {
-      const angle = (i / MOCK_COLLABORATIONS.nodes.length) * Math.PI * 2;
+    // 按论文数量排序，核心作者放中心
+    const sorted = [...data.nodes].sort((a, b) => b.paperCount - a.paperCount);
+
+    nodesRef.current = sorted.map((n, i) => {
+      // 核心作者放在内圈，其他放在外圈
+      const r = n.group === 'core' ? radius * 0.5 : n.group === 'active' ? radius * 0.8 : radius;
+      const angle = (i / sorted.length) * Math.PI * 2 + (n.group === 'core' ? 0 : Math.PI / 4);
       return {
         ...n,
-        x: centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 60,
-        y: centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 60,
+        x: centerX + Math.cos(angle) * r + (Math.random() - 0.5) * 40,
+        y: centerY + Math.sin(angle) * r + (Math.random() - 0.5) * 40,
         vx: 0,
         vy: 0,
       };
     });
-  }, [width, height]);
+  }, [data, width, height]);
 
   useEffect(() => {
     initNodes();
   }, [initNodes]);
 
+  // 绘制图表
   useEffect(() => {
+    if (!data || nodesRef.current.length === 0) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const links = MOCK_COLLABORATIONS.links.map((l) => ({
+    const links = data.links.map((l) => ({
       ...l,
       sourceNode: nodesRef.current.find((n) => n.id === l.source)!,
       targetNode: nodesRef.current.find((n) => n.id === l.target)!,
     }));
 
+    const maxVal = Math.max(...data.links.map((l) => l.value));
+    const minVal = Math.min(...data.links.map((l) => l.value));
+
     const simulate = () => {
       const nodes = nodesRef.current;
-      const k = 0.05;
-      const repulsion = 800;
+      const k = 0.04;
+      const repulsion = 600;
       const centerX = width / 2;
       const centerY = height / 2;
 
@@ -88,7 +132,8 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
         const dx = link.targetNode.x - link.sourceNode.x;
         const dy = link.targetNode.y - link.sourceNode.y;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const force = (dist - 80) * k * link.strength;
+        const normalized = (link.value - minVal) / (maxVal - minVal || 1);
+        const force = (dist - 60 - normalized * 40) * k;
         const fx = (dx / dist) * force;
         const fy = (dy / dist) * force;
         link.sourceNode.vx += fx;
@@ -100,10 +145,10 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
       for (const n of nodes) {
         const dx = centerX - n.x;
         const dy = centerY - n.y;
-        n.vx += dx * 0.001;
-        n.vy += dy * 0.001;
-        n.vx *= 0.85;
-        n.vy *= 0.85;
+        n.vx += dx * 0.002;
+        n.vy += dy * 0.002;
+        n.vx *= 0.88;
+        n.vy *= 0.88;
         n.x += n.vx;
         n.y += n.vy;
         n.x = Math.max(30, Math.min(width - 30, n.x));
@@ -115,45 +160,77 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
       ctx.translate(pan.x, pan.y);
       ctx.scale(zoom, zoom);
 
+      // 绘制连线
       for (const link of links) {
         if (!link.sourceNode || !link.targetNode) continue;
+        const normalized = (link.value - minVal) / (maxVal - minVal || 1);
+
+        // 高亮与悬停节点相关的连线
+        const isRelated = hoveredNode &&
+          ((link.source === hoveredNode && link.target === hoveredNode) ||
+           (link.source === hoveredNode || link.target === hoveredNode));
+        const isDimmed = hoveredNode && !isRelated;
+
         ctx.beginPath();
         ctx.moveTo(link.sourceNode.x, link.sourceNode.y);
         ctx.lineTo(link.targetNode.x, link.targetNode.y);
-        ctx.strokeStyle = `rgba(8, 145, 178, ${link.strength * 0.4})`;
-        ctx.lineWidth = link.strength * 2;
+        ctx.strokeStyle = isDimmed
+          ? 'rgba(200,210,220,0.15)'
+          : isRelated
+            ? `rgba(8, 145, 178, ${0.3 + normalized * 0.5})`
+            : `rgba(148, 163, 184, ${0.15 + normalized * 0.25})`;
+        ctx.lineWidth = isRelated ? 1.5 + normalized * 2 : 0.5 + normalized;
         ctx.stroke();
+
+        // 在线上显示合作次数
+        if (isRelated && normalized > 0.3) {
+          const mx = (link.sourceNode.x + link.targetNode.x) / 2;
+          const my = (link.sourceNode.y + link.targetNode.y) / 2;
+          ctx.font = 'bold 9px sans-serif';
+          ctx.fillStyle = '#0891b2';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${link.value}`, mx, my - 4);
+        }
       }
 
+      // 绘制节点
       for (const n of nodes) {
         const isHovered = hoveredNode === n.id;
         const isConnected = hoveredNode && links.some(
-          (l) =>
-            (l.source === hoveredNode && l.target === n.id) ||
-            (l.target === hoveredNode && l.source === n.id)
+          (l) => (l.source === hoveredNode && l.target === n.id) ||
+                 (l.target === hoveredNode && l.source === n.id)
         );
+        const isDimmed = hoveredNode && !isHovered && !isConnected;
+
+        const radius = 5 + Math.sqrt(n.paperCount) * 0.6;
+        const color = GROUP_COLORS[n.group] || '#94a3b8';
+
+        // 发光效果（核心作者）
+        if (n.group === 'core' && !isDimmed) {
+          const gradient = ctx.createRadialGradient(n.x, n.y, radius * 0.5, n.x, n.y, radius * 2.5);
+          gradient.addColorStop(0, color + '20');
+          gradient.addColorStop(1, 'transparent');
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, radius * 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
 
         ctx.beginPath();
-        ctx.arc(n.x, n.y, isHovered ? 10 : 7, 0, Math.PI * 2);
-        if (n.role === 'researcher') {
-          ctx.fillStyle = isHovered ? '#b45309' : '#d97706';
-        } else if (n.role === 'postdoc') {
-          ctx.fillStyle = isHovered ? '#0891b2' : '#06b6d4';
-        } else {
-          ctx.fillStyle = isHovered ? '#059669' : '#10b981';
-        }
-        if (hoveredNode && !isHovered && !isConnected) {
-          ctx.fillStyle = '#cbd5e1';
-        }
+        ctx.arc(n.x, n.y, isHovered ? radius + 3 : radius, 0, Math.PI * 2);
+        ctx.fillStyle = isDimmed ? '#e2e8f0' : color;
         ctx.fill();
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = isHovered ? '#fff' : isDimmed ? '#cbd5e1' : '#fff';
+        ctx.lineWidth = isHovered ? 3 : 2;
         ctx.stroke();
 
-        ctx.font = `${isHovered ? 'bold 12px' : '11px'} sans-serif`;
-        ctx.fillStyle = hoveredNode && !isHovered && !isConnected ? '#94a3b8' : '#334155';
-        ctx.textAlign = 'center';
-        ctx.fillText(n.name, n.x, n.y + (isHovered ? 18 : 16));
+        // 论文数标签
+        if ((isHovered || n.group === 'core') && !isDimmed) {
+          ctx.font = `${isHovered ? 'bold 11px' : '10px'} sans-serif`;
+          ctx.fillStyle = isDimmed ? '#94a3b8' : '#334155';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${n.name} (${n.paperCount})`, n.x, n.y + radius + (isHovered ? 16 : 14));
+        }
       }
 
       ctx.restore();
@@ -162,7 +239,7 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
 
     simulate();
     return () => cancelAnimationFrame(animRef.current);
-  }, [width, height, hoveredNode, zoom, pan]);
+  }, [data, width, height, hoveredNode, zoom, pan]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -181,11 +258,14 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
     }
 
     const found = nodesRef.current.find((n) => {
+      const radius = 5 + Math.sqrt(n.paperCount) * 0.6;
       const dx = mx - n.x;
       const dy = my - n.y;
-      return Math.sqrt(dx * dx + dy * dy) < 15;
+      return Math.sqrt(dx * dx + dy * dy) < radius + 5;
     });
-    setHoveredNode(found?.id || null);
+    const newHover = found?.id || null;
+    setHoveredNode(newHover);
+    onNodeHover?.(found?.name || null);
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -193,23 +273,27 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
     dragStart.current = { x: e.clientX, y: e.clientY };
   };
 
-  const handleMouseUp = () => {
-    isDragging.current = false;
-  };
+  const handleMouseUp = () => { isDragging.current = false; };
+  const resetView = () => { setZoom(1); setPan({ x: 0, y: 0 }); };
 
-  const resetView = () => {
-    setZoom(1);
-    setPan({ x: 0, y: 0 });
-  };
-
-  const hoveredData = hoveredNode
-    ? MOCK_COLLABORATIONS.nodes.find((n) => n.id === hoveredNode)
+  // 获取悬停节点数据
+  const hoveredData = hoveredNode && data
+    ? data.nodes.find((n) => n.id === hoveredNode)
     : null;
-  const connectedLinks = hoveredNode
-    ? MOCK_COLLABORATIONS.links.filter(
-        (l) => l.source === hoveredNode || l.target === hoveredNode
-      )
+  const connectedLinks = hoveredNode && data
+    ? data.links.filter((l) => l.source === hoveredNode || l.target === hoveredNode)
     : [];
+
+  if (loading) {
+    return (
+      <Card className="border-slate-200">
+        <CardContent className="p-8 text-center">
+          <Loader2 className="w-6 h-6 animate-spin text-cyan-600 mx-auto" />
+          <p className="text-sm text-slate-400 mt-2">加载合作网络数据...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -217,7 +301,7 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
         <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
             <Users className="w-4 h-4 text-cyan-600" />
-            协作关系网络
+            PAINT Lab 论文合作网络（2009-2025，216篇论文）
           </CardTitle>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="sm" onClick={() => setZoom((z) => Math.min(z + 0.2, 3))}>
@@ -244,37 +328,43 @@ export default function CollaborationGraph({ width = 800, height = 500 }: Props)
             onMouseLeave={handleMouseUp}
           />
           <div className="flex items-center gap-4 mt-3 text-xs text-slate-500">
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-500" />研究员</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-cyan-500" />博后</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />博士生</span>
-            <span className="ml-auto">拖拽平移 | 滚轮缩放</span>
+            {Object.entries(GROUP_COLORS).map(([key, color]) => (
+              <span key={key} className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+                {GROUP_LABELS[key]}
+              </span>
+            ))}
+            <span className="ml-auto text-slate-400">拖拽平移 | 悬停查看详情 | 滚轮缩放</span>
           </div>
         </CardContent>
       </Card>
 
-      {hoveredData && (
+      {/* 悬停节点详情 */}
+      {hoveredData && data && (
         <Card className="border-cyan-200 bg-cyan-50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <span className="font-medium text-slate-800">{hoveredData.name}</span>
               <Badge variant="outline" className="text-[10px]">
-                {hoveredData.role === 'researcher' ? '研究员' : hoveredData.role === 'postdoc' ? '博后' : '博士生'}
+                {GROUP_LABELS[hoveredData.group]}
               </Badge>
+              <span className="text-xs text-slate-500">{hoveredData.paperCount} 篇论文</span>
             </div>
             <div className="text-xs text-slate-600 space-y-1">
-              <div className="font-medium">协作连接 ({connectedLinks.length}):</div>
-              {connectedLinks.map((link, i) => {
+              <div className="font-medium">合作连接 ({connectedLinks.length}):</div>
+              {connectedLinks.sort((a, b) => b.value - a.value).slice(0, 8).map((link, i) => {
                 const otherId = link.source === hoveredNode ? link.target : link.source;
-                const other = MOCK_COLLABORATIONS.nodes.find((n) => n.id === otherId);
+                const other = data.nodes.find((n) => n.id === otherId);
                 return (
                   <div key={i} className="flex items-center gap-2">
                     <span className="text-slate-700">{other?.name}</span>
-                    <span className="text-slate-400">|</span>
-                    <span className="text-cyan-600">{link.topics.join(', ')}</span>
-                    <span className="text-slate-400">(强度: {(link.strength * 100).toFixed(0)}%)</span>
+                    <span className="text-cyan-600 font-medium">{link.value} 篇</span>
                   </div>
                 );
               })}
+              {connectedLinks.length > 8 && (
+                <div className="text-slate-400">... 还有 {connectedLinks.length - 8} 个合作</div>
+              )}
             </div>
           </CardContent>
         </Card>
