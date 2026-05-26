@@ -1,0 +1,1838 @@
+{
+  "activeMembers": [
+    {
+      "id": "p1",
+      "name": "严巍",
+      "role": "副研究员",
+      "direction": "激光微纳加工、光热弹性驱动、微转子"
+    },
+    {
+      "id": "p3",
+      "name": "谢宇",
+      "role": "助理研究员",
+      "direction": "微纳光电子器件、GaAs纳米器件"
+    },
+    {
+      "id": "p4",
+      "name": "邵露青",
+      "role": "助理研究员",
+      "direction": "光计算、光子神经网络"
+    },
+    {
+      "id": "p5",
+      "name": "陈瑞溢",
+      "role": "助理研究员",
+      "direction": "SiC超透镜、AR光波导"
+    },
+    {
+      "id": "p6",
+      "name": "潘婧",
+      "role": "助理研究员",
+      "direction": "光计算、智能光子推断"
+    },
+    {
+      "id": "p7",
+      "name": "薛环一",
+      "role": "助理研究员",
+      "direction": "微纳加工、3D打印"
+    },
+    {
+      "id": "p8",
+      "name": "赵康",
+      "role": "博士生",
+      "direction": "微纳光电子器件"
+    },
+    {
+      "id": "p9",
+      "name": "吕未",
+      "role": "博士生",
+      "direction": "拓扑光子学、光传输"
+    },
+    {
+      "id": "p10",
+      "name": "孙歆语",
+      "role": "博士生",
+      "direction": "SiC超表面、AR显示"
+    },
+    {
+      "id": "p11",
+      "name": "刘天远",
+      "role": "博士生",
+      "direction": "拓扑光子学、赝自旋"
+    },
+    {
+      "id": "x1",
+      "name": "薛淑雯",
+      "role": "本科生",
+      "direction": "光电子器件"
+    },
+    {
+      "id": "d1",
+      "name": "陈博取",
+      "role": "博士生",
+      "direction": "SiC超透镜、AR光波导"
+    },
+    {
+      "id": "d2",
+      "name": "卢奕含",
+      "role": "博士生",
+      "direction": "钙钛矿、范德华接触"
+    },
+    {
+      "id": "d3",
+      "name": "齐利民",
+      "role": "博士生",
+      "direction": "冰刻技术、低温光刻"
+    },
+    {
+      "id": "d4",
+      "name": "孙潇雨",
+      "role": "博士生",
+      "direction": "SiC超表面、激光加工"
+    },
+    {
+      "id": "d5",
+      "name": "邓卉彤",
+      "role": "博士生",
+      "direction": "微纳光电子器件"
+    },
+    {
+      "id": "d6",
+      "name": "周子博",
+      "role": "博士生",
+      "direction": "光纤传感器、3D打印"
+    },
+    {
+      "id": "d7",
+      "name": "裴海月",
+      "role": "博士生",
+      "direction": "微纳光电子、光电探测"
+    },
+    {
+      "id": "d8",
+      "name": "杨治蓉",
+      "role": "博士生",
+      "direction": "冰刻技术、生物光刻"
+    },
+    {
+      "id": "d19",
+      "name": "王启南",
+      "role": "博士生",
+      "direction": "光计算、光子芯片"
+    },
+    {
+      "id": "d9",
+      "name": "马墨南",
+      "role": "博士生",
+      "direction": "拓扑光子学、光传输"
+    },
+    {
+      "id": "d10",
+      "name": "欧阳祖希",
+      "role": "博士生",
+      "direction": "SiC色心、量子传感"
+    },
+    {
+      "id": "d11",
+      "name": "李晓萱",
+      "role": "博士生",
+      "direction": "SiC超透镜、热管理"
+    },
+    {
+      "id": "d12",
+      "name": "欧玟",
+      "role": "博士生",
+      "direction": "微纳光电子器件"
+    },
+    {
+      "id": "d13",
+      "name": "章子鉴",
+      "role": "博士生",
+      "direction": "激光加工、结构色"
+    },
+    {
+      "id": "d14",
+      "name": "李志浩",
+      "role": "博士生",
+      "direction": "光计算、光子神经网络"
+    },
+    {
+      "id": "d15",
+      "name": "陈飞霖",
+      "role": "博士生",
+      "direction": "微纳光电子、光电探测"
+    },
+    {
+      "id": "d16",
+      "name": "林春博",
+      "role": "博士生",
+      "direction": "冰刻技术、纳米加工"
+    },
+    {
+      "id": "d17",
+      "name": "虞阳",
+      "role": "博士生",
+      "direction": "辐射制冷、热管理"
+    },
+    {
+      "id": "x3",
+      "name": "郑豪杰",
+      "role": "本科生",
+      "direction": "SiC激光加工"
+    },
+    {
+      "id": "x2",
+      "name": "王旭杰",
+      "role": "本科生",
+      "direction": "光电子器件"
+    },
+    {
+      "id": "x4",
+      "name": "陈代吉",
+      "role": "本科生",
+      "direction": "AR光波导"
+    }
+  ],
+  "paperCollaborations": [
+    {
+      "members": [
+        "严巍",
+        "吕未"
+      ],
+      "count": 4,
+      "topics": [
+        "光传输",
+        "弹性波驱动"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": [
+        "严巍",
+        "孙潇雨"
+      ],
+      "count": 3,
+      "topics": [
+        "SiC激光加工",
+        "飞秒激光"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": [
+        "陈博取",
+        "孙潇雨"
+      ],
+      "count": 2,
+      "topics": [
+        "SiC超透镜",
+        "AR光波导"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": [
+        "严巍",
+        "陈博取"
+      ],
+      "count": 2,
+      "topics": [
+        "SiC光学",
+        "微纳加工"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": [
+        "严巍",
+        "杨治蓉"
+      ],
+      "count": 1,
+      "topics": [
+        "冰刻技术",
+        "生物光刻"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": [
+        "严巍",
+        "郑豪杰"
+      ],
+      "count": 1,
+      "topics": [
+        "SiC激光加工"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": [
+        "严巍",
+        "裴海月"
+      ],
+      "count": 1,
+      "topics": [
+        "光电子器件"
+      ],
+      "source": "论文"
+    },
+    {
+      "members": "严巍",
+      "count": 27,
+      "topics": [
+        "激光加工",
+        "光操控",
+        "微纳器件"
+      ],
+      "source": "论文"
+    }
+  ],
+  "potentialCollaborations": [
+    {
+      "members": [
+        "陈瑞溢",
+        "孙歆语"
+      ],
+      "member_ids": [
+        "p5",
+        "p10"
+      ],
+      "overlap_topics": [
+        "AR光波导",
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC超表面、AR显示"
+      ],
+      "overlap_count": 3
+    },
+    {
+      "members": [
+        "陈瑞溢",
+        "陈博取"
+      ],
+      "member_ids": [
+        "p5",
+        "d1"
+      ],
+      "overlap_topics": [
+        "AR光波导",
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC超透镜、AR光波导"
+      ],
+      "overlap_count": 3
+    },
+    {
+      "members": [
+        "孙歆语",
+        "陈博取"
+      ],
+      "member_ids": [
+        "p10",
+        "d1"
+      ],
+      "overlap_topics": [
+        "AR光波导",
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超表面、AR显示",
+        "SiC超透镜、AR光波导"
+      ],
+      "overlap_count": 3
+    },
+    {
+      "members": [
+        "陈瑞溢",
+        "孙潇雨"
+      ],
+      "member_ids": [
+        "p5",
+        "d4"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC超表面、激光加工"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "陈瑞溢",
+        "李晓萱"
+      ],
+      "member_ids": [
+        "p5",
+        "d11"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC超透镜、热管理"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "孙歆语",
+        "孙潇雨"
+      ],
+      "member_ids": [
+        "p10",
+        "d4"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超表面、AR显示",
+        "SiC超表面、激光加工"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "孙歆语",
+        "李晓萱"
+      ],
+      "member_ids": [
+        "p10",
+        "d11"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超表面、AR显示",
+        "SiC超透镜、热管理"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "陈博取",
+        "孙潇雨"
+      ],
+      "member_ids": [
+        "d1",
+        "d4"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC超表面、激光加工"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "陈博取",
+        "李晓萱"
+      ],
+      "member_ids": [
+        "d1",
+        "d11"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC超透镜、热管理"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "孙潇雨",
+        "李晓萱"
+      ],
+      "member_ids": [
+        "d4",
+        "d11"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "超透镜"
+      ],
+      "directions": [
+        "SiC超表面、激光加工",
+        "SiC超透镜、热管理"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "孙潇雨",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "d4",
+        "x3"
+      ],
+      "overlap_topics": [
+        "SiC",
+        "激光加工"
+      ],
+      "directions": [
+        "SiC超表面、激光加工",
+        "SiC激光加工"
+      ],
+      "overlap_count": 2
+    },
+    {
+      "members": [
+        "严巍",
+        "谢宇"
+      ],
+      "member_ids": [
+        "p1",
+        "p3"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳光电子器件、GaAs纳米器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "薛环一"
+      ],
+      "member_ids": [
+        "p1",
+        "p7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳加工、3D打印"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "赵康"
+      ],
+      "member_ids": [
+        "p1",
+        "p8"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "薛淑雯"
+      ],
+      "member_ids": [
+        "p1",
+        "x1"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "邓卉彤"
+      ],
+      "member_ids": [
+        "p1",
+        "d5"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "裴海月"
+      ],
+      "member_ids": [
+        "p1",
+        "d7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "欧玟"
+      ],
+      "member_ids": [
+        "p1",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "p1",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "严巍",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "p1",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "激光微纳加工、光热弹性驱动、微转子",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "薛环一"
+      ],
+      "member_ids": [
+        "p3",
+        "p7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "微纳加工、3D打印"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "赵康"
+      ],
+      "member_ids": [
+        "p3",
+        "p8"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "薛淑雯"
+      ],
+      "member_ids": [
+        "p3",
+        "x1"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "邓卉彤"
+      ],
+      "member_ids": [
+        "p3",
+        "d5"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "裴海月"
+      ],
+      "member_ids": [
+        "p3",
+        "d7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "欧玟"
+      ],
+      "member_ids": [
+        "p3",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "p3",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "谢宇",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "p3",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件、GaAs纳米器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邵露青",
+        "潘婧"
+      ],
+      "member_ids": [
+        "p4",
+        "p6"
+      ],
+      "overlap_topics": [
+        "光计算"
+      ],
+      "directions": [
+        "光计算、光子神经网络",
+        "光计算、智能光子推断"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邵露青",
+        "王启南"
+      ],
+      "member_ids": [
+        "p4",
+        "d19"
+      ],
+      "overlap_topics": [
+        "光计算"
+      ],
+      "directions": [
+        "光计算、光子神经网络",
+        "光计算、光子芯片"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邵露青",
+        "李志浩"
+      ],
+      "member_ids": [
+        "p4",
+        "d14"
+      ],
+      "overlap_topics": [
+        "光计算"
+      ],
+      "directions": [
+        "光计算、光子神经网络",
+        "光计算、光子神经网络"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈瑞溢",
+        "欧阳祖希"
+      ],
+      "member_ids": [
+        "p5",
+        "d10"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC色心、量子传感"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈瑞溢",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "p5",
+        "x3"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC激光加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈瑞溢",
+        "陈代吉"
+      ],
+      "member_ids": [
+        "p5",
+        "x4"
+      ],
+      "overlap_topics": [
+        "AR光波导"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "AR光波导"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "潘婧",
+        "王启南"
+      ],
+      "member_ids": [
+        "p6",
+        "d19"
+      ],
+      "overlap_topics": [
+        "光计算"
+      ],
+      "directions": [
+        "光计算、智能光子推断",
+        "光计算、光子芯片"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "潘婧",
+        "李志浩"
+      ],
+      "member_ids": [
+        "p6",
+        "d14"
+      ],
+      "overlap_topics": [
+        "光计算"
+      ],
+      "directions": [
+        "光计算、智能光子推断",
+        "光计算、光子神经网络"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "赵康"
+      ],
+      "member_ids": [
+        "p7",
+        "p8"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "薛淑雯"
+      ],
+      "member_ids": [
+        "p7",
+        "x1"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "邓卉彤"
+      ],
+      "member_ids": [
+        "p7",
+        "d5"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "周子博"
+      ],
+      "member_ids": [
+        "p7",
+        "d6"
+      ],
+      "overlap_topics": [
+        "3D打印"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "光纤传感器、3D打印"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "裴海月"
+      ],
+      "member_ids": [
+        "p7",
+        "d7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "欧玟"
+      ],
+      "member_ids": [
+        "p7",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "p7",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛环一",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "p7",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳加工、3D打印",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "赵康",
+        "薛淑雯"
+      ],
+      "member_ids": [
+        "p8",
+        "x1"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "赵康",
+        "邓卉彤"
+      ],
+      "member_ids": [
+        "p8",
+        "d5"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "赵康",
+        "裴海月"
+      ],
+      "member_ids": [
+        "p8",
+        "d7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "赵康",
+        "欧玟"
+      ],
+      "member_ids": [
+        "p8",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "赵康",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "p8",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "赵康",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "p8",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "吕未",
+        "刘天远"
+      ],
+      "member_ids": [
+        "p9",
+        "p11"
+      ],
+      "overlap_topics": [
+        "拓扑光子学"
+      ],
+      "directions": [
+        "拓扑光子学、光传输",
+        "拓扑光子学、赝自旋"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "吕未",
+        "马墨南"
+      ],
+      "member_ids": [
+        "p9",
+        "d9"
+      ],
+      "overlap_topics": [
+        "拓扑光子学"
+      ],
+      "directions": [
+        "拓扑光子学、光传输",
+        "拓扑光子学、光传输"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "孙歆语",
+        "欧阳祖希"
+      ],
+      "member_ids": [
+        "p10",
+        "d10"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超表面、AR显示",
+        "SiC色心、量子传感"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "孙歆语",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "p10",
+        "x3"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超表面、AR显示",
+        "SiC激光加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "孙歆语",
+        "陈代吉"
+      ],
+      "member_ids": [
+        "p10",
+        "x4"
+      ],
+      "overlap_topics": [
+        "AR光波导"
+      ],
+      "directions": [
+        "SiC超表面、AR显示",
+        "AR光波导"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "刘天远",
+        "马墨南"
+      ],
+      "member_ids": [
+        "p11",
+        "d9"
+      ],
+      "overlap_topics": [
+        "拓扑光子学"
+      ],
+      "directions": [
+        "拓扑光子学、赝自旋",
+        "拓扑光子学、光传输"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛淑雯",
+        "邓卉彤"
+      ],
+      "member_ids": [
+        "x1",
+        "d5"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "光电子器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛淑雯",
+        "裴海月"
+      ],
+      "member_ids": [
+        "x1",
+        "d7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛淑雯",
+        "欧玟"
+      ],
+      "member_ids": [
+        "x1",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "光电子器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛淑雯",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "x1",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "薛淑雯",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "x1",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "光电子器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈博取",
+        "欧阳祖希"
+      ],
+      "member_ids": [
+        "d1",
+        "d10"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC色心、量子传感"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈博取",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "d1",
+        "x3"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "SiC激光加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈博取",
+        "陈代吉"
+      ],
+      "member_ids": [
+        "d1",
+        "x4"
+      ],
+      "overlap_topics": [
+        "AR光波导"
+      ],
+      "directions": [
+        "SiC超透镜、AR光波导",
+        "AR光波导"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "齐利民",
+        "杨治蓉"
+      ],
+      "member_ids": [
+        "d3",
+        "d8"
+      ],
+      "overlap_topics": [
+        "冰刻技术"
+      ],
+      "directions": [
+        "冰刻技术、低温光刻",
+        "冰刻技术、生物光刻"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "齐利民",
+        "林春博"
+      ],
+      "member_ids": [
+        "d3",
+        "d16"
+      ],
+      "overlap_topics": [
+        "冰刻技术"
+      ],
+      "directions": [
+        "冰刻技术、低温光刻",
+        "冰刻技术、纳米加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "孙潇雨",
+        "欧阳祖希"
+      ],
+      "member_ids": [
+        "d4",
+        "d10"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超表面、激光加工",
+        "SiC色心、量子传感"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "孙潇雨",
+        "章子鉴"
+      ],
+      "member_ids": [
+        "d4",
+        "d13"
+      ],
+      "overlap_topics": [
+        "激光加工"
+      ],
+      "directions": [
+        "SiC超表面、激光加工",
+        "激光加工、结构色"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邓卉彤",
+        "裴海月"
+      ],
+      "member_ids": [
+        "d5",
+        "d7"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邓卉彤",
+        "欧玟"
+      ],
+      "member_ids": [
+        "d5",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邓卉彤",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "d5",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "邓卉彤",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "d5",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "裴海月",
+        "欧玟"
+      ],
+      "member_ids": [
+        "d7",
+        "d12"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子、光电探测",
+        "微纳光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "裴海月",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "d7",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子、光电探测",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "裴海月",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "d7",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子、光电探测",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "杨治蓉",
+        "林春博"
+      ],
+      "member_ids": [
+        "d8",
+        "d16"
+      ],
+      "overlap_topics": [
+        "冰刻技术"
+      ],
+      "directions": [
+        "冰刻技术、生物光刻",
+        "冰刻技术、纳米加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "王启南",
+        "李志浩"
+      ],
+      "member_ids": [
+        "d19",
+        "d14"
+      ],
+      "overlap_topics": [
+        "光计算"
+      ],
+      "directions": [
+        "光计算、光子芯片",
+        "光计算、光子神经网络"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "欧阳祖希",
+        "李晓萱"
+      ],
+      "member_ids": [
+        "d10",
+        "d11"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC色心、量子传感",
+        "SiC超透镜、热管理"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "欧阳祖希",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "d10",
+        "x3"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC色心、量子传感",
+        "SiC激光加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "李晓萱",
+        "虞阳"
+      ],
+      "member_ids": [
+        "d11",
+        "d17"
+      ],
+      "overlap_topics": [
+        "热管理"
+      ],
+      "directions": [
+        "SiC超透镜、热管理",
+        "辐射制冷、热管理"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "李晓萱",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "d11",
+        "x3"
+      ],
+      "overlap_topics": [
+        "SiC"
+      ],
+      "directions": [
+        "SiC超透镜、热管理",
+        "SiC激光加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "欧玟",
+        "陈飞霖"
+      ],
+      "member_ids": [
+        "d12",
+        "d15"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "微纳光电子、光电探测"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "欧玟",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "d12",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子器件",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "章子鉴",
+        "郑豪杰"
+      ],
+      "member_ids": [
+        "d13",
+        "x3"
+      ],
+      "overlap_topics": [
+        "激光加工"
+      ],
+      "directions": [
+        "激光加工、结构色",
+        "SiC激光加工"
+      ],
+      "overlap_count": 1
+    },
+    {
+      "members": [
+        "陈飞霖",
+        "王旭杰"
+      ],
+      "member_ids": [
+        "d15",
+        "x2"
+      ],
+      "overlap_topics": [
+        "微纳器件"
+      ],
+      "directions": [
+        "微纳光电子、光电探测",
+        "光电子器件"
+      ],
+      "overlap_count": 1
+    }
+  ],
+  "totalActive": 32,
+  "totalPotentialPairs": 85
+}
