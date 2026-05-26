@@ -6,7 +6,6 @@ import {
   UserSearch,
   TrendingUp,
   BookOpen,
-  Database,
   Users,
   Settings,
   Menu,
@@ -21,7 +20,6 @@ const navItems = [
   { path: '/analysis', label: '分析', icon: UserSearch },
   { path: '/trends', label: '趋势', icon: TrendingUp },
   { path: '/literature', label: '文献', icon: BookOpen },
-  { path: '/baseline', label: '基准库', icon: Database },
   { path: '/collaboration', label: '协作', icon: Users },
   { path: '/settings', label: '设置', icon: Settings },
 ];

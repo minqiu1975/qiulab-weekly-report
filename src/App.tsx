@@ -5,8 +5,8 @@ import Dashboard from './pages/Dashboard';
 import UploadPage from './pages/UploadPage';
 import AnalysisPage from './pages/AnalysisPage';
 import TrendsPage from './pages/TrendsPage';
+
 import LiteraturePage from './pages/LiteraturePage';
-import BaselinePage from './pages/BaselinePage';
 import CollaborationPage from './pages/CollaborationPage';
 import SettingsPage from './pages/SettingsPage';
 import PdfReportGenerator from './components/PdfReportGenerator';
@@ -130,7 +130,6 @@ export default function App() {
             <Route path="/analysis" element={<AnalysisPage />} />
             <Route path="/trends" element={<TrendsPage />} />
             <Route path="/literature" element={<LiteraturePage />} />
-            <Route path="/baseline" element={<BaselinePage />} />
             <Route path="/collaboration" element={<CollaborationPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
