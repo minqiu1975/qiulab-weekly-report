@@ -616,8 +616,12 @@ export default function AnalysisPage() {
         const saved = JSON.parse(localStorage.getItem(saveKey) || '{}');
         if (saved.result) {
           setCollabResult(saved.result);
+        } else {
+          setCollabResult(''); // 无历史记录时清空
         }
-      } catch { /* ignore */ }
+      } catch {
+        setCollabResult('');
+      }
     } else {
       setCollabResult('');
     }
@@ -719,6 +723,10 @@ PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室�
   const handleSelect = (id: string) => {
     setSelectedId(id);
     setSearchParams({ person: id });
+    // 切换成员A时清空成员B和分析结果，避免残留上一对的分析
+    setMemberB('');
+    setCollabResult('');
+    setCollabError('');
   };
 
   // 从在职成员的最新评估分数中计算分布（100分制），同时收集成员名字
