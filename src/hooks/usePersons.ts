@@ -21,6 +21,11 @@ interface StoredMember {
   exitDate?: string;
   contractEndDate?: string;
   graduationDate?: string;
+  collabSuggestions?: Record<string, {
+    partnerName: string;
+    result: string;
+    timestamp: string;
+  }>;
 }
 
 /** 从 localStorage 读取编辑后的人员数据，合并到静态数据 */
@@ -50,6 +55,7 @@ function mergeWithLocalStorage(staticPersons: Person[]): Person[] {
         graduationDate: stored.graduationDate ?? p.graduationDate,
         researchDirection: stored.researchDirection ?? p.researchDirection,
         status: (stored.status as Person['status']) || p.status,
+        collabSuggestions: stored.collabSuggestions ?? p.collabSuggestions,
       };
     });
   } catch {

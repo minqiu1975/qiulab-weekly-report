@@ -35,6 +35,12 @@ export interface Person {
   contractEndDate?: string;
   /** 预计毕业日期（仅博士生/本科生），格式 YYYY-MM-DD，由学制自动计算，也可手动编辑 */
   graduationDate?: string;
+  /** 与每个成员的合作建议，key 为对方成员 id，value 为合作建议内容（云端同步） */
+  collabSuggestions?: Record<string, {
+    partnerName: string;
+    result: string;
+    timestamp: string;
+  }>;
 }
 
 export interface WeeklyWorkItem {

@@ -4,6 +4,7 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import CollaborationGraph from '../components/CollaborationGraph';
 import { callKimiApi } from '../lib/kimiApi';
+import { cloudStorage } from '../services/cloudStorage';
 import {
   Sparkles,
   BookOpen,
@@ -82,34 +83,55 @@ export default function CollaborationPage() {
   const [savedCollabs, setSavedCollabs] = useState<SavedCollab[]>([]);
   const [expandedSaved, setExpandedSaved] = useState<number | null>(null);
 
-  // 加载所有保存的协作分析
-  useEffect(() => {
-    const index = JSON.parse(localStorage.getItem('qiulab_collab_index') || '[]') as string[];
+  // 从云端 Person 数据加载所有协作分析
+  const loadSavedCollabs = useCallback(() => {
+    const allData = cloudStorage.loadFromLocal();
     const loaded: SavedCollab[] = [];
-    for (const key of index) {
-      try {
-        const data = JSON.parse(localStorage.getItem(key) || '{}');
-        if (data.result && data.memberAName && data.memberBName) {
-          loaded.push({
-            key,
-            memberAName: data.memberAName,
-            memberBName: data.memberBName,
-            result: data.result,
-            timestamp: data.timestamp,
-          });
-        }
-      } catch { /* ignore */ }
+    const seenPairs = new Set<string>();
+
+    for (const person of allData.persons) {
+      if (!person.collabSuggestions) continue;
+      for (const [partnerId, sug] of Object.entries(person.collabSuggestions)) {
+        // 用排序后的 pair key 去重（A-B 和 B-A 视为同一条）
+        const pairKey = [person.id, partnerId].sort().join('-');
+        if (seenPairs.has(pairKey)) continue;
+        seenPairs.add(pairKey);
+        loaded.push({
+          key: pairKey,
+          memberAName: person.name,
+          memberBName: sug.partnerName,
+          result: sug.result,
+          timestamp: sug.timestamp,
+        });
+      }
     }
     // 按时间倒序
     loaded.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     setSavedCollabs(loaded);
-  }, [aiResult]); // aiResult 变化时刷新（新分析完成后）
+  }, []);
 
-  const deleteSavedCollab = (key: string) => {
-    localStorage.removeItem(key);
-    const index = JSON.parse(localStorage.getItem('qiulab_collab_index') || '[]') as string[];
-    localStorage.setItem('qiulab_collab_index', JSON.stringify(index.filter((k) => k !== key)));
-    setSavedCollabs((prev) => prev.filter((c) => c.key !== key));
+  useEffect(() => {
+    loadSavedCollabs();
+  }, [aiResult, loadSavedCollabs]);
+
+  const deleteSavedCollab = async (pairKey: string) => {
+    const [idA, idB] = pairKey.split('-');
+    if (!idA || !idB) return;
+    try {
+      const allData = cloudStorage.loadFromLocal();
+      const persons = allData.persons.map((p) => {
+        if (p.id === idA || p.id === idB) {
+          const sug = { ...p.collabSuggestions };
+          delete sug[idA === p.id ? idB : idA];
+          return { ...p, collabSuggestions: sug };
+        }
+        return p;
+      });
+      await cloudStorage.saveAllData({ ...allData, persons, lastModified: new Date().toISOString() });
+      loadSavedCollabs();
+    } catch (e) {
+      console.warn('[Collab] 删除失败:', e);
+    }
   };
 
   // 加载合作数据

@@ -626,8 +626,21 @@ class CloudStorageService {
         for (const [id, person] of secondaryMap) {
           if (!mergedMap.has(id)) {
             mergedMap.set(id, person); // 补充对方独有的人员
+          } else {
+            // 双方都有的人员：合并 collabSuggestions（以每对伙伴的 timestamp 为准）
+            const mergedPerson = mergedMap.get(id)!;
+            const localSugs = person.collabSuggestions || {};
+            const mergedSugs = mergedPerson.collabSuggestions || {};
+            const combinedSugs: Record<string, { partnerName: string; result: string; timestamp: string }> = { ...mergedSugs };
+            for (const [partnerId, sug] of Object.entries(localSugs)) {
+              const typedSug = sug as { partnerName: string; result: string; timestamp: string };
+              const existing = combinedSugs[partnerId];
+              if (!existing || typedSug.timestamp > existing.timestamp) {
+                combinedSugs[partnerId] = typedSug;
+              }
+            }
+            mergedPerson.collabSuggestions = combinedSugs;
           }
-          // 双方都有的人员，以时间戳新的一方为准（已在初始化时确定）
         }
         return Array.from(mergedMap.values());
       })();
