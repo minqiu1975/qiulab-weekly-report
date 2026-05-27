@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
-import { Card, CardContent } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import AssessmentPanel from '../components/AssessmentPanel';
 import DeepAnalysisPanel from '../components/DeepAnalysisPanel';
@@ -9,10 +10,11 @@ import { getLatestAssessmentMerged, MOCK_ASSESSMENTS } from '../data/mockAssessm
 import { ROLE_LABEL_MAP, ROLE_ORDER } from '../data/mockPersons';
 import { getMergedPersonHistory } from '../lib/dynamicStorage';
 import { usePersons } from '../hooks/usePersons';
+import { callKimiApi } from '../lib/kimiApi';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from 'recharts';
-import { UserSearch, Printer, CalendarDays, History, ChevronDown, ChevronRight, AlertTriangle } from 'lucide-react';
+import { UserSearch, Printer, CalendarDays, History, ChevronDown, ChevronRight, AlertTriangle, Sparkles, Loader2, Users, Lightbulb } from 'lucide-react';
 
 const COLORS = ['#059669', '#d97706', '#dc2626'];
 
@@ -599,6 +601,12 @@ export default function AnalysisPage() {
   const [selectedId, setSelectedId] = useState(searchParams.get('person') || '');
   const ALL_PERSONS = usePersons();
 
+  // 双人协作分析状态（成员A跟随当前选中的成员）
+  const [memberB, setMemberB] = useState('');
+  const [collabAnalyzing, setCollabAnalyzing] = useState(false);
+  const [collabResult, setCollabResult] = useState('');
+  const [collabError, setCollabError] = useState('');
+
   // 支持从 Dashboard 跳转的 filter=risk 参数
   const filterMode = searchParams.get('filter') || '';
   const riskIdsParam = searchParams.get('riskIds') || '';
@@ -619,6 +627,49 @@ export default function AnalysisPage() {
       }
     }
   }, [filterMode, riskIdSet, selectedId, ALL_PERSONS, riskIdsParam, setSearchParams]);
+
+  // 双人AI协作分析
+  const handleCollabAnalysis = async () => {
+    if (!selectedId || !memberB || selectedId === memberB) return;
+    setCollabAnalyzing(true);
+    setCollabResult('');
+    setCollabError('');
+    const personA = ALL_PERSONS.find((p) => p.id === selectedId);
+    const personB = ALL_PERSONS.find((p) => p.id === memberB);
+    if (!personA || !personB) { setCollabError('成员选择无效'); setCollabAnalyzing(false); return; }
+    try {
+      const trends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}');
+      const labels = JSON.parse(localStorage.getItem('qlab_dynamic_labels') || '[]') as string[];
+      const latestLabel = labels.length > 0 ? labels[labels.length - 1] : '';
+      const weekDataA = latestLabel && trends[latestLabel] ? trends[latestLabel][selectedId] || trends[latestLabel][personA.name] : null;
+      const weekDataB = latestLabel && trends[latestLabel] ? trends[latestLabel][memberB] || trends[latestLabel][personB.name] : null;
+      const prompt = `你是一位资深的科研合作顾问，精通光子学、微纳加工、材料科学等交叉领域。请基于以下两位仇旻实验室（PAINT Lab）成员的研究背景和最新周报进展，提出**具体、可行的合作研究课题**（不是研究方向，而是具体的研究内容/课题）。
+
+## 成员A：${personA.name}
+- 角色：${personA.roleLabel}${personA.subRole ? `(${personA.subRole})` : ''}
+- 研究方向：${personA.researchDirection}
+- 入组时间：${personA.joinDate || '未知'}
+${weekDataA ? `- 最新周报摘要：${weekDataA.summary || '无摘要'}` : ''}
+
+## 成员B：${personB.name}
+- 角色：${personB.roleLabel}${personB.subRole ? `(${personB.subRole})` : ''}
+- 研究方向：${personB.researchDirection}
+- 入组时间：${personB.joinDate || '未知'}
+${weekDataB ? `- 最新周报摘要：${weekDataB.summary || '无摘要'}` : ''}
+
+## 实验室整体研究方向
+PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室主要研究：SiC超表面/超透镜与AR光波导、冰刻纳米加工技术、拓扑光子学、光计算与智能推断、微纳光电子器件、激光微纳加工、钙钛矿光电子器件、等离激元学、辐射制冷/热管理。
+
+## 输出要求
+请直接返回纯文本（不要JSON，不要markdown代码块），为两位成员提出3个具体合作课题，每个课题包含：课题名称、研究内容（具体技术路线）、各自分工、预期成果、可行性分析。课题必须具体可行，结合两人实际背景。`;
+      const response = await callKimiApi(prompt, { maxTokens: 4000, temperature: 0.7 });
+      setCollabResult(response);
+    } catch (err: any) {
+      setCollabError(err.message || 'AI分析失败');
+    } finally {
+      setCollabAnalyzing(false);
+    }
+  };
 
   // 直接从 localStorage 读取最新评估（静态+动态合并），不使用 useMemo 缓存
   // 确保上传新周报后自动显示最新数据
@@ -642,6 +693,7 @@ export default function AnalysisPage() {
     // 建立 personId -> personName 映射（仅在职成员，排除已毕业/已离职）
     const activePersons = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left');
     const nameMap = new Map(activePersons.map((p) => [p.id, p.name]));
+
     // 为每个在职成员找到最新的一条评估
     const latestByPerson = new Map<string, typeof MOCK_ASSESSMENTS[0]>();
     for (const a of MOCK_ASSESSMENTS) {
@@ -933,6 +985,56 @@ export default function AnalysisPage() {
             <div className="space-y-4">
               {/* 深度分析按钮（始终显示，无需研判基线） */}
               {person && <DeepAnalysisPanel person={person} />}
+
+              {/* 双人协作分析 */}
+              {person && (
+                <Card className="border-violet-200">
+                  <CardHeader className="py-3 px-4">
+                    <CardTitle className="text-sm font-semibold flex items-center gap-2 text-violet-800">
+                      <Users className="w-4 h-4" />
+                      双人协作AI深度分析
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4 space-y-3">
+                    <div className="flex gap-2">
+                      {/* 成员A：固定为当前分析的成员 */}
+                      <div className="flex-1 px-3 py-2 rounded-md border border-slate-200 bg-slate-50 text-xs text-slate-700 flex items-center gap-1.5">
+                        <Users className="w-3.5 h-3.5 text-slate-400" />
+                        <span className="font-medium">{person?.name || '未选择'}</span>
+                        <span className="text-slate-400">- {person?.researchDirection?.slice(0, 15) || ''}...</span>
+                      </div>
+                      <span className="text-xs text-slate-400 self-center">↔</span>
+                      <Select value={memberB} onValueChange={setMemberB}>
+                        <SelectTrigger className="flex-1 text-xs"><SelectValue placeholder="选择协作成员" /></SelectTrigger>
+                        <SelectContent>
+                          {ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left' && p.status !== 'inactive' && p.id !== selectedId).map((p) => (
+                            <SelectItem key={p.id} value={p.id} className="text-xs">{p.name} - {p.researchDirection}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        onClick={handleCollabAnalysis}
+                        disabled={collabAnalyzing || !selectedId || !memberB || selectedId === memberB}
+                        className="bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 text-white text-xs h-9"
+                      >
+                        {collabAnalyzing ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 mr-1" />}
+                        {collabAnalyzing ? '分析中...' : 'AI分析'}
+                      </Button>
+                    </div>
+                    {collabError && <p className="text-xs text-red-600">{collabError}</p>}
+                    {collabResult && (
+                      <div className="bg-violet-50 rounded-lg p-3 space-y-3">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Lightbulb className="w-4 h-4 text-amber-500" />
+                          <span className="text-xs font-semibold text-violet-800">AI 协作分析报告</span>
+                          <span className="text-[10px] text-slate-400 ml-auto">{person?.name} ↔ {ALL_PERSONS.find((p) => p.id === memberB)?.name}</span>
+                        </div>
+                        <div className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{collabResult}</div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* 最近一周做了什么 */}
               {personHistory && personHistory.length > 0 && (
