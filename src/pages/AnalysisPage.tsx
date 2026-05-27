@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -607,6 +607,22 @@ export default function AnalysisPage() {
   const [collabResult, setCollabResult] = useState('');
   const [collabError, setCollabError] = useState('');
 
+  // 加载时恢复已保存的协作分析
+  useEffect(() => {
+    if (selectedId && memberB) {
+      const sortedIds = [selectedId, memberB].sort();
+      const saveKey = `qiulab_collab_${sortedIds[0]}_${sortedIds[1]}`;
+      try {
+        const saved = JSON.parse(localStorage.getItem(saveKey) || '{}');
+        if (saved.result) {
+          setCollabResult(saved.result);
+        }
+      } catch { /* ignore */ }
+    } else {
+      setCollabResult('');
+    }
+  }, [selectedId, memberB]);
+
   // 支持从 Dashboard 跳转的 filter=risk 参数
   const filterMode = searchParams.get('filter') || '';
   const riskIdsParam = searchParams.get('riskIds') || '';
@@ -664,6 +680,23 @@ PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室�
 请直接返回纯文本（不要JSON，不要markdown代码块），为两位成员提出3个具体合作课题，每个课题包含：课题名称、研究内容（具体技术路线）、各自分工、预期成果、可行性分析。课题必须具体可行，结合两人实际背景。`;
       const response = await callKimiApi(prompt, { maxTokens: 4000, temperature: 0.7 });
       setCollabResult(response);
+      // 保存到 localStorage（key: qiulab_collab_analysis_A_B，按id排序确保唯一）
+      const sortedIds = [selectedId, memberB].sort();
+      const saveKey = `qiulab_collab_${sortedIds[0]}_${sortedIds[1]}`;
+      localStorage.setItem(saveKey, JSON.stringify({
+        memberAId: selectedId,
+        memberAName: personA.name,
+        memberBId: memberB,
+        memberBName: personB.name,
+        result: response,
+        timestamp: new Date().toISOString(),
+      }));
+      // 同时更新索引
+      const index = JSON.parse(localStorage.getItem('qiulab_collab_index') || '[]') as string[];
+      if (!index.includes(saveKey)) {
+        index.push(saveKey);
+        localStorage.setItem('qiulab_collab_index', JSON.stringify(index));
+      }
     } catch (err: any) {
       setCollabError(err.message || 'AI分析失败');
     } finally {

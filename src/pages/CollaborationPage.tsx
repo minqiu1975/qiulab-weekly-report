@@ -15,6 +15,8 @@ import {
   FileText,
   TrendingUp,
   Lightbulb,
+  History,
+  Trash2,
 } from 'lucide-react';
 
 interface CollabData {
@@ -68,6 +70,48 @@ export default function CollaborationPage() {
   const [weeklyData, setWeeklyData] = useState<Record<string, WeeklyTrend>>({});
   const [activeCollabData, setActiveCollabData] = useState<ActiveCollabData | null>(null);
   const [expandedActiveCollab, setExpandedActiveCollab] = useState<number | null>(0);
+
+  // 历史协作分析记录
+  interface SavedCollab {
+    key: string;
+    memberAName: string;
+    memberBName: string;
+    result: string;
+    timestamp: string;
+  }
+  const [savedCollabs, setSavedCollabs] = useState<SavedCollab[]>([]);
+  const [expandedSaved, setExpandedSaved] = useState<number | null>(null);
+
+  // 加载所有保存的协作分析
+  useEffect(() => {
+    const index = JSON.parse(localStorage.getItem('qiulab_collab_index') || '[]') as string[];
+    const loaded: SavedCollab[] = [];
+    for (const key of index) {
+      try {
+        const data = JSON.parse(localStorage.getItem(key) || '{}');
+        if (data.result && data.memberAName && data.memberBName) {
+          loaded.push({
+            key,
+            memberAName: data.memberAName,
+            memberBName: data.memberBName,
+            result: data.result,
+            timestamp: data.timestamp,
+          });
+        }
+      } catch { /* ignore */ }
+    }
+    // 按时间倒序
+    loaded.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    setSavedCollabs(loaded);
+  }, [aiResult]); // aiResult 变化时刷新（新分析完成后）
+
+  const deleteSavedCollab = (key: string) => {
+    localStorage.removeItem(key);
+    const index = JSON.parse(localStorage.getItem('qiulab_collab_index') || '[]') as string[];
+    localStorage.setItem('qiulab_collab_index', JSON.stringify(index.filter((k) => k !== key)));
+    setSavedCollabs((prev) => prev.filter((c) => c.key !== key));
+  };
+
   // 加载合作数据
   useEffect(() => {
     fetch('./collaboration.json')
@@ -471,6 +515,59 @@ ${weeklyStr}
                 </li>
               ))}
             </ul>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 历史协作分析记录 */}
+      {savedCollabs.length > 0 && (
+        <Card className="border-slate-200">
+          <CardHeader className="py-3 px-4">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
+              <History className="w-4 h-4 text-cyan-600" />
+              历史协作分析记录 ({savedCollabs.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-4 space-y-3">
+            {savedCollabs.map((saved, i) => {
+              const isOpen = expandedSaved === i;
+              const date = new Date(saved.timestamp);
+              const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+              return (
+                <div key={saved.key} className="border border-slate-200 rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setExpandedSaved(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-medium text-violet-700">{saved.memberAName}</span>
+                        <ArrowRight className="w-3 h-3 text-slate-400" />
+                        <span className="text-sm font-medium text-violet-700">{saved.memberBName}</span>
+                      </div>
+                      <Badge variant="outline" className="text-[10px] text-slate-400">
+                        {dateStr}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); deleteSavedCollab(saved.key); }}
+                        className="p-1 rounded hover:bg-red-100 text-slate-400 hover:text-red-500 transition-colors"
+                        title="删除"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                      {isOpen ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="p-3 bg-violet-50">
+                      <div className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{saved.result}</div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </CardContent>
         </Card>
       )}
