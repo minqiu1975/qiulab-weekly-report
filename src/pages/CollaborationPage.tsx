@@ -25,27 +25,7 @@ interface CollabData {
   links: { source: string; target: string; value: number }[];
 }
 
-interface ActiveMember {
-  id: string;
-  name: string;
-  role: string;
-  direction: string;
-}
 
-interface PotentialCollab {
-  members: [string, string];
-  member_ids: [string, string];
-  overlap_topics: string[];
-  directions: [string, string];
-  overlap_count: number;
-}
-
-interface ActiveCollabData {
-  activeMembers: ActiveMember[];
-  potentialCollaborations: PotentialCollab[];
-  totalActive: number;
-  totalPotentialPairs: number;
-}
 
 interface AIAnalysisResult {
   summary: string;
@@ -69,8 +49,6 @@ export default function CollaborationPage() {
   const [expandedPotential, setExpandedPotential] = useState<number | null>(0);
   const [expandedTrend, setExpandedTrend] = useState<number | null>(0);
   const [weeklyData, setWeeklyData] = useState<Record<string, WeeklyTrend>>({});
-  const [activeCollabData, setActiveCollabData] = useState<ActiveCollabData | null>(null);
-  const [expandedActiveCollab, setExpandedActiveCollab] = useState<number | null>(0);
 
   // 历史协作分析记录
   interface SavedCollab {
@@ -139,10 +117,6 @@ export default function CollaborationPage() {
     fetch('./collaboration.json')
       .then((r) => r.json())
       .then((d: CollabData) => setCollabData(d))
-      .catch(() => {});
-    fetch('./active_collaborations.json')
-      .then((r) => r.json())
-      .then((d: ActiveCollabData) => setActiveCollabData(d))
       .catch(() => {});
   }, []);
 
@@ -313,75 +287,6 @@ ${weeklyStr}
 
       {/* 协作网络图 */}
       <CollaborationGraph />
-
-      {/* 组内成员合作推荐（基于研究方向交叉分析） */}
-      {activeCollabData && activeCollabData.potentialCollaborations.length > 0 && (
-        <Card className="border-slate-200">
-          <CardHeader className="py-3 px-4">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
-              <Users className="w-4 h-4 text-cyan-600" />
-              组内成员合作推荐（{activeCollabData.totalActive}位在研成员，基于研究方向交叉分析）
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 pb-4 space-y-3">
-            {activeCollabData.potentialCollaborations.slice(0, 15).map((collab, i) => {
-              const isOpen = expandedActiveCollab === i;
-              return (
-                <div key={i} className="border border-slate-200 rounded-lg overflow-hidden">
-                  <button
-                    onClick={() => setExpandedActiveCollab(isOpen ? null : i)}
-                    className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 transition-colors text-left"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-medium text-slate-800">{collab.members[0]}</span>
-                        <ArrowRight className="w-3 h-3 text-slate-400" />
-                        <span className="text-sm font-medium text-slate-800">{collab.members[1]}</span>
-                      </div>
-                      <div className="flex gap-1 flex-wrap">
-                        {collab.overlap_topics.map((topic) => (
-                          <Badge key={topic} variant="outline" className="text-[10px] bg-cyan-50 text-cyan-700 border-cyan-200">
-                            {topic}
-                          </Badge>
-                        ))}
-                      </div>
-                      <Badge className="bg-violet-100 text-violet-700 text-[10px]">
-                        {collab.overlap_count}个交叉方向
-                      </Badge>
-                    </div>
-                    {isOpen ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
-                  </button>
-                  {isOpen && (
-                    <div className="p-3 space-y-2">
-                      <div>
-                        <div className="text-xs font-medium text-slate-500 mb-1">{collab.members[0]}的研究方向</div>
-                        <p className="text-sm text-slate-700">{collab.directions[0]}</p>
-                      </div>
-                      <div>
-                        <div className="text-xs font-medium text-slate-500 mb-1">{collab.members[1]}的研究方向</div>
-                        <p className="text-sm text-slate-700">{collab.directions[1]}</p>
-                      </div>
-                      <div>
-                        <div className="text-xs font-medium text-slate-500 mb-1">建议合作主题</div>
-                        <div className="flex gap-1.5 flex-wrap">
-                          {collab.overlap_topics.map((t) => (
-                            <Badge key={t} variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-200">{t}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            {activeCollabData.potentialCollaborations.length > 15 && (
-              <p className="text-center text-xs text-slate-400">
-                ... 还有 {activeCollabData.potentialCollaborations.length - 15} 个合作推荐
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      )}
 
       {/* 经典合作排行 */}
       {collabData && (
