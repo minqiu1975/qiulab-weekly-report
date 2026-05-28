@@ -153,42 +153,69 @@ class PublicationUpdater {
   private baseUrl = 'https://api.semanticscholar.org/graph/v1';
   private minQiuAuthorId: string | null = null;
 
-  /** 搜索仇旻教授 */
+  /** 搜索仇旻教授（多策略回退） */
   async searchMinQiu(): Promise<{ authorId: string; name: string; paperCount: number } | null> {
-    try {
-      const res = await fetch(
-        `${this.baseUrl}/author/search?query=Min+Qiu+Westlake&fields=name,affiliations,paperCount,hIndex&limit=10`
-      );
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      if (!data.data || data.data.length === 0) return null;
+    const queries = [
+      'Min+Qiu+Westlake',
+      'Min+Qiu',
+    ];
 
-      // 找到 Westlake University 的 Min Qiu
-      for (const author of data.data) {
-        const affils = (author.affiliations || []).join(' ').toLowerCase();
-        if (affils.includes('westlake') || affils.includes('西湖')) {
-          this.minQiuAuthorId = author.authorId;
+    for (const query of queries) {
+      try {
+        const res = await fetch(
+          `${this.baseUrl}/author/search?query=${query}&fields=name,affiliations,paperCount,hIndex&limit=100`
+        );
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (!data.data || data.data.length === 0) continue;
+
+        // 优先找 affiliations 包含 westlake 的
+        for (const author of data.data) {
+          const affils = (author.affiliations || []).join(' ').toLowerCase();
+          if (affils.includes('westlake') || affils.includes('西湖')) {
+            this.minQiuAuthorId = author.authorId;
+            return {
+              authorId: author.authorId,
+              name: author.name,
+              paperCount: author.paperCount || 0,
+            };
+          }
+        }
+
+        // 备选：按 paperCount 排序取最高的（paperCount > 50 才可能是仇教授）
+        const sorted = [...data.data].sort(
+          (a: any, b: any) => (b.paperCount || 0) - (a.paperCount || 0)
+        );
+        const best = sorted[0];
+        if (best && (best.paperCount || 0) > 20) {
+          this.minQiuAuthorId = best.authorId;
           return {
-            authorId: author.authorId,
-            name: author.name,
-            paperCount: author.paperCount || 0,
+            authorId: best.authorId,
+            name: best.name,
+            paperCount: best.paperCount || 0,
           };
         }
-      }
-      // 如果没找到西湖大学的，返回第一个 Min Qiu
-      if (data.data[0]) {
-        this.minQiuAuthorId = data.data[0].authorId;
+      } catch { /* 继续下一个查询 */ }
+    }
+
+    // 如果搜索都失败，使用已知的仇旻教授 authorId 作为硬编码回退
+    const knownId = '2058749048'; // Semantic Scholar 上的 Min Qiu (M. Qiu, 154篇)
+    try {
+      const res = await fetch(
+        `${this.baseUrl}/author/${knownId}?fields=name,paperCount,hIndex,affiliations`
+      );
+      if (res.ok) {
+        const author = await res.json();
+        this.minQiuAuthorId = knownId;
         return {
-          authorId: data.data[0].authorId,
-          name: data.data[0].name,
-          paperCount: data.data[0].paperCount || 0,
+          authorId: knownId,
+          name: author.name || 'Min Qiu',
+          paperCount: author.paperCount || 0,
         };
       }
-      return null;
-    } catch (e) {
-      console.error('[PubUpdater] searchMinQiu failed:', e);
-      throw e;
-    }
+    } catch { /* ignore */ }
+
+    throw new Error('未找到仇旻教授，请检查网络连接或稍后重试');
   }
 
   /** 获取仇旻教授的所有论文 */
