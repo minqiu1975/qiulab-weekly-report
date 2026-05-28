@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge';
 import CollaborationGraph from '../components/CollaborationGraph';
 import { callKimiApi } from '../lib/kimiApi';
 import { cloudStorage } from '../services/cloudStorage';
+import { usePersons } from '../hooks/usePersons';
 import { pubUpdater, type Paper } from '../services/pubUpdaterService';
 import {
   Sparkles,
@@ -184,17 +185,28 @@ export default function CollaborationPage() {
     }
   };
 
-  // AI 分析（使用更新后的数据）
+  // AI 分析（使用更新后的数据，仅针对活跃成员）
+  const ALL_PERSONS = usePersons();
+  const activePersons = ALL_PERSONS.filter((p) => p.status === 'active');
+  const activeNames = new Set(activePersons.map((p) => p.name));
+
   const handleAIAnalysisWithData = async (data: CollabData, papers: Paper[]) => {
     setAiLoading(true);
     setAiError('');
     try {
-      const topAuthors = data.nodes
+      // 仅筛选活跃作者的论文数据
+      const activeNodes = data.nodes.filter((n) => activeNames.has(n.name));
+      const activeNodeIds = new Set(activeNodes.map((n) => n.id));
+      const activeLinks = data.links.filter(
+        (l) => activeNodeIds.has(l.source) && activeNodeIds.has(l.target)
+      );
+
+      const topAuthors = activeNodes
         .slice(0, 10)
         .map((n) => `${n.name}: ${n.paperCount}篇`)
         .join('\n');
 
-      const topCollabs = data.links
+      const topCollabs = activeLinks
         .sort((a, b) => b.value - a.value)
         .slice(0, 10)
         .map((l) => {
@@ -215,22 +227,32 @@ export default function CollaborationPage() {
         .map(([year, count]) => `${year}: ${count}篇`)
         .join('\n');
 
-      const prompt = `作为仇旻实验室（PAINT Lab, 西湖大学）的研究管理顾问，请基于以下论文发表合作数据提供深度洞察。
+      // 活跃成员名单及研究方向
+      const activeMembersStr = activePersons
+        .map((p) => `- ${p.name}（${p.roleLabel}）：${p.researchDirection}`)
+        .join('\n');
 
-## 论文统计
+      const prompt = `作为仇旻实验室（PAINT Lab, 西湖大学）的研究管理顾问，请基于以下数据提供深度洞察。
+
+【重要】以下分析仅限实验室当前活跃成员（在职研究员+博士后+在读博士生），请勿推荐已毕业/已离职人员的合作。
+
+## 当前活跃成员（${activePersons.length}人）
+${activeMembersStr}
+
+## 论文统计（活跃成员参与）
 - 总论文数：${papers.length}篇
 - 年份分布：
 ${yearDistStr}
 
-## 核心作者（前10）
+## 活跃核心作者（前10）
 ${topAuthors}
 
-## 主要合作关系（前10）
+## 活跃成员主要合作关系（前10）
 ${topCollabs}
 
 请用JSON格式返回分析结果（不要包含markdown代码块标记，直接返回JSON）：
 {
-  "summary": "对团队协作状况的总体评价（2-3句话）",
+  "summary": "对活跃团队协作状况的总体评价（2-3句话）",
   "topCollaborations": [
     { "pair": "作者A ↔ 作者B", "count": 共同论文数, "topics": ["研究主题1", "主题2"] }
   ],
@@ -242,9 +264,10 @@ ${topCollabs}
 }
 
 注意：
-1. topCollaborations 列出5个最强的现有合作
-2. potentialCollaborations 基于论文研究方向差异，推荐5个新的潜在合作组合
-3. researchGaps 基于整体论文分布找出研究空白`;
+1. topCollaborations 列出5个最强的现有合作（仅限活跃成员之间）
+2. potentialCollaborations 仅限活跃成员之间的组合，推荐5个有潜力但合作较少的组合
+3. researchGaps 基于活跃成员的研究方向分布找出研究空白
+4. 严禁推荐已毕业/已离职人员的合作`;
 
       const response = await callKimiApi(prompt, { maxTokens: 4000, temperature: 0.5 });
       let jsonStr = response;
@@ -282,7 +305,16 @@ ${topCollabs}
             协作分析
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            基于 {stats?.totalPapers || 0} 篇论文发表记录 + 周报动态，AI 驱动的协作洞察
+            基于 {stats?.totalPapers || 0} 篇同步论文（仇旻教授实际发表
+            <a
+              href="https://scholar.google.com/citations?user=FgSUsGoAAAAJ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cyan-600 hover:text-cyan-800 underline inline-flex items-center gap-0.5"
+            >
+              400+篇SCI <ExternalLink className="w-3 h-3" />
+            </a>
+            ）+ 周报动态，AI 驱动的协作洞察
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -313,11 +345,17 @@ ${topCollabs}
             { label: '合作作者数', value: stats.totalAuthors, icon: Users, color: 'bg-gradient-to-br from-blue-500 to-indigo-600', ring: 'ring-blue-100' },
             { label: '合作关系数', value: stats.totalLinks, icon: ArrowRight, color: 'bg-gradient-to-br from-emerald-500 to-teal-600', ring: 'ring-emerald-100' },
             { label: '核心作者', value: stats.coreAuthors, icon: BookOpen, color: 'bg-gradient-to-br from-amber-500 to-orange-600', ring: 'ring-amber-100' },
-            { label: '总论文数', value: stats.totalPapers, color: 'bg-gradient-to-br from-cyan-500 to-blue-600', ring: 'ring-cyan-100' },
+            {
+              label: '总论文数',
+              value: stats.totalPapers,
+              color: 'bg-gradient-to-br from-cyan-500 to-blue-600',
+              ring: 'ring-cyan-100',
+              href: 'https://scholar.google.com/citations?user=FgSUsGoAAAAJ',
+            },
           ].map((s) => {
             const Icon = s.icon || BookOpen;
-            return (
-              <Card key={s.label} className="border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            const cardContent = (
+              <Card className={`border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${s.href ? 'cursor-pointer' : ''}`}>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-11 h-11 rounded-xl ${s.color} flex items-center justify-center shadow-md ring-2 ${s.ring}`}>
@@ -325,11 +363,21 @@ ${topCollabs}
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-slate-800">{s.value}</div>
-                      <div className="text-xs text-slate-500">{s.label}</div>
+                      <div className="text-xs text-slate-500 flex items-center gap-0.5">
+                        {s.label}
+                        {s.href && <ExternalLink className="w-3 h-3 text-slate-400" />}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
+            );
+            return s.href ? (
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="block no-underline">
+                {cardContent}
+              </a>
+            ) : (
+              <div key={s.label}>{cardContent}</div>
             );
           })}
         </div>
@@ -380,7 +428,18 @@ ${topCollabs}
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-emerald-700">{pubUpdateResult.totalCount}</div>
-                <div className="text-xs text-emerald-600">总论文数</div>
+                <div className="text-xs text-emerald-600">
+                  同步论文数
+                  <span className="text-emerald-400 mx-1">|</span>
+                  <a
+                    href="https://scholar.google.com/citations?user=FgSUsGoAAAAJ"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-emerald-800 inline-flex items-center gap-0.5"
+                  >
+                    实际400+篇 <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-emerald-700">
