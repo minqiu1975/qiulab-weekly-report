@@ -343,19 +343,9 @@ class PublicationUpdater {
     };
   }
 
-  /** 尝试从实验室网站抓取（可能受 CORS 限制，作为补充） */
-  async fetchFromLabWebsite(): Promise<Paper[]> {
-    try {
-      // 尝试通过 proxy 或直接请求
-      await fetch('https://qiu.lab.westlake.edu.cn/publications.html', {
-        mode: 'no-cors',
-      });
-      // no-cors 模式下无法读取响应内容，此方法实际上不可用
-      // 返回空数组，依赖 Semantic Scholar
-      return [];
-    } catch {
-      return [];
-    }
+  /** 实验室官网发表论文页面 URL */
+  getLabWebsiteUrl(): string {
+    return 'https://qiu.lab.westlake.edu.cn/ky/fblw.htm';
   }
 }
 

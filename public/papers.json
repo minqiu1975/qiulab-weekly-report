@@ -1,7 +1,427 @@
 [
   {
+    "id": 366,
+    "title": "Wafer-scale topography-decoupled 3D metasurfaces",
+    "authors": [
+      "Boqu Chen",
+      "Yanhao Chu",
+      "Xiaoxuan Li",
+      "Xiaopeng L",
+      "Lu Cai",
+      "Ding Zhao",
+      "Kaikai Du",
+      "Tao Li",
+      "Min Qiu"
+    ],
+    "journal": "Device",
+    "year": 2026,
+    "keywords": [
+      "metasurface",
+      "超表面"
+    ]
+  },
+  {
+    "id": 365,
+    "title": "Mid-Infrared Extreme Grazing Brewster Effect in Natural Crystals for Surface-Enhanced Molecular Spectroscopy",
+    "authors": [
+      "Shuwen Xue",
+      "Yu Xie",
+      "Dongli Liu",
+      "Fengjiang Liu",
+      "Chuanjie Hu",
+      "Xiaoyu Sun",
+      "Shan Zhu",
+      "Huanyang Chen",
+      "Min Qiu"
+    ],
+    "journal": "Laser & Photonics Reviews",
+    "year": 2026,
+    "keywords": [
+      "AR",
+      "增强现实",
+      "infrared",
+      "红外"
+    ]
+  },
+  {
+    "id": 364,
+    "title": "Refractive Index Sensing in the Mid-Infrared Regime with Ice-Lithography Enabled Metasurfaces",
+    "authors": [
+      "Kang Zhao",
+      "Ce Li",
+      "Shuo Du",
+      "Rui Zheng",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Light: Advanced Manufacturing",
+    "year": 2026,
+    "keywords": [
+      "metasurface",
+      "超表面",
+      "lithography",
+      "光刻",
+      "infrared",
+      "红外"
+    ]
+  },
+  {
+    "id": 363,
+    "title": "High-Brightness, Wide-Gamut, and High-Resolution Structural Colors via Ultrafast Laser Oxidation of Ti/TiO2 Films",
+    "authors": [
+      "Ruiyi Chen",
+      "Wei Lyu",
+      "Xiaoyu Sun",
+      "Haojie Zheng",
+      "Yiheng Chen",
+      "Min Qiu"
+    ],
+    "journal": "Advanced Science",
+    "year": 2026,
+    "keywords": [
+      "laser",
+      "激光",
+      "ultrafast",
+      "超快"
+    ]
+  },
+  {
+    "id": 362,
+    "title": "Winding coupling phase for pseudo-spin-derived topological photonics",
+    "authors": [
+      "Tianyuan Liu",
+      "Min Qiu",
+      "Wei Yan"
+    ],
+    "journal": "Nature Communications",
+    "year": 2025,
+    "keywords": [
+      "photonic",
+      "光子",
+      "topological",
+      "拓扑"
+    ]
+  },
+  {
+    "id": 361,
+    "title": "Geometrical Tailoring of Shockley–Ramo Bipolar Photocurrent in Self-Powered GaAs Nanodevices",
+    "authors": [
+      "Xiaoguo Fang",
+      "Huanyi Xue",
+      "Xuhui Mao",
+      "Feilin Chen",
+      "Ludi Qin",
+      "Haiyue Pei",
+      "Zhong Chen",
+      "Pingping Chen",
+      "Ding Zhao",
+      "Zhenghua An",
+      "Min Qiu"
+    ],
+    "journal": "Advanced Optical Materials",
+    "year": 2025,
+    "keywords": [
+      "nano",
+      "纳米",
+      "AR",
+      "增强现实",
+      "device",
+      "器件"
+    ]
+  },
+  {
+    "id": 360,
+    "title": "Ice buffer layer assisted in situ soft-landing for van der Waals integration",
+    "authors": [
+      "Xinyu Sun",
+      "Yihan Lu",
+      "Bin Bin Jin",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Journal of Physics: Conference Series(会议论文）3100 012003",
+    "year": 2025,
+    "keywords": [
+      "ice lithography",
+      "冰刻",
+      "integration",
+      "集成",
+      "van der Waals",
+      "范德华"
+    ]
+  },
+  {
+    "id": 359,
+    "title": "Substrate Selection for Ice Lithography on Living Tardigrades",
+    "authors": [
+      "Zhirong Yang",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Journal of Physics: Conference Series(会议论文） 3100 012002",
+    "year": 2025,
+    "keywords": [
+      "lithography",
+      "光刻",
+      "ice lithography",
+      "冰刻"
+    ]
+  },
+  {
+    "id": 358,
+    "title": "Ice-assisted soft-landing deposition for van der Waals integration",
+    "authors": [
+      "Xinyu Sun",
+      "Xiang Xu",
+      "Bin Bin Jin",
+      "Yihan Lu",
+      "Jichuang Shen",
+      "Wei Kong",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "arXiv:2508.18577",
+    "year": 2025,
+    "keywords": [
+      "integration",
+      "集成",
+      "van der Waals",
+      "范德华"
+    ]
+  },
+  {
+    "id": 357,
+    "title": "Controlled Growth of Multifilament Structures with Deep Subwavelength Features in SiC via Ultrafast Laser Processing",
+    "authors": [
+      "Xiaoyu Sun",
+      "Haojie Zheng",
+      "Qiannan Jia",
+      "Limin Qi",
+      "Zhiqi Zhang",
+      "Lijing Zhong",
+      "Wei Yan",
+      "Jianrong Qiuand Min Qiu"
+    ],
+    "journal": "Photonics，Vol.12",
+    "year": 2025,
+    "keywords": [
+      "SiC",
+      "碳化硅",
+      "laser",
+      "激光",
+      "ultrafast",
+      "超快"
+    ]
+  },
+  {
+    "id": 356,
+    "title": "Breakthroughs in Large-Scale Intelligent Photonic Computing Inference",
+    "authors": [
+      "Jing Pan",
+      "Zhihao Li",
+      "Min Qiu"
+    ],
+    "journal": "，Chinese Science Bulletin",
+    "year": 2025,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 355,
+    "title": "Ice-assisted van der Waals metal contact with halide perovskites",
+    "authors": [
+      "Yihan Lu",
+      "Bangjie Song",
+      "Xinyu Sun",
+      "∙Binbin Jin",
+      "D ing Zhao",
+      "Siying Peng",
+      "Min Qiu"
+    ],
+    "journal": "Device",
+    "year": 2025,
+    "keywords": [
+      "perovskite",
+      "钙钛矿",
+      "van der Waals",
+      "范德华"
+    ]
+  },
+  {
+    "id": 354,
+    "title": "Femtosecond laser-induced CSiVC color centers on the surface of N-doped 4H-SiC",
+    "authors": [
+      "Xiaoyu Sun",
+      "Xuhu Han",
+      "Haochen Wang",
+      "Haojie Zheng",
+      "Qiannan Jia",
+      "Lei Zhang",
+      "Xinyu Sun",
+      "Chen Chen",
+      "Xiaoguo Fang",
+      "Liping Shi",
+      "Fengjiang Liu",
+      "Dongli Liu",
+      "Zhiqi Zhang",
+      "Yu Xie",
+      "Lijing Zhong",
+      "Wei Yan",
+      "Jianrong Qiu",
+      "Min Qiu"
+    ],
+    "journal": "Optics Letters",
+    "year": 2025,
+    "keywords": [
+      "laser",
+      "激光",
+      "femtosecond",
+      "飞秒",
+      "color center",
+      "色心",
+      "CSiVC",
+      "碳化硅色心"
+    ]
+  },
+  {
+    "id": 353,
+    "title": "Light-Controlled Oscillation of Microplates Leveraging Contact Adhesion",
+    "authors": [
+      "Weiwei Tang",
+      "Qiannan Jia",
+      "Ning Zhou",
+      "Wei Yan",
+      "Min Qiu"
+    ],
+    "journal": "， ACS Nano， Vol.19",
+    "year": 2025,
+    "keywords": []
+  },
+  {
+    "id": 352,
+    "title": "SiC diffractive waveguides for augmented reality: single-layer, full-color, rainbow-artifact-free display with vision correction",
+    "authors": [
+      "Boqu Chen",
+      "Ce Li",
+      "Xiaoxuan Li",
+      "Chenting Fang",
+      "Yinggang Chen",
+      "Ding Zhao",
+      "Lu Cai",
+      "Kaikai Du&Min Qiu"
+    ],
+    "journal": "eLight",
+    "year": 2025,
+    "keywords": [
+      "SiC",
+      "碳化硅",
+      "waveguide",
+      "光波导",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 351,
+    "title": "Dispersion Design Method of Metasurface Based on Semi-Inverse Phase Matching",
+    "authors": [
+      "Zhuang Ma",
+      "Wei Yan",
+      "Min Qiu"
+    ],
+    "journal": "Laser Photonics Reviews",
+    "year": 0,
+    "keywords": [
+      "metasurface",
+      "超表面"
+    ]
+  },
+  {
+    "id": 350,
+    "title": "Repetition Frequency-Dependent Formation of Oxidized LIPSSs on Amorphous Silicon Films",
+    "authors": [
+      "Liye Xu",
+      "Wei Yan",
+      "Weicheng Cui",
+      "Min Qiu"
+    ],
+    "journal": "Photonics",
+    "year": 2025,
+    "keywords": []
+  },
+  {
+    "id": 349,
+    "title": "Ice lithography: Advances and prospects",
+    "authors": [
+      "Kang Zhao",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Science & Technology Review",
+    "year": 2025,
+    "keywords": [
+      "lithography",
+      "光刻",
+      "ice lithography",
+      "冰刻"
+    ]
+  },
+  {
+    "id": 348,
+    "title": "Tattooing water bears: microfabrication on living organisms",
+    "authors": [
+      "Zhirong Yang",
+      "Shan Wu",
+      "Kang Zhao",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Science Bulletin",
+    "year": 2025,
+    "keywords": []
+  },
+  {
+    "id": 347,
+    "title": "Patterning on Living Tardigrades",
+    "authors": [
+      "Zhirong Yang",
+      "Shan Wu",
+      "Kang Zhao",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Nano Letters",
+    "year": 2025,
+    "keywords": []
+  },
+  {
+    "id": 346,
+    "title": "Transparent radiative cooler with high thermal conductivity for heat dissipation in electronic devices",
+    "authors": [
+      "Xiaoxuan Li",
+      "Zhiqiang Xie",
+      "Boqu Chen",
+      "Lu Cai",
+      "Ding Zhao",
+      "Kaikai Du",
+      "Min Qiu"
+    ],
+    "journal": "Cell Reports Physical Science",
+    "year": 2025,
+    "keywords": [
+      "thermal",
+      "热",
+      "radiative",
+      "辐射",
+      "device",
+      "器件"
+    ]
+  },
+  {
     "id": 345,
-    "title": "Ultrafast Laser Inkless Full-Color Printing on Flexible and Thermolabile Substrates",
+    "title": "Multiexposure Grayscale Patterns with Low-Energy Electrons",
     "authors": [
       "Xinyu Sun",
       "Guangnan Yao",
@@ -9,13 +429,48 @@
       "Ding Zhao",
       "Min Qiu"
     ],
-    "journal": "Advanced Optical Materials",
+    "journal": "A CS Applied Materials & Interfaces",
     "year": 2025,
+    "keywords": []
+  },
+  {
+    "id": 344,
+    "title": "Micro-Rotors on Frictional Solid Surfaces via Optothermally-Invoked Chirality",
+    "authors": [
+      "Qiannan Jia",
+      "Zhiqi Zhang",
+      "Xiaoyu Sun",
+      "Wei Yan",
+      "Min Qiu"
+    ],
+    "journal": "Laser & Photonics Reviews",
+    "year": 2024,
     "keywords": [
-      "超快激光",
-      "femtosecond",
-      "激光加工",
-      "laser processing"
+      "thermal",
+      "热"
+    ]
+  },
+  {
+    "id": 343,
+    "title": "Ultrafast Laser Inkless Full-Color Printing on Flexible and Thermolabile Substrates",
+    "authors": [
+      "Zhewei Wang",
+      "Liye Xu",
+      "Zhefeng Zhang",
+      "Kaikai Du",
+      "Wei Yan",
+      "Weicheng Cui",
+      "Min Qiu"
+    ],
+    "journal": "， Advanced Optical Materi als",
+    "year": 2024,
+    "keywords": [
+      "laser",
+      "激光",
+      "printing",
+      "打印",
+      "ultrafast",
+      "超快"
     ]
   },
   {
@@ -34,17 +489,37 @@
     "journal": "Advanced Materials",
     "year": 2024,
     "keywords": [
-      "碳化硅",
-      "SiC",
-      "光热",
-      "thermal photonics",
+      "metalens",
       "超透镜",
-      "metalens"
+      "SiC",
+      "碳化硅",
+      "thermal",
+      "热",
+      "laser",
+      "激光"
+    ]
+  },
+  {
+    "id": 341,
+    "title": "Liquid Hydrogen Temperature Cryostage for Ice-Assisted Electron-Beam Lithography",
+    "authors": [
+      "Rui Zheng",
+      "Limin Qi",
+      "Sizhuo Li",
+      "Zhihua Gan",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "IEEE Transactions on Instrumentation and Measurement",
+    "year": 2024,
+    "keywords": [
+      "lithography",
+      "光刻"
     ]
   },
   {
     "id": 340,
-    "title": "Advancing cryogenic electronic cooling: A case study on embedded manifold microchannels in micromachined Joule-Thomson coolers",
+    "title": "Fast and Efficient Inverse Design Framework for Multifunctional Metalenses",
     "authors": [
       "Xixian Zu",
       "Xiaoyu Sun",
@@ -52,11 +527,28 @@
       "Wei E. I. Sha",
       "Min Qiu"
     ],
-    "journal": "Case Studies in Thermal Engineering",
+    "journal": "Laser&Photonics Reviews",
     "year": 2024,
     "keywords": [
-      "低温制冷",
-      "cryogenic cooling"
+      "metalens",
+      "超透镜"
+    ]
+  },
+  {
+    "id": 339,
+    "title": "Advancing cryogenic electronic cooling: A case study on embedded manifold microchannels in micromachined Joule-Thomson coolers",
+    "authors": [
+      "Limin Qi",
+      "Dongli Liu",
+      "Haiyue Pei",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Case Studies in Thermal Engineering",
+    "year": 0,
+    "keywords": [
+      "cooling",
+      "制冷"
     ]
   },
   {
@@ -76,10 +568,29 @@
     "journal": "Advanced Science",
     "year": 2024,
     "keywords": [
-      "光热",
-      "opto-thermal",
-      "光热弹性波",
-      "opto-thermo-elastic"
+      "van der Waals",
+      "范德华"
+    ]
+  },
+  {
+    "id": 337,
+    "title": "Micromachined Joule–Thomson cooling for long-time and precise thermal management",
+    "authors": [
+      "Haiyue Pei",
+      "Limin Qi",
+      "Yihan Lu",
+      "Dongli Liu",
+      "Jiakai Zhu",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "Review of Scientific Instruments",
+    "year": 2024,
+    "keywords": [
+      "thermal",
+      "热",
+      "cooling",
+      "制冷"
     ]
   },
   {
@@ -97,8 +608,8 @@
     "journal": "PhotoniX",
     "year": 2024,
     "keywords": [
-      "超表面",
-      "metasurface"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -107,14 +618,11 @@
     "authors": [
       "Tianyuan Liu",
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.L020101",
+    "journal": "Physical Review B",
     "year": 2024,
-    "keywords": [
-      "拓扑光子",
-      "topological photonic"
-    ]
+    "keywords": []
   },
   {
     "id": 334,
@@ -122,14 +630,11 @@
     "authors": [
       "Luqing Shao",
       "Xijun Li",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.24304-24316",
+    "journal": "Optics Express",
     "year": 2024,
-    "keywords": [
-      "光波导",
-      "waveguide"
-    ]
+    "keywords": []
   },
   {
     "id": 333,
@@ -146,14 +651,11 @@
       "Ali Akhtar",
       "Ding Zhao",
       "Min Qiu",
-      "Daru Chen"
+      "Daru Chen."
     ],
-    "journal": "IEEE Transactions on Instrumentation and Measurement",
-    "year": 2024,
-    "keywords": [
-      "光波导",
-      "waveguide"
-    ]
+    "journal": "IEEE Transactions on Instrumentation and Measurement.V ol.73",
+    "year": 0,
+    "keywords": []
   },
   {
     "id": 332,
@@ -171,12 +673,7 @@
     ],
     "journal": "Physical Review B",
     "year": 2024,
-    "keywords": [
-      "碳化硅",
-      "SiC",
-      "量子",
-      "quantum"
-    ]
+    "keywords": []
   },
   {
     "id": 331,
@@ -198,12 +695,12 @@
     "journal": "Laser & Photonics Reviews",
     "year": 2024,
     "keywords": [
-      "超表面",
       "metasurface",
-      "超快激光",
-      "femtosecond",
-      "石墨烯",
-      "graphene"
+      "超表面",
+      "optical",
+      "光学",
+      "ultrafast",
+      "超快"
     ]
   },
   {
@@ -223,8 +720,10 @@
     "journal": "Microelectronic Engineering",
     "year": 2024,
     "keywords": [
-      "冰刻",
-      "ice lithography"
+      "lithography",
+      "光刻",
+      "ice lithography",
+      "冰刻"
     ]
   },
   {
@@ -232,19 +731,19 @@
     "title": "A micromachined Joule-Thomson cryocooler for ice lithography",
     "authors": [
       "Limin Qi",
-      "Zheng Rui",
+      "Zheng Rui.",
       "Dongli Liu",
       "Haiyue Pei",
       "Ding Zhao",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.112180",
+    "journal": "Microelectronic Engineering",
     "year": 2024,
     "keywords": [
-      "冰刻",
+      "lithography",
+      "光刻",
       "ice lithography",
-      "低温制冷",
-      "Joule-Thomson cooling"
+      "冰刻"
     ]
   },
   {
@@ -258,57 +757,179 @@
       "Liaoyong Wen",
       "Qing Zhang",
       "Ding Zhao",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.5610-5617",
+    "journal": "Nano Letters",
     "year": 2024,
     "keywords": [
-      "超表面",
       "metasurface",
-      "冰刻",
-      "ice lithography",
-      "钙钛矿",
-      "perovskite"
+      "超表面",
+      "perovskite",
+      "钙钛矿"
     ]
   },
   {
     "id": 327,
-    "title": "Fiber‐Integrated Force Sensor using 3D Printed Spring‐Composed Fabry‐Perot Cavities with a High Precision Down to Tens of Piconewton",
+    "title": "Metallic photoluminescence of plasmonic nanoparticles in both weak and strong excitation regimes",
     "authors": [
       "Xiaoguo Fang",
       "Jiyong Wang",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.2305121",
+    "journal": "Nanophotonics",
     "year": 2024,
     "keywords": [
-      "光波导",
-      "waveguide",
-      "力传感器",
-      "force sensor",
-      "3D打印",
-      "3D printing"
+      "plasmon",
+      "等离激元",
+      "nano",
+      "纳米"
+    ]
+  },
+  {
+    "id": 326,
+    "title": "Observation of Wide Bandwidth and Giant Chiroptical Response Empowered by Core–Shell Micro-Helixes",
+    "authors": [
+      "Xinggang Shang",
+      "Ning Wang",
+      "Chengyao Li",
+      "Wei Yan",
+      "Yitong Gu",
+      "Ruwen Peng",
+      "Nanjia Zhou",
+      "Min Qiu."
+    ],
+    "journal": "Advanced Photonics Research",
+    "year": 2024,
+    "keywords": [
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 325,
+    "title": "Oxidation-driven 2D LIPSS on amorphous Si films atop metal layers: The interplay of near-field and far-field effects",
+    "authors": [
+      "Liye Xu",
+      "Jiao Geng",
+      "Liping Shi",
+      "Weicheng Cui",
+      "Min Qiu."
+    ],
+    "journal": "Applied Surface Science",
+    "year": 2024,
+    "keywords": []
+  },
+  {
+    "id": 324,
+    "title": "Pulsed polarized vortex beam enabled by metafiber lasers",
+    "authors": [
+      "Chenxi Zhang",
+      "Lei Zhang",
+      "He Zhang",
+      "Bo Fu",
+      "Jiyong Wang & Min Qiu"
+    ],
+    "journal": "PhotoniX",
+    "year": 2024,
+    "keywords": [
+      "laser",
+      "激光"
+    ]
+  },
+  {
+    "id": 323,
+    "title": "Fiber‐Integrated Force Sensor using 3D Printed Spring‐Composed Fabry‐Perot Cavities with a High Precision Down to Tens of Piconewton",
+    "authors": [
+      "Xinggang Shang",
+      "Ning Wang",
+      "Simin Cao",
+      "Hehao Chen",
+      "Dixia Fan",
+      "Nanjia Zhou",
+      "Min Qiu ."
+    ],
+    "journal": "A dvanced Materials",
+    "year": 2023,
+    "keywords": []
+  },
+  {
+    "id": 322,
+    "title": "Night-time radiative warming using the atmosphere",
+    "authors": [
+      "Yining Zhu",
+      "Yiwei Zhou",
+      "Bing Qin",
+      "Rui Qin",
+      "Min Qiu",
+      "Qiang Li."
+    ],
+    "journal": "Light: Science & Applications",
+    "year": 2023,
+    "keywords": [
+      "radiative",
+      "辐射"
     ]
   },
   {
     "id": 321,
-    "title": "A study of structural effect on the spectral property of metallic cross-hole array in mid-infrared wavelengths",
+    "title": "Nanomotion of micro-objects driven by light-induced elastic waves on solid interfaces",
     "authors": [
       "Wei Lyu",
       "Weiwei Tang",
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
+    ],
+    "journal": "Physical Review Applied",
+    "year": 2023,
+    "keywords": [
+      "nano",
+      "纳米"
+    ]
+  },
+  {
+    "id": 320,
+    "title": "Laser-induced deep-subwavelength periodic nanostructures with large-scale uniformity",
+    "authors": [
+      "Jiao Geng",
+      "Liping Shi",
+      "Jukun Liu",
+      "Liye Xu",
+      "Wei Yan",
+      "Min Qiu."
+    ],
+    "journal": "Applied Physics Letters",
+    "year": 2023,
+    "keywords": [
+      "laser",
+      "激光",
+      "nano",
+      "纳米"
+    ]
+  },
+  {
+    "id": 319,
+    "title": "A study of structural effect on the spectral property of metallic cross-hole array in mid-infrared wavelengths",
+    "authors": [
+      "J inyu Guo",
+      "Tao Liu",
+      "Shuoqiu Tian",
+      "Wentao Yuan",
+      "Rui Zheng",
+      "Shan Wu",
+      "Ding Zhao",
+      "Yifang Chen",
+      "Min Qiu."
     ],
     "journal": "Microelectronic Engineering",
     "year": 2023,
     "keywords": [
-      "红外",
-      "infrared"
+      "infrared",
+      "红外"
     ]
   },
   {
     "id": 318,
-    "title": "A dual-axis mechanical model for analyzing the capillary-force-induced clustering on periodic structures",
+    "title": "Zero-threshold and Broadband Optical Gain Induced by Plasmonic Doping",
     "authors": [
       "Hao Zhang",
       "Fengjiang Liu",
@@ -316,14 +937,320 @@
       "Kai Chen",
       "Yuhui Chen",
       "Min Qiu",
-      "Pieter Geiregat"
+      "Pieter Geiregat."
+    ],
+    "journal": "Bulletin of the American Physical Society",
+    "year": 2023,
+    "keywords": [
+      "plasmon",
+      "等离激元",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 317,
+    "title": "Chromatic Effects of Supplemental Light on the Fruit Quality of Strawberries",
+    "authors": [
+      "Ni Tang",
+      "Jiyong Wang",
+      "Baofeng Zhang",
+      "Hao Chen",
+      "Min Qiu."
+    ],
+    "journal": "Horticulturae",
+    "year": 2023,
+    "keywords": []
+  },
+  {
+    "id": 316,
+    "title": "Directional Thermal Emission Covering Two Atmospheric Windows",
+    "authors": [
+      "Yunbin Ying",
+      "Jianbo Yu",
+      "Bing Qin",
+      "Meng Zhao",
+      "Tianze Zhou",
+      "Weidong Shen",
+      "Min Qiu",
+      "Qiang Li."
+    ],
+    "journal": "Laser & Photonics Reviews",
+    "year": 2023,
+    "keywords": [
+      "thermal",
+      "热"
+    ]
+  },
+  {
+    "id": 315,
+    "title": "Femtosecond‐Laser‐Direct‐Writing Micro‐Scale Soft Actuators with Controllable Shape Morphing",
+    "authors": [
+      "Yong Wang",
+      "Yunlong Li",
+      "Jiao Geng",
+      "Zhiming Hu",
+      "Fengjiang Liu",
+      "Liping Shi",
+      "Jiu-an Lv",
+      "Min Qiu."
+    ],
+    "journal": "Advanced Materials Technologies",
+    "year": 2023,
+    "keywords": [
+      "laser",
+      "激光",
+      "femtosecond",
+      "飞秒"
+    ]
+  },
+  {
+    "id": 314,
+    "title": "Colored Woven Cloth‐Based Textile for Passive Radiative Heating",
+    "authors": [
+      "Yining Zhu",
+      "Wenjuan Wang",
+      "Yiwei Zhou",
+      "Rui Qin",
+      "Bing Qin",
+      "Tianze Zhou",
+      "Min Qiu",
+      "Qiang Li."
+    ],
+    "journal": "Laser & Photonics Reviews",
+    "year": 2023,
+    "keywords": [
+      "radiative",
+      "辐射"
+    ]
+  },
+  {
+    "id": 313,
+    "title": "Asymmetric directional control of thermal emission",
+    "authors": [
+      "Jiaobo Yu",
+      "Rui Qin",
+      "Yunbin Ying",
+      "Min Qiu",
+      "Qiang Li."
+    ],
+    "journal": "Advanced Materials",
+    "year": 2023,
+    "keywords": [
+      "thermal",
+      "热"
+    ]
+  },
+  {
+    "id": 312,
+    "title": "Nonlinear plasmonics: second-harmonic generation and multiphoton photoluminescence",
+    "authors": [
+      "Jiyong Wang",
+      "Lei Zhang",
+      "Min Qiu."
+    ],
+    "journal": "PhotoniX",
+    "year": 2023,
+    "keywords": [
+      "plasmon",
+      "等离激元",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 311,
+    "title": "Whole-infrared-band camouflage with dual-band radiative heat dissipation",
+    "authors": [
+      "Bing Qin",
+      "Yining Zhu",
+      "Yiwei Zhou",
+      "Min Qiu",
+      "Qiang Li."
+    ],
+    "journal": "Light: Science & Applications",
+    "year": 2023,
+    "keywords": [
+      "radiative",
+      "辐射",
+      "infrared",
+      "红外",
+      "camouflage",
+      "伪装"
+    ]
+  },
+  {
+    "id": 310,
+    "title": "Hot‐Electron Driven Ultrafast Optical Polarization Conversion with Graphene‐Loaded Metasurface",
+    "authors": [
+      "Xu",
+      "Leijun",
+      "Jiale He",
+      "Weiwei Tang",
+      "Chengsen Yang",
+      "Li Han",
+      "Libo Zhang",
+      "He Zhu",
+      "Shijie Liu",
+      "Changlong Liu",
+      "Min Qiu",
+      "Guanhai Li",
+      "Xiaoshuang Chen."
+    ],
+    "journal": "Laser and Photonics Reviews Early View， Vol.18",
+    "year": 2023,
+    "keywords": [
+      "metasurface",
+      "超表面",
+      "optical",
+      "光学",
+      "ultrafast",
+      "超快"
+    ]
+  },
+  {
+    "id": 309,
+    "title": "Impact of film t hickness in laser-induced periodic structures on amorphous Si films",
+    "authors": [
+      "Liye Xu",
+      "Jiao Geng",
+      "Liping Shi",
+      "Weicheng Cui &",
+      "Min Qiu"
+    ],
+    "journal": "Frontiers of Optoelectronics",
+    "year": 2023,
+    "keywords": [
+      "laser",
+      "激光"
+    ]
+  },
+  {
+    "id": 308,
+    "title": "A dual-axis mechanical model for analyzing the capillary-force-induced clustering on periodic structures",
+    "authors": [
+      "Shang Xinggang",
+      "Wang Ning",
+      "Zhou Nanjia",
+      "Qiu Min"
     ],
     "journal": "Journal of Applied Physics",
     "year": 2023,
+    "keywords": []
+  },
+  {
+    "id": 307,
+    "title": "PDMS-filled micro-spring Fabry-Perot cavity for temperature sensing",
+    "authors": [
+      "Cao Simin",
+      "Shang Xinggang",
+      "Zhang Lei",
+      "Wang Ning",
+      "Qiu Min"
+    ],
+    "journal": "Opt. Express 31",
+    "year": 2023,
+    "keywords": []
+  },
+  {
+    "id": 306,
+    "title": "Optical manipulation: from fluid to solid domains",
+    "authors": [
+      "Qiannan Jia",
+      "Wei Lyu",
+      "Wei Yan",
+      "Weiwei Tang",
+      "Jinsheng Lu",
+      "Min Qiu"
+    ],
+    "journal": "Photonics Insights",
+    "year": 2023,
     "keywords": [
-      "碳化硅",
-      "SiC"
+      "optical",
+      "光学"
     ]
+  },
+  {
+    "id": 305,
+    "title": "Plasmonic metafibers electro-optic modulators",
+    "authors": [
+      "Lei Zhang",
+      "Xinyu Sun",
+      "Hongyan Yu",
+      "Niping Deng",
+      "Feng Qiu",
+      "Jiyong Wang & Min Qiu"
+    ],
+    "journal": "Light: Science & Applications",
+    "year": 2023,
+    "keywords": [
+      "plasmon",
+      "等离激元"
+    ]
+  },
+  {
+    "id": 304,
+    "title": "Cooling characteristics of a nitrogen micromachined Joule-Thomson cooler operating from 88.5 K to 295 K",
+    "authors": [
+      "Limin Qi",
+      "Dongli Liu",
+      "Xiao Liu",
+      "Haiyue Pei",
+      "Ding Zhao",
+      "Haishan Cao",
+      "Min Qiu"
+    ],
+    "journal": "Applied Thermal Engineering",
+    "year": 2023,
+    "keywords": [
+      "cooling",
+      "制冷"
+    ]
+  },
+  {
+    "id": 303,
+    "title": "Production and Patterning of Fluorescent Quantum Dots by Cryogenic Electron-Beam Writing",
+    "authors": [
+      "Yihan Lu",
+      "Binbin Jin",
+      "Rui Zheng",
+      "Shan Wu",
+      "Ding Zhao",
+      "Min Qiu"
+    ],
+    "journal": "ACS Appl. Mater. Interfaces",
+    "year": 2023,
+    "keywords": []
+  },
+  {
+    "id": 302,
+    "title": "Fibre tapering using plasmonic microheaters and deformation-induced pull",
+    "authors": [
+      "Qiannan Jia",
+      "Weiwei Tang",
+      "Wei Yan",
+      "Min Qiu"
+    ],
+    "journal": "Light: Advanced Manufacturing Vol.4",
+    "year": 2023,
+    "keywords": [
+      "plasmon",
+      "等离激元"
+    ]
+  },
+  {
+    "id": 301,
+    "title": "Accurate luminance and chromaticity controls of digital colors using CIE-based RGBW algorithms",
+    "authors": [
+      "Ni Tang",
+      "Jiyong Wang",
+      "Baofeng Zhang",
+      "Hao Chen",
+      "Min Qiu"
+    ],
+    "journal": "J. Opt. Soc. Am. A",
+    "year": 2023,
+    "keywords": []
   },
   {
     "id": 300,
@@ -338,10 +1265,10 @@
     "journal": "Nature Communications",
     "year": 2023,
     "keywords": [
-      "激光加工",
-      "laser processing",
-      "结构色",
-      "structural color"
+      "laser",
+      "激光",
+      "printing",
+      "打印"
     ]
   },
   {
@@ -354,18 +1281,15 @@
       "Ding Zhao",
       "Wei Lyu",
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.026005",
+    "journal": "Advanced Photonics Nexus",
     "year": 2022,
-    "keywords": [
-      "光热弹性波",
-      "optical micromotor"
-    ]
+    "keywords": []
   },
   {
     "id": 298,
-    "title": "'Plug-and-play' plasmonic metafibers for ultrafast fibre lasers",
+    "title": "' Plug-and-play' plasmonic metafibers for ultrafast fibre lasers",
     "authors": [
       "Lei Zhang",
       "Huiru Zhang",
@@ -390,24 +1314,22 @@
       "Duanduan Wu",
       "Xiang Shen",
       "Jiyong Wang",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.653-664",
+    "journal": "Light: Advanced Manufacturing",
     "year": 2022,
     "keywords": [
-      "超表面",
-      "metasurface",
-      "光波导",
-      "waveguide",
-      "超快激光",
-      "femtosecond",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "laser",
+      "激光",
+      "ultrafast",
+      "超快"
     ]
   },
   {
     "id": 297,
-    "title": "Suppression of Phase Transitions in Perovskite Thin Films through Cryogenic Electron Beam Irradiation",
+    "title": "Versatile optical beam routers based on inversely designed supercell metagratings",
     "authors": [
       "Xixian Zu",
       "Boqu Chen",
@@ -416,13 +1338,36 @@
       "Jiyong Wang",
       "Min Qiu"
     ],
-    "journal": "pp.7449-7456",
+    "journal": "Photonics and Nanostructures-Fundamentals and Applications",
     "year": 2022,
     "keywords": [
-      "冰刻",
-      "ice lithography",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 296,
+    "title": "Suppression of Phase Transitions in Perovskite Thin Films through Cryogenic Electron Beam Irradiation",
+    "authors": [
+      "Binbin Jin",
+      "Fei Liang",
+      "Ding Zhao",
+      "Yihan Lu",
+      "Lufang Liu",
+      "Fengjiang Liu",
+      "Zhong Chen",
+      "Gang Bi",
+      "Pan Wang",
+      "Qing Zhang",
+      "Min Qiu."
+    ],
+    "journal": "Nano Letters",
+    "year": 2022,
+    "keywords": [
+      "perovskite",
       "钙钛矿",
-      "perovskite"
+      "e-beam lithography",
+      "电子束光刻"
     ]
   },
   {
@@ -439,17 +1384,19 @@
       "Gang Bi",
       "Qing Zhang",
       "Xiaosheng Fang",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.107692",
+    "journal": "Nano Energy",
     "year": 2022,
     "keywords": [
-      "微纳加工",
-      "nanofabrication",
-      "光电子器件",
-      "optoelectronic",
+      "perovskite",
       "钙钛矿",
-      "perovskite"
+      "nano",
+      "纳米",
+      "lithography",
+      "光刻",
+      "device",
+      "器件"
     ]
   },
   {
@@ -462,15 +1409,13 @@
       "Liping Shi",
       "Lei Zhang",
       "Ning Wang",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.25536-25543",
+    "journal": "Optics Express",
     "year": 2022,
     "keywords": [
-      "光波导",
-      "waveguide",
-      "激光加工",
-      "laser processing"
+      "laser",
+      "激光"
     ]
   },
   {
@@ -482,61 +1427,38 @@
       "Junhan Ni",
       "Qiannan Jia",
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "Iss.14 pp.1-11",
+    "journal": "Photonix",
     "year": 2022,
     "keywords": [
-      "光学",
-      "optics"
+      "optical",
+      "光学"
     ]
   },
   {
     "id": 292,
-    "title": "Surface plasmons interference nanogratings: wafer-scale laser direct structuring in seconds",
+    "title": "Surface plasmons interference nanogratings : wafer-scale laser direct structuring in seconds",
     "authors": [
       "Jiao Geng",
       "Wei Yan",
       "Liping Shi",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.189",
+    "journal": "Light-Science & Applications",
     "year": 2022,
     "keywords": [
-      "激光加工",
-      "laser processing",
+      "plasmon",
       "等离激元",
-      "plasmonic"
-    ]
-  },
-  {
-    "id": 291,
-    "title": "Theoretical modeling of ice lithography on amorphous solid water",
-    "authors": [
-      "Tao Liu",
-      "Xujie Tong",
-      "Shuoqiu Tian",
-      "Yuying Xie",
-      "Mingsai Zhu",
-      "Bo Feng",
-      "Xiaohang Pan",
-      "Rui Zheng",
-      "Shan Wu",
-      "Ding Zhao",
-      "Yifang Chen",
-      "Bingrui Lu",
-      "Min Qiu"
-    ],
-    "journal": "pp.9045-9052",
-    "year": 2022,
-    "keywords": [
-      "冰刻",
-      "ice lithography"
+      "laser",
+      "激光",
+      "nano",
+      "纳米"
     ]
   },
   {
     "id": 290,
-    "title": "Color-preserving passive radiative cooling for an actively temperature-regulated enclosure",
+    "title": "Color -preserving passive radiative cooling for an actively temperature-regulated enclosure",
     "authors": [
       "Yining Zhu",
       "Hao Luo",
@@ -547,15 +1469,15 @@
       "Weidong Shen",
       "Min Qiu",
       "Pavel Belov",
-      "Qiang Li"
+      "Qiang Li."
     ],
-    "journal": "pp. 1-9",
+    "journal": "Light-Science & Applications",
     "year": 2022,
     "keywords": [
-      "光热",
-      "radiative thermal",
-      "辐射制冷",
-      "radiative cooling"
+      "cooling",
+      "制冷",
+      "radiative",
+      "辐射"
     ]
   },
   {
@@ -568,14 +1490,11 @@
       "Hanqing Jiang",
       "Yunfei Jia",
       "Nanjia Zhou",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.171107",
+    "journal": "Applied Physics Letters",
     "year": 2022,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 288,
@@ -587,14 +1506,11 @@
       "Bo Jiao",
       "John Pfotenhauer",
       "Zhihua Gan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.103440",
+    "journal": "Cryogenics",
     "year": 2022,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 287,
@@ -606,13 +1522,13 @@
       "Shan Wu",
       "Guangnan Yao",
       "Dongli Liu",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp. 2112894",
+    "journal": "Advanced Functional Materials",
     "year": 2022,
     "keywords": [
-      "冰刻",
-      "ice lithography"
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -622,29 +1538,26 @@
       "Wei Lyu",
       "Weiwei Tang",
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.2100561",
+    "journal": "Laser & Photonics Reviews",
     "year": 2022,
-    "keywords": [
-      "光波导",
-      "waveguide"
-    ]
+    "keywords": []
   },
   {
     "id": 285,
     "title": "Efficient modal analysis of plasmonic nanoparticles: from retardation to nonclassical regimes",
     "authors": [
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1887-1895",
+    "journal": "Nanophotonics",
     "year": 2022,
     "keywords": [
-      "碳化硅",
-      "SiC",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -655,30 +1568,27 @@
       "Dongli Liu",
       "Sizhuo Li",
       "Zhihua Gan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.122269",
+    "journal": "Energy",
     "year": 2022,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 283,
-    "title": "Ice-assisted electron-beam lithography for MoS2 transistors with extremely low-energy electrons",
+    "title": "Ice-assisted electron-beam lithography for MoS 2 transistors with extremely low-energy electrons",
     "authors": [
       "Guangnan Yao",
       "Ding Zhao",
       "Yu Hong",
       "Rui Zheng",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp. 2479-2483",
+    "journal": "Nanoscale Advances",
     "year": 2022,
     "keywords": [
-      "微纳加工",
-      "nanofabrication"
+      "lithography",
+      "光刻"
     ]
   },
   {
@@ -687,13 +1597,17 @@
     "authors": [
       "Shan Wu",
       "Ding Zhao",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1652-1658",
+    "journal": "ACS Applied Materials & Interfaces",
     "year": 2022,
     "keywords": [
+      "nano",
+      "纳米",
+      "ice lithography",
       "冰刻",
-      "ice lithography"
+      "printing",
+      "打印"
     ]
   },
   {
@@ -705,13 +1619,15 @@
       "Yurui Qu",
       "Siqi Ma",
       "Stan Z Li",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1-35",
+    "journal": "PhotoniX",
     "year": 2021,
     "keywords": [
-      "光计算",
-      "optical computing"
+      "photonic",
+      "光子",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -727,15 +1643,13 @@
       "Sandeep Kaur",
       "Min Qiu",
       "Pavel Belov",
-      "Qiang Li"
+      "Qiang Li  ."
     ],
-    "journal": "pp.1290-1295",
+    "journal": "Optica",
     "year": 2021,
     "keywords": [
-      "超表面",
       "metasurface",
-      "吸收器",
-      "absorber"
+      "超表面"
     ]
   },
   {
@@ -751,14 +1665,11 @@
       "Yingxin Chen",
       "Qiang Li",
       "Xuefeng Zhang",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.4125-4131",
+    "journal": "Nanophotonics",
     "year": 2021,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 278,
@@ -772,18 +1683,18 @@
       "Fengjiang Liu",
       "Weiwei Tang",
       "Liping Shi",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.274-282",
+    "journal": "Light: Advanced Manufacturing",
     "year": 2021,
     "keywords": [
-      "光子学",
-      "photonics"
+      "AR",
+      "增强现实"
     ]
   },
   {
     "id": 277,
-    "title": "Ultrathin High Quality‐Factor Planar Absorbers/Emitters Based on Uniaxial/Biaxial Anisotropic van der Waals Polar Crystals",
+    "title": "Ultrathin High Quality ‐ Factor Planar Absorbers/Emitters Based on Uniaxial/Biaxial Anisotropic van der Waals Polar Crystals",
     "authors": [
       "Huanzheng Zhu",
       "Ziquan Xu",
@@ -793,33 +1704,35 @@
       "Arnab Pattanayak",
       "Pintu Ghosh",
       "Min Qiu",
-      "Qiang Li"
+      "Qiang Li."
     ],
-    "journal": "pp.2100645",
+    "journal": "Advanced Optical Materials",
     "year": 2021,
     "keywords": [
-      "吸收器",
-      "absorber"
+      "AR",
+      "增强现实",
+      "van der Waals",
+      "范德华"
     ]
   },
   {
     "id": 276,
-    "title": "Infrared Camouflage Utilizing Ultrathin Flexible Large‐Scale High‐Temperature‐Tolerant Lambertian Surfaces",
+    "title": "Infrared Camouflage Utilizing Ultrathin Flexible Large ‐ Scale High ‐ Temperature ‐ Tolerant Lambertian Surfaces",
     "authors": [
       "Yun Huang",
       "Binze Ma",
       "Arnab Pattanayak",
       "Sandeep Kaur",
       "Min Qiu",
-      "Qiang Li"
+      "Qiang Li."
     ],
-    "journal": "pp.2000391",
+    "journal": "Laser & Photonics Reviews",
     "year": 2021,
     "keywords": [
-      "隐身",
-      "camouflage",
+      "infrared",
       "红外",
-      "infrared"
+      "camouflage",
+      "伪装"
     ]
   },
   {
@@ -833,14 +1746,11 @@
       "Shelley I Fried",
       "Ding Zhao",
       "Min Qiu",
-      "Anpan Han"
+      "Anpan Han."
     ],
-    "journal": "pp.1-22",
+    "journal": "Microsystems & nanoengineering",
     "year": 2021,
-    "keywords": [
-      "MEMS",
-      "micro-electromechanical"
-    ]
+    "keywords": []
   },
   {
     "id": 274,
@@ -852,14 +1762,11 @@
       "Fengjiang Liu",
       "Jiyong Wang",
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1-10",
+    "journal": "Light: Science & Applications",
     "year": 2021,
-    "keywords": [
-      "光热",
-      "opto-thermal"
-    ]
+    "keywords": []
   },
   {
     "id": 273,
@@ -874,13 +1781,13 @@
       "Justin M. Hodgkiss",
       "Richard J. Blaikie",
       "Boyang Ding",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1-8",
+    "journal": "Nature Communications",
     "year": 2021,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -896,13 +1803,13 @@
       "Xiaoqing Tian",
       "Wei Yan",
       "Jiyong Wang",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.977-983",
+    "journal": "Optica",
     "year": 2021,
     "keywords": [
-      "非线性光学",
-      "nonlinear optics"
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -917,13 +1824,13 @@
       "Min Qiu",
       "Tian Gu",
       "Juejun Hu",
-      "Federico Capasso"
+      "Federico Capasso  ."
     ],
-    "journal": "pp.409-414",
+    "journal": "Optica",
     "year": 2021,
     "keywords": [
-      "光学操控",
-      "optical manipulation"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -938,19 +1845,21 @@
       "Weidong Shen",
       "Sandeep Kaur",
       "Pintu Ghosh",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1-8",
+    "journal": "Nature Communications",
     "year": 2021,
     "keywords": [
-      "光热",
-      "radiative thermal",
-      "隐身",
-      "camouflage",
-      "辐射制冷",
-      "radiative cooling",
+      "cooling",
+      "制冷",
+      "laser",
+      "激光",
+      "radiative",
+      "辐射",
+      "infrared",
       "红外",
-      "infrared"
+      "camouflage",
+      "伪装"
     ]
   },
   {
@@ -966,13 +1875,13 @@
       "Mingbang Wu",
       "Chenying Yang",
       "Min Qiu",
-      "Qiang Li"
+      "Qiang Li."
     ],
-    "journal": "pp. 3879-3886",
+    "journal": "Nano Letters",
     "year": 2021,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -988,13 +1897,17 @@
       "Sandeep Kaur",
       "Pintu Ghosh",
       "Min Qiu",
-      "Qiang Li"
+      "Qiang Li."
     ],
-    "journal": "pp. 5269-5276",
+    "journal": "Nano Letters",
     "year": 2021,
     "keywords": [
+      "metasurface",
       "超表面",
-      "metasurface"
+      "optical",
+      "光学",
+      "radiative",
+      "辐射"
     ]
   },
   {
@@ -1007,13 +1920,13 @@
       "Lufang Liu",
       "Dongli Liu",
       "Pan Wang",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.9797058",
+    "journal": "Research",
     "year": 2021,
     "keywords": [
-      "钙钛矿",
-      "perovskite"
+      "perovskite",
+      "钙钛矿"
     ]
   },
   {
@@ -1024,14 +1937,11 @@
       "Ding Zhao",
       "Guangnan Yao",
       "Yu Hong",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.148265",
+    "journal": "Applied Surface Science",
     "year": 2021,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 265,
@@ -1042,14 +1952,11 @@
       "Yu Hong",
       "Shan Wu",
       "Dongli Liu",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp. 22473-22477",
+    "journal": "Nanoscale",
     "year": 2020,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 264,
@@ -1063,13 +1970,19 @@
       "Dongli Liu",
       "Hao Luo",
       "Qiang Li",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.8841-8846",
+    "journal": "Nano Letters",
     "year": 2020,
     "keywords": [
-      "微纳加工",
-      "nanofabrication"
+      "nanofabrication",
+      "纳米加工",
+      "nano",
+      "纳米",
+      "lithography",
+      "光刻",
+      "e-beam lithography",
+      "电子束光刻"
     ]
   },
   {
@@ -1087,13 +2000,13 @@
       "Pavel Belov",
       "Ravindra K Sinha",
       "Sandeep Kaur",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.241105",
+    "journal": "Applied Physics Letters",
     "year": 2020,
     "keywords": [
-      "光子学",
-      "photonics"
+      "photonic",
+      "光子"
     ]
   },
   {
@@ -1106,14 +2019,11 @@
       "Sizhuo Li",
       "Shuhang Chen",
       "Zhihua Gan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.115627",
+    "journal": "Applied Thermal Engineering",
     "year": 2020,
-    "keywords": [
-      "制冷技术",
-      "cooling technology"
-    ]
+    "keywords": []
   },
   {
     "id": 261,
@@ -1131,14 +2041,11 @@
       "Min Qiu",
       "Qiaoliang Bao",
       "Stefan Maier",
-      "ChengWei Qiu"
+      "Cheng Wei Qiu."
     ],
-    "journal": "pp.2000030",
+    "journal": "Laser & Photonics Reviews",
     "year": 2020,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 260,
@@ -1150,14 +2057,11 @@
       "Jinsheng Lu",
       "Min Qiu",
       "Simon Kheifets",
-      "Federico Capasso"
+      "Federico Capasso  ."
     ],
-    "journal": "pp.436-440",
+    "journal": "Science",
     "year": 2020,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 259,
@@ -1165,13 +2069,13 @@
     "authors": [
       "Wei Yan",
       "Philippe Lalanne",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.013901",
+    "journal": "Physical Review Letters",
     "year": 2020,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1180,17 +2084,19 @@
     "authors": [
       "Yurui Qu",
       "Meiyan Pan",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.064052",
+    "journal": "Physical Review Applied",
     "year": 2020,
     "keywords": [
-      "光热",
-      "radiative thermal",
-      "辐射制冷",
-      "radiative cooling",
-      "红外",
-      "infrared"
+      "thermal",
+      "热",
+      "cooling",
+      "制冷",
+      "radiative",
+      "辐射",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -1198,13 +2104,13 @@
     "title": "Two-dimensional optical edge detection",
     "authors": [
       "Wei Yan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.268-269",
+    "journal": "Nature Photonics",
     "year": 2020,
     "keywords": [
-      "光学",
-      "optics"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -1216,15 +2122,15 @@
       "Pavel A Belov",
       "Ravindra Kumar Sinha",
       "Weiping Qian",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1436-1443",
+    "journal": "ACS Photonics",
     "year": 2020,
     "keywords": [
-      "超表面",
       "metasurface",
-      "吸收器",
-      "absorber"
+      "超表面",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -1240,15 +2146,17 @@
       "Weidong Shen",
       "Sandeep Kaur",
       "Pintu Ghosh",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1-8",
+    "journal": "Light: Science & Applications",
     "year": 2020,
     "keywords": [
-      "隐身",
-      "camouflage",
+      "thermal",
+      "热",
+      "infrared",
       "红外",
-      "infrared"
+      "camouflage",
+      "伪装"
     ]
   },
   {
@@ -1261,13 +2169,19 @@
       "Jin Zhang",
       "Chenning Tao",
       "Pintu Ghosh",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1177-1183",
+    "journal": "Science Bulletin",
     "year": 2020,
     "keywords": [
-      "光计算",
-      "optical computing"
+      "photonic",
+      "光子",
+      "nano",
+      "纳米",
+      "optical",
+      "光学",
+      "neural",
+      "神经"
     ]
   },
   {
@@ -1278,15 +2192,19 @@
       "Ding Zhao",
       "Dongli Liu",
       "Guangnan Yao",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.111251",
+    "journal": "Microelectronic Engineering",
     "year": 2020,
     "keywords": [
-      "冰刻",
+      "nanofabrication",
+      "纳米加工",
+      "nano",
+      "纳米",
+      "lithography",
+      "光刻",
       "ice lithography",
-      "微纳加工",
-      "nanofabrication"
+      "冰刻"
     ]
   },
   {
@@ -1299,17 +2217,19 @@
       "Hao Luo",
       "Huanzheng Zhu",
       "Sandeep Kaur",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.104449",
+    "journal": "Nano Energy",
     "year": 2020,
     "keywords": [
-      "光热",
-      "thermal photonics",
-      "隐身",
-      "camouflage",
+      "photonic",
+      "光子",
+      "thermal",
+      "热",
+      "infrared",
       "红外",
-      "infrared"
+      "camouflage",
+      "伪装"
     ]
   },
   {
@@ -1322,15 +2242,15 @@
       "Yanfeng Zhang",
       "Richard J Blaikie",
       "Boyang Ding",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.063902",
+    "journal": "Physical Review Letters",
     "year": 2020,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "量子",
-      "quantum"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1343,13 +2263,13 @@
       "Qinyu Zhao",
       "Lei Liu",
       "Zhihua Gan",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.114667",
+    "journal": "Applied Thermal Engineering",
     "year": 2020,
     "keywords": [
-      "低温制冷",
-      "Joule-Thomson cooling"
+      "cooling",
+      "制冷"
     ]
   },
   {
@@ -1366,13 +2286,13 @@
       "Huanzheng Zhu",
       "Pintu Ghosh",
       "Weidong Shen",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1900162",
+    "journal": "Laser & Photonics Reviews",
     "year": 2020,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -1381,15 +2301,19 @@
     "authors": [
       "Ding Zhao",
       "Anpan Han",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.865-871",
+    "journal": "Science Bulletin. Vol.64",
     "year": 2019,
     "keywords": [
-      "冰刻",
+      "nanofabrication",
+      "纳米加工",
+      "nano",
+      "纳米",
+      "lithography",
+      "光刻",
       "ice lithography",
-      "微纳加工",
-      "nanofabrication"
+      "冰刻"
     ]
   },
   {
@@ -1402,31 +2326,33 @@
       "F. Javier García de Abajo",
       "Qiang Li",
       "Zhichao Ruan",
-      "Min Qiu"
+      "Min Qiu  ."
     ],
-    "journal": "pp.44030",
+    "journal": "Physical Review Applied.Vol.11",
     "year": 2019,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
     "id": 246,
-    "title": "Simultaneous single-peak and narrowband thermal emission enabled by hybrid metal-polar dielectric structures",
+    "title": "Simultaneous single-peak and narrowband thermal emission enabled by hybrid metal-polar dielectric structure s",
     "authors": [
       "Lu Cai",
       "Qiang Li",
       "Jianbo Yu",
       "Hao Luo",
       "Kaikai Du",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.93505",
+    "journal": "Applied Physics Letters. Vol.115",
     "year": 2019,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -1436,15 +2362,13 @@
       "Qiang Li",
       "Jun Lu",
       "Prince Gupta",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1900595",
+    "journal": "Advanced Optical Materials. Vol.7",
     "year": 2019,
     "keywords": [
-      "石墨烯",
-      "graphene",
-      "吸收器",
-      "absorber"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -1454,34 +2378,36 @@
       "Yurui Qu",
       "Li Jing",
       "Yichen Shen",
-      "Min Qiu. Marin Soljačić"
+      "Min Qiu. Marin Soljačić."
     ],
-    "journal": "pp.1168-1174",
+    "journal": "ACS Photonics. Vol.6",
     "year": 2019,
     "keywords": [
-      "碳化硅",
-      "SiC"
+      "neural",
+      "神经"
     ]
   },
   {
     "id": 243,
     "title": "An ultra-thin colored textile with simultaneous solar and passive heating abilities",
     "authors": [
-      "HaoLuo",
-      "QiangLi",
+      "Hao Luo",
+      "Qiang Li",
       "Kaikai Du",
       "Ziquan Xu",
       "Huanzheng Zhu",
       "Dongli Liu",
       "Lu Cai",
       "Pintu Ghosh",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp. 103998",
+    "journal": "Nano Energy. Vol. 65",
     "year": 2019,
     "keywords": [
-      "光子学",
-      "photonics"
+      "solar",
+      "太阳能",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -1494,13 +2420,15 @@
       "Wei Wang",
       "Ziquan Xu",
       "Min Qiu",
-      "Qiang Li"
+      "Qiang Li."
     ],
-    "journal": "pp. 1800807",
+    "journal": "Advanced Electronic Materials. Vol.5",
     "year": 2019,
     "keywords": [
-      "光热",
-      "opto-thermal"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1513,17 +2441,17 @@
       "Shiwei Long",
       "Yang Yang",
       "Xun Cao",
-      "HaoLuo",
+      "Hao Luo",
       "Huanzheng Zhu",
       "Pintu Ghosh",
       "Weidong Shen",
-      "Min Qiu"
+      "Min Qiu."
     ],
-    "journal": "pp.1900162",
+    "journal": "Laser & Photonics Reviews",
     "year": 2019,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -1539,18 +2467,18 @@
       "AP Pushkarev",
       "Y Sun",
       "P Ghosh",
-      "Qiang Li",
-      "Min Qiu",
+      "Q Li",
+      "M Qiu",
       "SV Makarov",
       "MV Zyuzin"
     ],
-    "journal": "Journal of Physics: Conference Series 1410",
+    "journal": "Journal of Physics: Conference Series 1410 (1)",
     "year": 2019,
     "keywords": [
-      "碳化硅",
-      "SiC",
-      "光热",
-      "thermal photonics"
+      "thermal",
+      "热",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -1564,8 +2492,8 @@
     "journal": "arXiv preprint arXiv:1909.03386",
     "year": 2019,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1583,8 +2511,10 @@
     "journal": "Advanced Electronic Materials",
     "year": 2019,
     "keywords": [
-      "光热",
-      "opto-thermal"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1612,10 +2542,8 @@
     "journal": "Light: Science & Applications",
     "year": 2019,
     "keywords": [
-      "光热",
-      "optical heating",
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -1635,12 +2563,9 @@
       "Min Qiu",
       "Zhichao Ruan"
     ],
-    "journal": "pp. 034043",
+    "journal": "Physical Review Applied",
     "year": 2019,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 235,
@@ -1656,13 +2581,13 @@
     "journal": "Science Advances",
     "year": 2019,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
     "id": 234,
-    "title": "Tunable Valley Polarized Plasmon-Exciton Polaritons in Two-Dimensional Semiconductors",
+    "title": "Tu nable Valley Polarized Plasmon-Exciton Polaritons in Two-Dimensional Semiconductors",
     "authors": [
       "Boyang Ding",
       "Zhepeng Zhang",
@@ -1674,10 +2599,10 @@
     "journal": "ACS nano",
     "year": 2019,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "量子",
-      "quantum"
+      "polariton",
+      "极化激元"
     ]
   },
   {
@@ -1693,12 +2618,9 @@
       "Min Qiu",
       "Sergey I Bozhevolnyi"
     ],
-    "journal": "pp. 396",
+    "journal": "Nature communications",
     "year": 2019,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 232,
@@ -1714,13 +2636,15 @@
       "Pintu Ghosh",
       "Min Qiu"
     ],
-    "journal": "\" Tunable narrowband mid-infrared thermal emitter with a bilayer cavity enhanced Tamm plasmon\". Optics Letters",
+    "journal": "Optics Letters",
     "year": 2018,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "红外",
-      "infrared"
+      "thermal",
+      "热",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -1737,11 +2661,11 @@
       "Jun Lv",
       "Min Qiu"
     ],
-    "journal": "pp. 4989-4992",
+    "journal": "Optics Letters",
     "year": 2018,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1755,15 +2679,15 @@
       "Kaikai Du",
       "Min Qiu"
     ],
-    "journal": "Laser & Photonics Reviews",
+    "journal": "",
     "year": 2018,
     "keywords": [
-      "超表面",
       "metasurface",
-      "吸收器",
-      "absorber",
-      "红外",
-      "infrared"
+      "超表面",
+      "nano",
+      "纳米",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -1775,11 +2699,13 @@
       "Jun Lu",
       "Min Qiu"
     ],
-    "journal": "pp. 23918-23925",
+    "journal": "Optics Express",
     "year": 2018,
     "keywords": [
+      "metasurface",
       "超表面",
-      "metasurface"
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -1794,11 +2720,13 @@
       "Min Qiu",
       "Marin Soljačić"
     ],
-    "journal": "pp. 4125-4131",
+    "journal": "ACS Photo nics 2018",
     "year": 2018,
     "keywords": [
+      "optical",
       "光学",
-      "optics"
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -1814,11 +2742,11 @@
       "Anpan Han",
       "Min Qiu"
     ],
-    "journal": "pp. 5036–5041",
+    "journal": "Nano Letters",
     "year": 2018,
     "keywords": [
-      "微纳加工",
-      "nanofabrication"
+      "lithography",
+      "光刻"
     ]
   },
   {
@@ -1833,11 +2761,13 @@
       "Kaikai Du",
       "Min Qiu"
     ],
-    "journal": "pp. 1–10",
+    "journal": "Light: Science & Applications",
     "year": 2018,
     "keywords": [
-      "隐身",
-      "camouflage"
+      "thermal",
+      "热",
+      "camouflage",
+      "伪装"
     ]
   },
   {
@@ -1849,11 +2779,13 @@
       "Lu Cai",
       "Min Qiu"
     ],
-    "journal": "pp. 2312-2320",
+    "journal": "Optical Materials Express",
     "year": 2018,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -1867,12 +2799,9 @@
       "Jun Lu",
       "Min Qiu"
     ],
-    "journal": "pp. 17772-17780",
+    "journal": "Optics Express",
     "year": 2018,
-    "keywords": [
-      "吸收器",
-      "absorber"
-    ]
+    "keywords": []
   },
   {
     "id": 223,
@@ -1888,11 +2817,13 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "pp. 2422-2425",
+    "journal": "Optics Letters",
     "year": 2018,
     "keywords": [
-      "光热",
-      "opto-thermal"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1907,11 +2838,13 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "pp. 1295-1298",
+    "journal": "Optics Letters",
     "year": 2018,
     "keywords": [
-      "红外",
-      "infrared"
+      "thermal",
+      "热",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -1925,11 +2858,13 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "Advanced Electronic Materials",
+    "journal": "",
     "year": 2018,
     "keywords": [
-      "光热",
-      "opto-thermal"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1948,11 +2883,13 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "pp. 4415-4420",
+    "journal": "Nanoscale",
     "year": 2018,
     "keywords": [
-      "红外",
-      "infrared"
+      "thermal",
+      "热",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -1969,11 +2906,13 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "pp. 071108",
+    "journal": "Applied Physics Letters",
     "year": 2018,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1987,11 +2926,13 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "pp.4279-4287",
+    "journal": "Optics Express",
     "year": 2018,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -1999,20 +2940,22 @@
     "title": "Strongly enhanced molecular fluorescence with ultra-thin optical magnetic mirror metasurfaces",
     "authors": [
       "J. Qin",
-      "Ding Zhao",
+      "D. Zhao",
       "S. Luo",
       "W. Wang",
       "J. Lu",
-      "Min Qiu",
-      "Qiang Li"
+      "M. Qiu",
+      "Q. Li"
     ],
     "journal": "Optics Letters",
     "year": 2017,
     "keywords": [
-      "超表面",
       "metasurface",
-      "荧光",
-      "fluorescence"
+      "超表面",
+      "optical",
+      "光学",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2021,16 +2964,18 @@
     "authors": [
       "G. Xiao",
       "G. H. Zheng",
-      "Min Qiu",
-      "Qiang Li",
+      "M. Qiu",
+      "Q. Li",
       "D. S. Li",
       "M. J. Ni"
     ],
     "journal": "Applied Energy",
     "year": 2017,
     "keywords": [
-      "光热",
-      "thermionic"
+      "solar",
+      "太阳能",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2039,16 +2984,16 @@
     "authors": [
       "J .S. Lu",
       "Y. Hong",
-      "Qiang Li",
+      "Q. Li",
       "Y. X. Xu",
       "W. Fang",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "AIP Advances",
     "year": 2017,
     "keywords": [
-      "金纳米颗粒",
-      "gold nanoparticle"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2059,15 +3004,15 @@
       "Y. H. Chen",
       "B. Y. Ding",
       "R. J. Blaikie",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "The Journal of Physical Chemistry C",
     "year": 2017,
     "keywords": [
-      "碳化硅",
-      "SiC",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2076,7 +3021,7 @@
     "authors": [
       "J. Y. Tian",
       "Y. Q. Yang",
-      "Min Qiu",
+      "M. Qiu",
       "F. Laurell",
       "V. Pasiskevicius",
       "H. Jang"
@@ -2084,10 +3029,10 @@
     "journal": "Optics Express",
     "year": 2017,
     "keywords": [
-      "超表面",
       "metasurface",
-      "太赫兹",
-      "terahertz"
+      "超表面",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2096,14 +3041,18 @@
     "authors": [
       "L. J. Meng",
       "R. W. Yu",
-      "Min Qiu",
+      "M. Qiu",
       "F. J. García de Abajo"
     ],
     "journal": "ACS Nano",
     "year": 2017,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2111,17 +3060,19 @@
     "title": "Dynamic Thermal Emission Control Based on Ultrathin Plasmonic Metamaterials Including Phase-Changing Material GST",
     "authors": [
       "Y. R. Qu",
-      "Qiang Li",
+      "Q. Li",
       "K. K. Du",
       "L. Cai",
       "J. Lu",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "",
     "year": 2017,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -2132,15 +3083,15 @@
       "Y. H. Zhou",
       "Y. J. Lou",
       "H. Ye",
-      "Min Qiu",
+      "M. Qiu",
       "Z. C. Ruan",
       "S. H. Fan"
     ],
     "journal": "Nature Communications",
     "year": 2017,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -2156,14 +3107,14 @@
       "K. K. Du",
       "S. L. Yu",
       "C. W. Qiu",
-      "Min Qiu",
-      "Qiang Li"
+      "M. Qiu.",
+      "Q. Li"
     ],
     "journal": "IEEE Photonics Journal",
     "year": 2017,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -2175,16 +3126,14 @@
       "S. V. Kostinski",
       "M. Odit",
       "P. Kapitanova",
-      "Min Qiu",
+      "M. Qiu",
       "Y. S. Kivshar"
     ],
     "journal": "Physical Review B",
     "year": 2017,
     "keywords": [
-      "碳化硅",
-      "SiC",
-      "超表面",
-      "metasurface"
+      "metasurface",
+      "超表面"
     ]
   },
   {
@@ -2194,18 +3143,18 @@
       "X. X. Chen",
       "Y. H. Chen",
       "J. Qin",
-      "Ding Zhao",
+      "D. Zhao",
       "B. Y. Ding",
       "R. J. Blaikie",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "Nano Letters",
     "year": 2017,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "量子",
-      "quantum"
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2213,22 +3162,20 @@
     "title": "Controlling fluorescence emission with split-ring-resonator-based plasmonic metasurfaces",
     "authors": [
       "S. Luo",
-      "Qiang Li",
+      "Q. Li",
       "Y. Q. Yang",
       "X. X. Chen",
       "W. Wang",
       "Y. R. Qu",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "",
     "year": 2017,
     "keywords": [
-      "超表面",
       "metasurface",
-      "等离激元",
-      "plasmonic",
-      "荧光",
-      "fluorescence"
+      "超表面",
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -2242,16 +3189,18 @@
       "J. Y. Tian",
       "M. Y. Pan",
       "H. Ye",
-      "Min Qiu",
-      "Qiang Li"
+      "M. Qiu",
+      "Q. Li."
     ],
-    "journal": "pp. 101101",
+    "journal": "Applied Physics Letters",
     "year": 2017,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2264,14 +3213,16 @@
       "S. Luo",
       "W. Wang",
       "J. Lv",
-      "Min Qiu",
-      "Qiang Li"
+      "M. Qiu",
+      "Q. Li"
     ],
-    "journal": "pp. 081101",
+    "journal": "Applied Physics Letters",
     "year": 2017,
     "keywords": [
-      "光学",
-      "optics"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2283,14 +3234,14 @@
       "L. N. Zhou",
       "Y. Y. Yang",
       "S. Luo",
-      "Qiang Li",
-      "Min Qiu"
+      "Q. Li",
+      "M. Qiu，"
     ],
-    "journal": "Physical Review Letters",
+    "journal": "，(Editors' Suggestion",
     "year": 2017,
     "keywords": [
-      "碳化硅",
-      "SiC"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2308,8 +3259,8 @@
     "journal": "Light: Science & Applications",
     "year": 2017,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -2317,14 +3268,14 @@
     "title": "Hot Electrons in Metallic Micro/nano-structures",
     "authors": [
       "M. Y. Pan",
-      "Qiang Li",
-      "Min Qiu"
+      "Q. Li",
+      "M. Qiu"
     ],
     "journal": "",
     "year": 2016,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2341,10 +3292,7 @@
     ],
     "journal": "Scientific Reports",
     "year": 2016,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 199,
@@ -2360,12 +3308,12 @@
     "journal": "IEEE Photonics Technology Letters",
     "year": 2016,
     "keywords": [
-      "光热",
-      "opto-thermal",
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2380,7 +3328,7 @@
       "A. S. Vorontsov",
       "P. K. Kashkarov",
       "S. Popov",
-      "Min Qiu",
+      "M. Qiu",
       "M. Zacharias",
       "S. G. Tikhodeev",
       "N. A. Gippius"
@@ -2388,8 +3336,10 @@
     "journal": "Phys. Rev. B",
     "year": 2016,
     "keywords": [
-      "光学",
-      "optics"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2406,10 +3356,8 @@
     "journal": "IEEE Photonics Journal",
     "year": 2016,
     "keywords": [
-      "光热",
-      "opto-thermal",
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -2427,8 +3375,10 @@
     "journal": "Applied Physics Letters",
     "year": 2016,
     "keywords": [
-      "碳化硅",
-      "SiC"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2447,10 +3397,10 @@
     "journal": "Applied Physics Letters",
     "year": 2016,
     "keywords": [
-      "碳化硅",
-      "SiC",
-      "激光加工",
-      "laser processing"
+      "laser",
+      "激光",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2465,8 +3415,8 @@
       "S. A. Bai",
       "S. M. Yang",
       "L. X. Zhao",
-      "Qiang Li",
-      "Min Qiu",
+      "Q. Li",
+      "M. Qiu",
       "R. Z. Tai",
       "H. J. Fecht",
       "J. Z. Jiang",
@@ -2475,8 +3425,10 @@
     "journal": "Applied Optics",
     "year": 2016,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2490,8 +3442,12 @@
     "journal": "Scientific Reports",
     "year": 2016,
     "keywords": [
+      "photonic",
+      "光子",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2506,8 +3462,10 @@
     "journal": "Nanoscale",
     "year": 2016,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2526,8 +3484,10 @@
     "journal": "",
     "year": 2016,
     "keywords": [
-      "吸收器",
-      "absorber"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2541,8 +3501,10 @@
     "journal": "",
     "year": 2016,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2557,8 +3519,12 @@
     "journal": "Plasmonics",
     "year": 2016,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2574,8 +3540,8 @@
     "journal": "J. Nanophoton",
     "year": 2015,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2595,10 +3561,10 @@
     "journal": "Appl. Phys. Lett",
     "year": 2015,
     "keywords": [
-      "金纳米颗粒",
-      "gold nanoparticle",
-      "非线性光学",
-      "nonlinear optics"
+      "nano",
+      "纳米",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2616,10 +3582,12 @@
     "journal": "Scientific Reports 5",
     "year": 2015,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "金纳米颗粒",
-      "gold nanoparticle"
+      "nano",
+      "纳米",
+      "polariton",
+      "极化激元"
     ]
   },
   {
@@ -2633,11 +3601,11 @@
       "Shanhui Fan",
       "Zhichao Ruan"
     ],
-    "journal": "pp 5513–5518",
+    "journal": "Nano Lett. Vol. 15",
     "year": 2015,
     "keywords": [
-      "吸收器",
-      "absorber"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2654,10 +3622,10 @@
     "journal": "J. Phys. Chem. C",
     "year": 2015,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "金纳米颗粒",
-      "gold nanoparticle"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2672,10 +3640,7 @@
     ],
     "journal": "Phys. Status Solidi B",
     "year": 2015,
-    "keywords": [
-      "荧光",
-      "fluorescence"
-    ]
+    "keywords": []
   },
   {
     "id": 182,
@@ -2685,11 +3650,13 @@
       "Qiang Li",
       "Min Qiu"
     ],
-    "journal": "pp. 031109",
+    "journal": "Appl. Phys. Lett. Vol. 107",
     "year": 2015,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2698,19 +3665,17 @@
     "authors": [
       "R. Soltanmoradi",
       "Q. Wang",
-      "Min Qiu",
+      "M. Qiu",
       "S. Popov",
-      "Min Yan"
+      "M. Yan"
     ],
-    "journal": "pp. 15031",
+    "journal": "J. Eur. Opt. Soc.-Rapid Vol. 10",
     "year": 2015,
     "keywords": [
-      "金纳米颗粒",
-      "gold nanoparticle",
-      "吸收器",
-      "absorber",
-      "红外",
-      "infrared"
+      "nano",
+      "纳米",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -2719,14 +3684,18 @@
     "authors": [
       "S A Dyakov",
       "J Dai",
-      "Min Yan",
-      "Min Qiu"
+      "M Yan",
+      "M Qiu"
     ],
-    "journal": "pp. 305104",
+    "journal": "J. Phys. D: Appl. Phys. Vol. 48",
     "year": 2015,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热",
+      "AR",
+      "增强现实",
+      "radiative",
+      "辐射"
     ]
   },
   {
@@ -2739,11 +3708,11 @@
       "Yuanqing Yang",
       "Min Qiu"
     ],
-    "journal": "pp. 1-8",
+    "journal": "IEEE Photonics Journal Vol. 7",
     "year": 2015,
     "keywords": [
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -2756,11 +3725,13 @@
       "Yuanqing Yang",
       "Min Qiu"
     ],
-    "journal": "pp 911-918",
+    "journal": "Plasmonics",
     "year": 2015,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2769,14 +3740,16 @@
     "authors": [
       "S. A. Dyakov",
       "J. Dai",
-      "Min Yan",
-      "Min Qiu"
+      "M. Yan",
+      "M. Qiu"
     ],
-    "journal": "pp. 064103",
+    "journal": "Appl. Phys. Lett. Vol. 106",
     "year": 2015,
     "keywords": [
-      "光热",
-      "thermal photonics"
+      "thermal",
+      "热",
+      "radiative",
+      "辐射"
     ]
   },
   {
@@ -2791,10 +3764,8 @@
     "journal": "Optics Express",
     "year": 2014,
     "keywords": [
-      "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -2807,10 +3778,7 @@
     ],
     "journal": "Optics Express",
     "year": 2014,
-    "keywords": [
-      "吸收器",
-      "absorber"
-    ]
+    "keywords": []
   },
   {
     "id": 174,
@@ -2827,10 +3795,10 @@
     "journal": "Optics Express",
     "year": 2014,
     "keywords": [
-      "光热",
-      "opto-thermal",
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2846,15 +3814,15 @@
       "Min Yan",
       "Qiang Li & Min Qiu"
     ],
-    "journal": "pp. 1-4",
+    "journal": "Scientific Reports 4",
     "year": 2014,
     "keywords": [
-      "光热",
-      "opto-thermal",
-      "金纳米颗粒",
-      "gold nanoparticle",
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热",
+      "laser",
+      "激光",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2863,14 +3831,16 @@
     "authors": [
       "S. A. Dyakov",
       "J. Dai",
-      "Min Yan",
-      "Min Qiu"
+      "M. Yan",
+      "M. Qiu"
     ],
-    "journal": "pp. 045414",
+    "journal": "Physical Review B vol. 90",
     "year": 2014,
     "keywords": [
-      "热学",
-      "thermal"
+      "thermal",
+      "热",
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2880,15 +3850,12 @@
       "R. Soltanmoradi",
       "S. A. Dyakov",
       "Q. Wang",
-      "Min Qiu",
-      "Min Yan"
+      "M. Qiu",
+      "M. Yan"
     ],
-    "journal": "pp. 061110",
+    "journal": "Applied Physics Letters vol. 105",
     "year": 2014,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 170,
@@ -2905,10 +3872,10 @@
     "journal": "Optics Letters",
     "year": 2014,
     "keywords": [
-      "光热",
-      "opto-thermal",
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -2921,10 +3888,14 @@
       "Shanhui Fan"
     ],
     "journal": "Optics Letters",
-    "year": 2014,
+    "year": 0,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "AR",
+      "增强现实",
+      "polariton",
+      "极化激元"
     ]
   },
   {
@@ -2940,11 +3911,11 @@
       "Qiang Li",
       "Min Qiu"
     ],
-    "journal": "pp.221107",
+    "journal": "Applied Physics Letters Vol.104",
     "year": 2014,
     "keywords": [
-      "光子学",
-      "photonics"
+      "AR",
+      "增强现实"
     ]
   },
   {
@@ -2960,8 +3931,10 @@
     "journal": "Optics Letters",
     "year": 2014,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2974,15 +3947,17 @@
       "Min Yan",
       "Min Qiu"
     ],
-    "journal": "pp 1197-1205",
+    "journal": "Plasmonics Vol. 9",
     "year": 2014,
     "keywords": [
-      "光波导",
       "waveguide",
-      "光热",
-      "opto-thermal",
+      "光波导",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -2990,16 +3965,18 @@
     "title": "Whispering gallery mode nanodisk resonator based on layered metal-dielectric waveguide",
     "authors": [
       "F Lou",
-      "Min Yan",
+      "M Yan",
       "L Thylen",
-      "Min Qiu",
+      "M Qiu",
       "L Wosinski"
     ],
-    "journal": "pp. 8490-8502",
+    "journal": "Optics express Vol. 22",
     "year": 2014,
     "keywords": [
+      "waveguide",
       "光波导",
-      "waveguide"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3019,8 +3996,8 @@
     "journal": "Opt. Express",
     "year": 2014,
     "keywords": [
-      "光学",
-      "optics"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -3035,10 +4012,12 @@
     "journal": "Plasmonics",
     "year": 2014,
     "keywords": [
-      "光热",
-      "opto-thermal",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3055,10 +4034,8 @@
     "journal": "Optics Letters",
     "year": 2014,
     "keywords": [
-      "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -3072,12 +4049,10 @@
     "journal": "Journal of Optics",
     "year": 2014,
     "keywords": [
-      "微纳加工",
-      "nanofabrication",
-      "金纳米颗粒",
-      "gold nanoparticle",
-      "吸收器",
-      "absorber"
+      "nano",
+      "纳米",
+      "lithography",
+      "光刻"
     ]
   },
   {
@@ -3095,8 +4070,8 @@
     "journal": "Nanoscale",
     "year": 2014,
     "keywords": [
-      "纳米技术",
-      "nanotechnology"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3108,11 +4083,11 @@
       "Qiang Li",
       "Min Qiu"
     ],
-    "journal": "pp. 261108",
+    "journal": "Appl. Phys. Lett. Vol. 103",
     "year": 2013,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -3120,17 +4095,19 @@
     "title": "Transmission of Infrared Radiation Through Metallic Photonic Crystal Structures",
     "authors": [
       "Soltanmoradi",
-      "R",
+      "R.",
       "Qin Wang",
       "Min Qiu",
       "Andersson",
-      "J.Y"
+      "J.Y."
     ],
-    "journal": "pp. 4500608",
+    "journal": "Photonics Journal",
     "year": 2013,
     "keywords": [
-      "红外",
-      "infrared"
+      "photonic",
+      "光子",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3141,11 +4118,13 @@
       "Cassan",
       "E.; Yang Xu ; Min Qiu; Xing-Chang Wei; Er-Ping Li"
     ],
-    "journal": "pp. 4601809",
+    "journal": "Selected Topics in Quantum Electronics",
     "year": 2013,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3160,12 +4139,16 @@
     "journal": "Journal of Lightwave Technology",
     "year": 2013,
     "keywords": [
-      "光波导",
       "waveguide",
-      "光热",
-      "opto-thermal",
+      "光波导",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热",
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -3180,10 +4163,10 @@
     "journal": "Optics Express",
     "year": 2013,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "ice lithography",
+      "冰刻"
     ]
   },
   {
@@ -3196,10 +4179,7 @@
     ],
     "journal": "Phys. Lett. A",
     "year": 2013,
-    "keywords": [
-      "量子",
-      "quantum"
-    ]
+    "keywords": []
   },
   {
     "id": 153,
@@ -3213,13 +4193,13 @@
       "Qiang Li",
       "Min Qiu"
     ],
-    "journal": "pp. 2247-2249",
+    "journal": "Optics Letters",
     "year": 2013,
     "keywords": [
-      "吸收器",
-      "absorber",
-      "红外",
-      "infrared"
+      "nano",
+      "纳米",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3236,8 +4216,10 @@
     "journal": "Opt. Express 21",
     "year": 2013,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "photonic",
+      "光子",
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -3252,12 +4234,10 @@
     "journal": "Opt. Express 21",
     "year": 2013,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber",
-      "红外",
-      "infrared"
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3272,10 +4252,7 @@
     ],
     "journal": "Appl. Phys. Lett",
     "year": 2013,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 149,
@@ -3287,8 +4264,10 @@
     "journal": "Opt. Express",
     "year": 2013,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3299,14 +4278,14 @@
       "F Ye",
       "Y Chen",
       "M Muhammed",
-      "Min Qiu",
-      "Min Yan"
+      "M Qiu",
+      "M Yan"
     ],
-    "journal": "pp. 6697-6706",
+    "journal": "Optics Express",
     "year": 2013,
     "keywords": [
-      "吸收器",
-      "absorber"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3317,15 +4296,19 @@
       "J Hao",
       "H Ye",
       "SP Yeo",
-      "Min Qiu",
+      "M Qiu",
       "S Zouhdi",
       "CW Qiu"
     ],
     "journal": "Nanoscale",
     "year": 2013,
     "keywords": [
-      "红外",
-      "infrared"
+      "nano",
+      "纳米",
+      "AR",
+      "增强现实",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3335,14 +4318,16 @@
       "Y Chen",
       "J Wang",
       "X Chen",
-      "Min Yan",
-      "Min Qiu"
+      "M Yan",
+      "M Qiu"
     ],
-    "journal": "pp. 1639-1644",
+    "journal": "Optics Express",
     "year": 2013,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热"
     ]
   },
   {
@@ -3356,10 +4341,12 @@
     "journal": "Opt. Express 21",
     "year": 2013,
     "keywords": [
-      "光热",
-      "opto-thermal",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3374,48 +4361,46 @@
     "journal": "Opt. Express",
     "year": 2013,
     "keywords": [
-      "吸收器",
-      "absorber",
-      "红外",
-      "infrared"
+      "infrared",
+      "红外"
     ]
   },
   {
     "id": 143,
     "title": "Design of an Ultrathin Broadband Transparent and High-Conductive Screen Using Plasmonic Nanostructures",
     "authors": [
-      "Hao. J",
-      "Qiu. C. W",
-      "Qiu. M",
-      "Zouhdi. S"
+      "Hao. J.",
+      "Qiu. C. W.",
+      "Qiu. M.",
+      "Zouhdi. S."
     ],
     "journal": "Opt. Lett",
     "year": 2012,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
     "id": 142,
     "title": "Time-Resolved Photocurrents in Quantum Well/Dot Infrared Photodetectors with Different Optical Coupling Structures",
     "authors": [
-      "Chen. Z. H",
-      "Hellstrom. S",
-      "Yu. Z. Y",
-      "Qiu. M",
+      "Chen. Z. H.",
+      "Hellstrom. S.",
+      "Yu. Z. Y.",
+      "Qiu. M.",
       "Fu",
-      "Y"
+      "Y."
     ],
     "journal": "Appl. Phys. Lett",
     "year": 2012,
     "keywords": [
-      "光电子器件",
-      "optoelectronic",
-      "量子",
-      "quantum",
-      "红外",
-      "infrared"
+      "optical",
+      "光学",
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3424,16 +4409,18 @@
     "authors": [
       "X. Chen",
       "Y.T. Chen",
-      "Min Yan",
-      "Min Qiu"
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "ACS Nano",
     "year": 2012,
     "keywords": [
-      "光热",
-      "opto-thermal",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3450,10 +4437,10 @@
     "journal": "IEEE Journal of Selected Topics in Quantum Electronics",
     "year": 2010,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "量子",
-      "quantum"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3465,15 +4452,15 @@
       "F. Li",
       "X. Hu",
       "T. Wang",
-      "Qiang Li",
-      "Min Qiu",
+      "Q. Li",
+      "M. Qiu",
       "Y. Su"
     ],
     "journal": "Electron. Lett.",
     "year": 2011,
     "keywords": [
-      "光计算",
-      "optical computing"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -3489,8 +4476,10 @@
     "journal": "Opt. Express 19",
     "year": 2011,
     "keywords": [
-      "微纳光子学",
-      "nanophotonics"
+      "photonic",
+      "光子",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3507,14 +4496,12 @@
     "journal": "Opt. Express",
     "year": 2011,
     "keywords": [
-      "光热",
-      "opto-thermal",
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "金纳米颗粒",
-      "gold nanoparticle",
-      "吸收器",
-      "absorber"
+      "thermal",
+      "热",
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3527,10 +4514,7 @@
     ],
     "journal": "J. Opt. Soc. Am. A",
     "year": 2011,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 135,
@@ -3546,8 +4530,8 @@
     "journal": "Phys. Rev. A",
     "year": 2013,
     "keywords": [
-      "光波导",
-      "waveguide"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -3563,10 +4547,8 @@
     "journal": "J. Appl. Phys",
     "year": 2011,
     "keywords": [
-      "吸收器",
-      "absorber",
-      "红外",
-      "infrared"
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3581,10 +4563,10 @@
     "journal": "J. Opt.",
     "year": 2011,
     "keywords": [
-      "光波导",
       "waveguide",
-      "等离激元",
-      "plasmonic"
+      "光波导",
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -3599,8 +4581,10 @@
     "journal": "J. Opt.",
     "year": 2011,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3614,10 +4598,8 @@
     "journal": "Phys. Rev. B",
     "year": 2011,
     "keywords": [
-      "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -3631,42 +4613,41 @@
     "journal": "Opt. Express",
     "year": 2011,
     "keywords": [
-      "光波导",
-      "waveguide"
+      "waveguide",
+      "光波导"
     ]
   },
   {
     "id": 129,
     "title": "Generalized nihility media from transformation optics",
     "authors": [
-      "Wei Yan",
-      "Min Yan",
-      "Min Qiu"
+      "W. Yan",
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "J. Opt.",
     "year": 2010,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 128,
     "title": "Reducing crosstalk between nanowire-based hybrid plasmonic waveguides",
     "authors": [
       "Y. Song",
-      "Min Yan",
+      "M. Yan",
       "Q. Yang",
       "L.M. Tong",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "Opt. Comm.",
     "year": 2011,
     "keywords": [
-      "光波导",
       "waveguide",
+      "光波导",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3674,15 +4655,12 @@
     "title": "Design of invisibility cloaks with an open tunnel",
     "authors": [
       "T. Ako",
-      "Min Yan",
-      "Min Qiu"
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "Opt. Express",
     "year": 2010,
-    "keywords": [
-      "隐身",
-      "camouflage"
-    ]
+    "keywords": []
   },
   {
     "id": 126,
@@ -3690,22 +4668,24 @@
     "authors": [
       "J. Tian",
       "Z. Ma",
-      "Qiang Li",
+      "Q. Li",
       "Y. Song",
       "Z. Liu",
       "Q. Yang",
       "C. Zha",
       "J. Åkerman",
       "L. Tong",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
     "year": 2010,
     "keywords": [
-      "光波导",
       "waveguide",
+      "光波导",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
@@ -3713,50 +4693,47 @@
     "title": "Theoretical investigation on guiding IR light in hollow-core metallic fiber with corrugated inner surface",
     "authors": [
       "H. Liu",
-      "Min Yan",
-      "Min Qiu",
+      "M. Yan",
+      "M. Qiu",
       "D. Liu",
       "X. Yu",
       "Y. Zhang"
     ],
     "journal": "Opt. Express",
     "year": 2010,
-    "keywords": [
-      "光波导",
-      "waveguide"
-    ]
+    "keywords": []
   },
   {
     "id": 124,
     "title": "Asymmetric plasmonic-dielectric coupler with short coupling length, high extinction ratio, and low insertion loss",
     "authors": [
-      "Qiang Li",
+      "Q. Li",
       "Y. Song",
       "G. Zhou",
       "Y. Su",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "Opt. Lett.",
     "year": 2010,
     "keywords": [
-      "等离激元",
-      "plasmonic"
+      "plasmon",
+      "等离激元"
     ]
   },
   {
     "id": 123,
     "title": "Structurally-tolerant vertical directional coupling between metal-insulator-metal plasmonic waveguide and silicon dielectric waveguide",
     "authors": [
-      "Qiang Li",
-      "Min Qiu"
+      "Q. Li",
+      "M. Qiu"
     ],
     "journal": "Opt. Express",
     "year": 2010,
     "keywords": [
-      "光波导",
       "waveguide",
-      "等离激元",
-      "plasmonic"
+      "光波导",
+      "plasmon",
+      "等离激元"
     ]
   },
   {
@@ -3768,15 +4745,15 @@
       "X. Liu",
       "W. J. Padilla",
       "L. Zhou",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
     "year": 2010,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic",
-      "吸收器",
-      "absorber"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -3784,29 +4761,26 @@
     "title": "Manipulate light polarizations with metamaterials: From microwave to visible",
     "authors": [
       "J. Hao",
-      "Min Qiu",
+      "M. Qiu",
       "L. Zhou"
     ],
     "journal": "Front. Phys. China",
     "year": 2010,
-    "keywords": [
-      "超材料",
-      "metamaterial"
-    ]
+    "keywords": []
   },
   {
     "id": 120,
     "title": "Photonic crystal surface mode microcavities",
     "authors": [
       "J. Wang",
-      "Min Yan",
-      "Min Qiu"
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "Front. Phys. China",
     "year": 2010,
     "keywords": [
-      "光子晶体",
-      "photonic crystal"
+      "photonic",
+      "光子"
     ]
   },
   {
@@ -3816,7 +4790,7 @@
       "S. Hellström",
       "Z.-H. Chen",
       "Y. Fu",
-      "Min Qiu",
+      "M. Qiu",
       "R. Soltanmoradi",
       "Q. Wang",
       "and J. Y. Andersson"
@@ -3824,12 +4798,8 @@
     "journal": "Appl. Phys. Lett.",
     "year": 2010,
     "keywords": [
-      "光电子器件",
-      "optoelectronic",
-      "量子",
-      "quantum",
-      "红外",
-      "infrared"
+      "infrared",
+      "红外"
     ]
   },
   {
@@ -3838,35 +4808,32 @@
     "authors": [
       "Y. Song",
       "J. Wang",
-      "Qiang Li",
-      "Min Yan",
-      "Min Qiu"
+      "Q. Li",
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "Opt. Express.",
     "year": 2010,
     "keywords": [
-      "光波导",
       "waveguide",
-      "等离激元",
-      "plasmonic"
+      "光波导",
+      "plasmon",
+      "等离激元"
     ]
   },
   {
     "id": 117,
     "title": "Coupled mode theory analysis of mode-splitting in coupled cavity system",
     "authors": [
-      "Qiang Li",
+      "Q. Li",
       "T. Wang",
       "Y. Su",
-      "Min Yan",
-      "Min Qiu"
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "Opt. Express.",
     "year": 2010,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 116,
@@ -3874,14 +4841,14 @@
     "authors": [
       "J. Wang",
       "Y. Song",
-      "Wei Yan",
-      "Min Qiu"
+      "W. Yan",
+      "M. Qiu"
     ],
     "journal": "Opt. Comm.",
     "year": 2010,
     "keywords": [
-      "光子晶体",
-      "photonic crystal"
+      "photonic",
+      "光子"
     ]
   },
   {
@@ -3889,15 +4856,12 @@
     "title": "Super-reflection and cloaking based on zero index metamaterial",
     "authors": [
       "J. Hao",
-      "Wei Yan",
-      "Min Qiu"
+      "W. Yan",
+      "M. Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
     "year": 2010,
-    "keywords": [
-      "隐身",
-      "camouflage"
-    ]
+    "keywords": []
   },
   {
     "id": 114,
@@ -3905,13 +4869,13 @@
     "authors": [
       "B. Jaskorzynska",
       "Y. Song",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "Photonics Letters of Poland",
     "year": 2009,
     "keywords": [
-      "光波导",
-      "waveguide"
+      "waveguide",
+      "光波导"
     ]
   },
   {
@@ -3921,14 +4885,14 @@
       "F. Liu",
       "T. Wang",
       "Z. Zhang",
-      "Min Qiu",
+      "M. Qiu",
       "Y. Su"
     ],
     "journal": "Electron. Lett.",
     "year": 2009,
     "keywords": [
-      "光子学",
-      "photonics"
+      "photonic",
+      "光子"
     ]
   },
   {
@@ -3936,7 +4900,7 @@
     "title": "Direct Coupling of Plasmonic and Photonic Nanowires for Hybrid Nanophotonic Components and Circuits",
     "authors": [
       "X. Guo",
-      "Min Qiu",
+      "M. Qiu",
       "J. M. Bao",
       "B. J. Wiley",
       "Q. Yang",
@@ -3948,42 +4912,47 @@
     "journal": "Nano Lett.",
     "year": 2009,
     "keywords": [
+      "photonic",
+      "光子",
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "nano",
+      "纳米"
     ]
   },
   {
     "id": 111,
     "title": "Generalized compensated bilayer structure from the transformation optics perspective",
     "authors": [
-      "Wei Yan",
-      "Min Yan",
-      "Min Qiu"
+      "W. Yan",
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "J. Opt. Soc. Am. B",
     "year": 2009,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 110,
     "title": "Optical Quality Improvement of Si Photonic Devices Fabricated by Focused-Ion-Beam Milling",
     "authors": [
       "J. Tian",
-      "Wei Yan",
+      "W. Yan",
       "Y. Luo",
       "Y.Z. Liu",
       "D.Z. Zhang",
       "Z.Y. Li",
-      "Min Qiu"
+      "M. Qiu"
     ],
     "journal": "J. Lightwave Technol.",
     "year": 2009,
     "keywords": [
-      "光子学",
-      "photonics"
+      "photonic",
+      "光子",
+      "optical",
+      "光学",
+      "device",
+      "器件"
     ]
   },
   {
@@ -3995,15 +4964,12 @@
       "S. Qin",
       "T. Wang",
       "F. Liu",
-      "Min Qiu",
+      "M. Qiu",
       "Y. Su"
     ],
     "journal": "Appl. Opt.",
     "year": 2009,
-    "keywords": [
-      "生物传感",
-      "biosensor"
-    ]
+    "keywords": []
   },
   {
     "id": 108,
@@ -4015,15 +4981,12 @@
       "Z.Y. Zhang",
       "T. Ye",
       "Y. Tian",
-      "Min Qiu",
+      "M. Qiu",
       "Y.K. Su"
     ],
     "journal": "J. Lightwave Technol.",
     "year": 2009,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 107,
@@ -4035,15 +4998,12 @@
       "Tong Ye",
       "J. Wang",
       "Y. Tian",
-      "Min Qiu",
+      "M. Qiu",
       "Y.K. Su"
     ],
     "journal": "Opt. Communications",
     "year": 2009,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 106,
@@ -4054,14 +5014,14 @@
       "Z.H. An",
       "X.Q. Huang",
       "Z.H. Chen",
-      "Min Qiu",
+      "M. Qiu",
       "L. Zhou"
     ],
     "journal": "Phys. Rev. A",
     "year": 2009,
     "keywords": [
-      "超材料",
-      "metamaterial"
+      "optical",
+      "光学"
     ]
   },
   {
@@ -4071,7 +5031,7 @@
       "H.K. Yu",
       "S.S. Wang",
       "J. Fu",
-      "Min Qiu",
+      "M. Qiu",
       "Y.H. Li",
       "F.X. Gu",
       "L.M. Tong"
@@ -4079,8 +5039,10 @@
     "journal": "Appl. Opt.",
     "year": 2009,
     "keywords": [
-      "光波导",
-      "waveguide"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -4091,14 +5053,16 @@
       "Z.F. Hu",
       "H.K. Yu",
       "W. Fang",
-      "Min Qiu",
+      "M. Qiu",
       "L.M. Tong"
     ],
     "journal": "Opt. Express",
     "year": 2009,
     "keywords": [
-      "光学",
-      "optics"
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
     ]
   },
   {
@@ -4107,64 +5071,1624 @@
     "authors": [
       "J. Tian",
       "S.Q. Yu",
-      "Wei Yan",
-      "Min Qiu"
+      "W. Yan",
+      "M. Qiu"
     ],
     "journal": "Appl. Phys. Lett.",
     "year": 2009,
     "keywords": [
+      "plasmon",
       "等离激元",
-      "plasmonic"
+      "polariton",
+      "极化激元"
     ]
   },
   {
     "id": 102,
     "title": "Achieving perfect imaging beyond passive and active obstacles by a transformed bilayer lens",
     "authors": [
-      "Wei Yan",
-      "Min Yan",
-      "Min Qiu"
+      "W. Yan",
+      "M. Yan",
+      "M. Qiu"
     ],
     "journal": "Phys. Rev. B",
     "year": 2009,
-    "keywords": [
-      "光子学",
-      "photonics"
-    ]
+    "keywords": []
   },
   {
     "id": 101,
     "title": "All Optical NRZ-to-AMI Conversion Using Linear Filtering Effect of Silicon Microring Resonator",
     "authors": [
-      "Qiang Li",
+      "Q. Li",
       "T. Ye",
       "Y.Y. Lu",
       "Z.Y. Zhang",
-      "Min Qiu",
+      "M. Qiu",
       "Y.K. Su"
     ],
     "journal": "Chin. Opt. Lett.",
     "year": 2009,
     "keywords": [
+      "optical",
       "光学",
-      "optics"
+      "AR",
+      "增强现实"
     ]
   },
   {
     "id": 100,
-    "title": "The effect of transformation order on the invisibility performance of a practical cylindrical cloak",
+    "title": "Fast light in silicon ring resonator with resonance-splitting",
     "authors": [
-      "Qiang Li",
+      "Q. Li",
       "Z.Y. Zhang",
       "J. Wang",
-      "Min Qiu",
+      "M. Qiu",
       "Y.K. Su"
     ],
-    "journal": "J. Opt. A: Pure Appl. Opt.",
+    "journal": "Optics Express",
     "year": 2009,
+    "keywords": []
+  },
+  {
+    "id": 99,
+    "title": "A Tunable Broadband Photonic RF Phase Shifter Based on a Silicon Microring Resonator",
+    "authors": [
+      "Q. Chang",
+      "Q. Li",
+      "Z.Y. Zhang",
+      "M. Qiu",
+      "T. Ye",
+      "Y.K. Su"
+    ],
+    "journal": "IEEE Photon. Technol. Lett",
+    "year": 2008,
     "keywords": [
-      "隐身",
-      "camouflage"
+      "photonic",
+      "光子"
     ]
+  },
+  {
+    "id": 98,
+    "title": "System performances of on-chip silicon microring delay line for RZ, CSRZ, RZ-DB and RZ-AMI signals",
+    "authors": [
+      "Q. Li",
+      "F.F. Liu",
+      "Z.Y. Zhang",
+      "M. Qiu",
+      "Y.K. Su"
+    ],
+    "journal": "J. Lightwave Technol.",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 97,
+    "title": "Optical reflection from excitonic quantum-dot multilayer structures",
+    "authors": [
+      "Y. Fu",
+      "H. Ågren",
+      "L. Höglund",
+      "J.Y. Andersson",
+      "C. Asplund",
+      "M. Qiu",
+      "L. Thylén"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2008,
+    "keywords": [
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 96,
+    "title": "Direct characterization of focusing light by negative refraction in a photonic crystal flat lens",
+    "authors": [
+      "J. Tian",
+      "M. Yan",
+      "M. Qiu",
+      "C. G. Ribbing",
+      "Y.Z. Liu",
+      "D.Z. Zhang",
+      "Z.Y. Li"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2008,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 95,
+    "title": "Compact optical temporal differentiator based on silicon microring resonator",
+    "authors": [
+      "F.F. Liu",
+      "T. Wang",
+      "Q. Li",
+      "T. Ye",
+      "Z.Y. Zhang",
+      "M. Qiu",
+      "Y.K. Su"
+    ],
+    "journal": "Optics Express",
+    "year": 2008,
+    "keywords": [
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 94,
+    "title": "Cylindrical superlens by a coordinate transformation",
+    "authors": [
+      "M. Yan",
+      "W. Yan",
+      "M. Qiu"
+    ],
+    "journal": "Phys. Rev. B",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 93,
+    "title": "The effect of transformation order on the invisibility performance of a practical cylindrical cloak",
+    "authors": [
+      "L.Y. Zhang",
+      "M. Yan",
+      "M. Qiu"
+    ],
+    "journal": "J. Opt. A: Pure Appl. Opt.",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 92,
+    "title": "Dense wavelength conversion and multicasting in a resonance-split silicon microring",
+    "authors": [
+      "Q. Li",
+      "Z.Y. Zhang",
+      "F.F. Liu",
+      "M. Qiu",
+      "Y.K. Su"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 91,
+    "title": "Non-magnetic simplified cylindrical cloak with suppressed zeroth order scattering",
+    "authors": [
+      "W. Yan",
+      "M. Yan",
+      "M. Qiu"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 90,
+    "title": "Modeling endface output patterns of optical micro/nanofibers",
+    "authors": [
+      "S.S. Wang",
+      "J. Fu",
+      "M. Qiu",
+      "K.J. Huang",
+      "Z. Ma",
+      "L.M. Tong"
+    ],
+    "journal": "Opt. Express",
+    "year": 2008,
+    "keywords": [
+      "nano",
+      "纳米",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 89,
+    "title": "Optically Tunable Delay Line in Silicon Microring Resonator Based on Thermal Nonlinear Effect",
+    "authors": [
+      "F.F. Liu",
+      "Q. Li",
+      "Z.Y. Zhang",
+      "M. Qiu",
+      "Y.K. Su"
+    ],
+    "journal": "IEEE J. Sel. Quantum Electro. Vol. 14",
+    "year": 2008,
+    "keywords": [
+      "thermal",
+      "热",
+      "optical",
+      "光学",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 88,
+    "title": "Feasibility study of nanoscaled optical waveguide based on near-resonant surface plasmon polariton",
+    "authors": [
+      "M. Yan",
+      "L. Thylén",
+      "M. Qiu",
+      "D. Parekh"
+    ],
+    "journal": "Opt. Express",
+    "year": 2008,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "plasmon",
+      "等离激元",
+      "nano",
+      "纳米",
+      "optical",
+      "光学",
+      "polariton",
+      "极化激元"
+    ]
+  },
+  {
+    "id": 87,
+    "title": "Coordinate transformation makes perfect invisibility cloak with arbitrary shape",
+    "authors": [
+      "W. Yan",
+      "M. Yan",
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "New J. Phys.",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 86,
+    "title": "Influence of geometrical perturbation at inner boundaries of invisibility cloaks",
+    "authors": [
+      "W. Yan",
+      "M. Yan",
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "J. Opt. Soc. Am. A",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 85,
+    "title": "Resonance-splitting and enhanced notch depth in SOI ring resonators with mutual mode coupling",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Dainese",
+      "L. Wosinski",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2008,
+    "keywords": []
+  },
+  {
+    "id": 84,
+    "title": "Subwavelength-diameter silica wire for light in-coupling to silicon-based waveguide",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Qiu",
+      "U. Andersson",
+      "L.M. Tong"
+    ],
+    "journal": "Chinese Optics Letters",
+    "year": 2007,
+    "keywords": [
+      "waveguide",
+      "光波导"
+    ]
+  },
+  {
+    "id": 83,
+    "title": "Scattering characteristics of simplified cylindrical invisibility cloaks",
+    "authors": [
+      "M. Yan",
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 82,
+    "title": "Analysis of Surface Plasmon Polariton Using Anisotropic Finite Elements",
+    "authors": [
+      "M. Yan",
+      "M. Qiu"
+    ],
+    "journal": "IEEE Photonics Technology Letters",
+    "year": 2007,
+    "keywords": [
+      "plasmon",
+      "等离激元",
+      "polariton",
+      "极化激元"
+    ]
+  },
+  {
+    "id": 81,
+    "title": "Cylindrical invisibility cloak with simplified material parameters is inherently visible",
+    "authors": [
+      "M. Yan",
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "Phys. Rev. Lett.",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 80,
+    "title": "All-optical format conversions from NRZ to BPSK and QPSK based on nonlinear responses in silicon microring resonators",
+    "authors": [
+      "Y.Y. Lu",
+      "F.F. Liu",
+      "M. Qiu",
+      "Y.K. Su"
+    ],
+    "journal": "Opt. Express",
+    "year": 2007,
+    "keywords": [
+      "optical",
+      "光学",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 79,
+    "title": "Guided plasmon polariton at 2D metal corners",
+    "authors": [
+      "M. Yan",
+      "M. Qiu"
+    ],
+    "journal": "J. Opt. Soc. Am. B",
+    "year": 2007,
+    "keywords": [
+      "plasmon",
+      "等离激元",
+      "polariton",
+      "极化激元"
+    ]
+  },
+  {
+    "id": 78,
+    "title": "Ideal cylindrical cloak: Perfect but sensitive to tiny perturbations",
+    "authors": [
+      "Z.C. Ruan",
+      "M. Yan",
+      "C.W. Neff",
+      "M. Qiu"
+    ],
+    "journal": "Phys. Rev. Lett. Vol. 99",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 77,
+    "title": "Coupled resonator optical waveguide structures with highly dispersive media",
+    "authors": [
+      "C.W. Neff",
+      "L. M. Andersson",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2007,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 76,
+    "title": "Effect of photonic bandgap on luminescence from silicon nanocrystals",
+    "authors": [
+      "I. Sychugov",
+      "N. Elfström",
+      "A. Hallén",
+      "J. Linnros",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Lett.",
+    "year": 2007,
+    "keywords": [
+      "photonic",
+      "光子",
+      "nano",
+      "纳米"
+    ]
+  },
+  {
+    "id": 75,
+    "title": "Slow electromagnetic wave guided in subwavelength region along one-dimensional periodically structured metal surface",
+    "authors": [
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 74,
+    "title": "Optical microcavities based on surface modes in two-dimensional photonic crystals and silicon-on-insulator photonic crystals",
+    "authors": [
+      "S.S. Xiao",
+      "M. Qiu"
+    ],
+    "journal": "J. Opt. Soc. Am. B",
+    "year": 2007,
+    "keywords": [
+      "photonic",
+      "光子",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 73,
+    "title": "Theoretical study of the transmission properties of a metallic film with surface corrugations",
+    "authors": [
+      "S.S. Xiao",
+      "M. Qiu"
+    ],
+    "journal": "J. Opt. A: Pure Appl. Opt.",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 72,
+    "title": "Modelling electromagnetically induced transparency media using the finite-difference time-domain method",
+    "authors": [
+      "C. W. Neff",
+      "L. M. Andersson",
+      "M. Qiu"
+    ],
+    "journal": "New Journal of Physics",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 71,
+    "title": "Optical filter based on two-dimensional photonic crystal surface-mode cavity in amorphous silicon-on-silica structure",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Dainese",
+      "L. Wosinski",
+      "S.S. Xiao",
+      "Min Qiu",
+      "M. Swillo",
+      "U. Andersson"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2007,
+    "keywords": [
+      "photonic",
+      "光子",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 70,
+    "title": "Enhanced transmission through arrays of subwavelength holes in gold films coated by a finite dielectric layer",
+    "authors": [
+      "S.S. Xiao",
+      "N.A. Mortensen",
+      "M. Qiu"
+    ],
+    "journal": "J. European Optical Society",
+    "year": 2007,
+    "keywords": []
+  },
+  {
+    "id": 69,
+    "title": "Compact optical waveguides based on hybrid index and surface-plasmon-polariton guidance mechanisms",
+    "authors": [
+      "M. Yan",
+      "M. Qiu"
+    ],
+    "journal": "Special Issue on \"Metamaterials",
+    "year": 2007,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "plasmon",
+      "等离激元",
+      "optical",
+      "光学",
+      "polariton",
+      "极化激元"
+    ]
+  },
+  {
+    "id": 68,
+    "title": "Subwavelength-Diameter Silica Wire and Photonic Crystal Waveguide Slow Light Coupling",
+    "authors": [
+      "Z.Y. Zhang",
+      "U. Andersson",
+      "M. Qiu"
+    ],
+    "journal": "Active and Passive Electronic Components",
+    "year": 2007,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 67,
+    "title": "Negative refraction and sub-wavelength imaging through surface waves on structured perfect conductor surfaces",
+    "authors": [
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2006,
+    "keywords": []
+  },
+  {
+    "id": 66,
+    "title": "Enhanced Transmission through Periodic Arrays of Subwavelength Holes: The Role of Localized Waveguide Resonances",
+    "authors": [
+      "Z.C. Ruan",
+      "M. Qiu"
+    ],
+    "journal": "Phys. Rev. Lett. Vol. 96",
+    "year": 2006,
+    "keywords": [
+      "waveguide",
+      "光波导"
+    ]
+  },
+  {
+    "id": 65,
+    "title": "Resonator channel drop filters in a plasmon-polaritons metal",
+    "authors": [
+      "S.S. Xiao",
+      "L. Liu",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2006,
+    "keywords": [
+      "plasmon",
+      "等离激元",
+      "polariton",
+      "极化激元"
+    ]
+  },
+  {
+    "id": 64,
+    "title": "Coupled mode analysis of in-plane channel drop filters with resonant mirrors",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Qiu"
+    ],
+    "journal": "J. Opt. Soc. Am. B",
+    "year": 2006,
+    "keywords": []
+  },
+  {
+    "id": 63,
+    "title": "Parallel Power Computation for Photonic Crystal Devices",
+    "authors": [
+      "U. Andersson",
+      "M. Qiu",
+      "Z.Y. Zhang"
+    ],
+    "journal": "Methods Appl. Anal.",
+    "year": 2006,
+    "keywords": [
+      "photonic",
+      "光子",
+      "device",
+      "器件"
+    ]
+  },
+  {
+    "id": 62,
+    "title": "Coupled mode analysis of resonant channel drop filter using waveguides with mirror boundaries",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Qiu"
+    ],
+    "journal": "Photonics and Nanostructures - Fundamentals and Applications",
+    "year": 2005,
+    "keywords": [
+      "waveguide",
+      "光波导"
+    ]
+  },
+  {
+    "id": 61,
+    "title": "High-Q microcavities realized in a circular photonic crystal slab",
+    "authors": [
+      "S.S. Xiao",
+      "M. Qiu"
+    ],
+    "journal": "Photonics and Nanostructures - Fundamentals and Applications",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 60,
+    "title": "Gap Maps for Triangular Photonic Crystals with a Dispersive and Absorbing Component",
+    "authors": [
+      "A. Rung",
+      "C.G. Ribbing",
+      "M. Qiu"
+    ],
+    "journal": "Phys. Rev. B",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 59,
+    "title": "Photonic band structures for surface waves on structured metal surfaces",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 58,
+    "title": "Surface mode microcavities",
+    "authors": [
+      "S.S. Xiao",
+      "M. Qiu"
+    ],
+    "journal": "Appl. Phys. Lett",
+    "year": 2005,
+    "keywords": []
+  },
+  {
+    "id": 57,
+    "title": "Doppler effects in left-handed materials: A first-principles theoretical study",
+    "authors": [
+      "S.S. Xiao",
+      "M. Qiu"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2005,
+    "keywords": []
+  },
+  {
+    "id": 56,
+    "title": "Influence of structural variations on high-Q microcavities in 2D photonic crystal slabs",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Lett.",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 55,
+    "title": "Study of transmission properties for waveguide bends by use of a circular photonic crystal",
+    "authors": [
+      "S.S. Xiao",
+      "M. Qiu"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 2005,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 54,
+    "title": "Vertically-coupled photonic-crystal optical filters",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Opt. Lett.",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 53,
+    "title": "Micro-cavities in Silicon-on-insulator Photonic Crystal Slabs: Determining Resonant Frequencies and Quality Factors Accurately",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 52,
+    "title": "Compact in-plane channel drop filter design using a single cavity with two degenerate modes in 2D photonic crystal slabs",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 51,
+    "title": "Negative refraction in two-dimensional photonic crystals",
+    "authors": [
+      "M. Qiu",
+      "S.S. Xiao",
+      "A. Berrier",
+      "S. Anand",
+      "L. Thylén",
+      "M. Mulot",
+      "M. Swillo",
+      "Z.C. Ruan",
+      "S.L. He"
+    ],
+    "journal": "Appl. Phys. A",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 50,
+    "title": "Coupling between plane waves and Bloch waves in photonic crystals with negative refraction",
+    "authors": [
+      "Z.C. Ruan",
+      "M. Qiu",
+      "S.S. Xiao",
+      "S.L. He",
+      "L. Thylén"
+    ],
+    "journal": "Phys. Rev. B",
+    "year": 2005,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 49,
+    "title": "Influence of the surface termination to the point imaging by a photonic crystal slab with negative refraction",
+    "authors": [
+      "S.S. Xiao",
+      "Z.C. Ruan",
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Appl. Phys. Lett. Vol. 85",
+    "year": 2004,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 48,
+    "title": "Photonic crystals - a step towards integrated circuits for photonics",
+    "authors": [
+      "L. Thylén",
+      "M. Qiu",
+      "S. Anand"
+    ],
+    "journal": "ChemPhysChem",
+    "year": 0,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 47,
+    "title": "Small-volume Waveguide-section High Q Microcavities in 2D Photonic Crystal Slabs",
+    "authors": [
+      "Z.Y. Zhang",
+      "M. Qiu"
+    ],
+    "journal": "Opt. Express",
+    "year": 2004,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 46,
+    "title": "Negative refraction at infrared wavelengths in a two-dimensional photonic crystal",
+    "authors": [
+      "A. Berrier",
+      "M. Mulot",
+      "M. Swillo",
+      "M. Qiu",
+      "L. Thylén",
+      "A. Talneau",
+      "S. Anand"
+    ],
+    "journal": "Phys. Rev. Lett. Vol. 93",
+    "year": 2004,
+    "keywords": [
+      "photonic",
+      "光子",
+      "infrared",
+      "红外"
+    ]
+  },
+  {
+    "id": 45,
+    "title": "Ultra-compact optical filter in two-dimensional photonic crystal",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Electron. Lett. Vol. 40",
+    "year": 2004,
+    "keywords": [
+      "photonic",
+      "光子",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 44,
+    "title": "Fabry-Pérot cavities based on 2D Photonic crystals fabricated in InP membranes",
+    "authors": [
+      "M. Mulot",
+      "M. Swillo",
+      "M. Qiu",
+      "M. Strassner",
+      "M. Hede",
+      "S. Anand"
+    ],
+    "journal": "J. Appl. Phys. Vol. 95",
+    "year": 2004,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 43,
+    "title": "Photonic crystal optical filter based on contra-directional waveguide coupling",
+    "authors": [
+      "M. Qiu",
+      "M. Mulot",
+      "M. Swillo",
+      "S. Anand",
+      "B. Jaskorzynska",
+      "A. Karlsson",
+      "M. Kamp",
+      "A. Forchel"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2003,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 42,
+    "title": "Design of a channel drop filter in a two-dimensional triangular photonic crystal",
+    "authors": [
+      "M. Qiu",
+      "B. Jaskorzynska"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2003,
+    "keywords": [
+      "photonic",
+      "光子",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 41,
+    "title": "In-plane resonant cavities with photonic crystal boundaries etched in InP-based heterostructure",
+    "authors": [
+      "M. Mulot",
+      "M. Qiu",
+      "M. Swillo",
+      "B. Jaskorzynska",
+      "A. Talneau",
+      "S. Anand"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2003,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 40,
+    "title": "Low loss InP-based Photonic Crystal waveguides etched with Ar/Cl2 Chemical Assisted Ion Beam Etching",
+    "authors": [
+      "M. Mulot",
+      "S. Anand",
+      "M. Swillo",
+      "M. Qiu",
+      "B. Jaskorzynska",
+      "A. Talneau"
+    ],
+    "journal": "J. Vac. Sci. Technol. B",
+    "year": 2003,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 39,
+    "title": "Wave propagation through a photonic crystal in a negative phase refractive index region",
+    "authors": [
+      "M. Qiu",
+      "M. Swillo",
+      "L. Thylén",
+      "B. Jaskorzynska"
+    ],
+    "journal": "IEEE J. Sel. Quantum Electro. Vol. 9",
+    "year": 2003,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 38,
+    "title": "Radiation losses in planar photonic crystals: two-dimensional representation of hole depth and shape by an imaginary dielectric constant",
+    "authors": [
+      "R. Ferrini",
+      "R. Houdre",
+      "H. Benisty",
+      "M. Qiu",
+      "J. Moosburger"
+    ],
+    "journal": "J. Opt. Soc. Am. B. Vol. 20",
+    "year": 2003,
+    "keywords": [
+      "photonic",
+      "光子",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 37,
+    "title": "Separation of Optical Modes in a Coupler on the Basis of the Bragg One-Dimensional Grating",
+    "authors": [
+      "V. Shushunova",
+      "M. Swillo",
+      "B. Jaskorzynska",
+      "M. Qiu",
+      "L. Thylén"
+    ],
+    "journal": "J. Appl. Spectroscopy",
+    "year": 2003,
+    "keywords": [
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 36,
+    "title": "Contra-directional coupling between two-dimensional photonic crystal waveguides",
+    "authors": [
+      "M. Qiu",
+      "M. Swillo"
+    ],
+    "journal": "Photonics and Nanostructures - Fundamentals and Applications",
+    "year": 2003,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 35,
+    "title": "Band Gap Effects in Asymmetric Photonic Crystal Slabs",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Phys. Rev. B",
+    "year": 2002,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 34,
+    "title": "Time-domain 2D modeling of slab-waveguide based photonic-crystal devices in the presence of out-of-plane radiation losses",
+    "authors": [
+      "M. Qiu",
+      "B. Jaskorzynska",
+      "M. Swillo",
+      "H. Benisty"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2002,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子",
+      "device",
+      "器件"
+    ]
+  },
+  {
+    "id": 33,
+    "title": "Effective index method in heterostructure slab waveguide based two-dimensional photonic crystals",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2002,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 32,
+    "title": "Models and Measurements for the Transmission of Submicron-Width Waveguide Bends Defined in Two-Dimensional Photonic Crystals",
+    "authors": [
+      "H. Benisty",
+      "S. Olivier",
+      "C. Weisbuch",
+      "M. Agio",
+      "M. Kafesaki",
+      "C.M. Soukoulis",
+      "M. Qiu",
+      "M. Swillo",
+      "A. Karlsson",
+      "B. Jaskorzynska",
+      "A. Talneau",
+      "J. Moosburger",
+      "M. Kamp A. Forchel",
+      "R. Ferrini",
+      "R. Houdré",
+      "U. Oesterle"
+    ],
+    "journal": "IEEE J. Quantum Electron. Vol. 38",
+    "year": 2002,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 31,
+    "title": "Optical study of two-dimensional InP-based photonic crystals by internal light source technique",
+    "authors": [
+      "R. Ferrini",
+      "D. Leuenberger",
+      "M. Mulot",
+      "M. Qiu",
+      "J. Moosburger",
+      "M. Kamp",
+      "A. Forchel",
+      "S. Anand",
+      "R. Houdre"
+    ],
+    "journal": "IEEE J. Quantum Electron. Vol. 38",
+    "year": 2002,
+    "keywords": [
+      "photonic",
+      "光子",
+      "optical",
+      "光学"
+    ]
+  },
+  {
+    "id": 30,
+    "title": "Theoretical analysis of a vertical channel dropping tunnelling process in a photonic crystal for wavelength division demultiplexing",
+    "authors": [
+      "J. Fu",
+      "S.L. He",
+      "S.S. Xiao",
+      "M. Qiu",
+      "J.J. He"
+    ],
+    "journal": "Chinese Phys. Lett.",
+    "year": 2001,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 29,
+    "title": "Numerical Studies of Waveguide Propagation and Mode-gaps in two-dimensional Photonic Crystal Waveguides",
+    "authors": [
+      "M. Qiu",
+      "K. Azizi",
+      "A. Karlsson",
+      "M. Swillo",
+      "B. Jaskorzynska"
+    ],
+    "journal": "Phys. Rev. B",
+    "year": 2001,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 28,
+    "title": "Resonant and nonresonant transmission through waveguide bends in a planar photonic crystal",
+    "authors": [
+      "S. Olivier",
+      "H. Benisty",
+      "M. Rattier",
+      "C. Weisbuch",
+      "M. Qiu",
+      "A. Karlsson",
+      "C.J.M. Smith"
+    ],
+    "journal": "Appl. Phys. Lett.",
+    "year": 2001,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子",
+      "AR",
+      "增强现实"
+    ]
+  },
+  {
+    "id": 27,
+    "title": "Analysis of guided modes in photonic crystal fibers using the finite-difference time-domain method",
+    "authors": [
+      "M. Qiu"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2001,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 26,
+    "title": "High directivity patch antenna with both photonic bandgap substrate and photonic bandgap cover",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2001,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 25,
+    "title": "Interference of Signals in Parallel Waveguides in a Two-Dimensional Photonic Crystal",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Physica B",
+    "year": 2001,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 24,
+    "title": "Explicit formulas for obtaining the radiation characteristics of an antenna based on a three-dimensional metallic photonic bandgap structure",
+    "authors": [
+      "S.L. He",
+      "M. Popov",
+      "M. Qiu",
+      "Z. Liao",
+      "C.R. Simovski"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2001,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 23,
+    "title": "Surface modes in two-dimensional dielectric and metallic photonic crystals: a finite-difference time-domain method study",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 2001,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 22,
+    "title": "FDTD algorithm for computing the off-plane band structure in a two-dimensional photonic crystal with dielectric or metallic inclusions",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 2001,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 21,
+    "title": "The influence of the dielectric-air interface on the radiation pattern of an antenna in a metallic photonic bandgap structure in a dielectric host medium",
+    "authors": [
+      "S.L. He",
+      "M. Popov",
+      "M. Qiu",
+      "C.R. Simovski"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 20,
+    "title": "Optimal Design of a Two-Dimensional Photonic Crystal of Square Lattice with a Large Complete Band Gap",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "J. Opt. Soc. Am. B.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子",
+      "ice lithography",
+      "冰刻"
+    ]
+  },
+  {
+    "id": 19,
+    "title": "A Nonorthogonal FDTD method for computing the band structure of a two-dimensional photonic crystal with dielectric and metallic inclusions",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "J. App. Phys.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Obtaining the band structure of a two-dimensional photonic crystal by an averaged field approach",
+    "authors": [
+      "S.L. He",
+      "M. Qiu",
+      "C.R. Simovski"
+    ],
+    "journal": "Chinese Phys. Lett.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 17,
+    "title": "A numerical method for computing defect modes in two-dimensional photonic crystals with dielectric or metallic inclusions",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Phys. Rev. B.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 16,
+    "title": "An explicit method for the analysis of guided waves in a line defect channel in a photonic crystal",
+    "authors": [
+      "S.L. He",
+      "M. Popov",
+      "M. Qiu",
+      "C.R. Simovski"
+    ],
+    "journal": "Microwave Opt. Techn. Lett.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 15,
+    "title": "An Averaged Field Approach for Obtaining the Band Structure of a Dielectric Photonic Crystal",
+    "authors": [
+      "S.L. He",
+      "M. Qiu",
+      "C.R. Simovski"
+    ],
+    "journal": "J. Phys.: Conden. Matter",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Guided modes in a two-dimensional metallic photonic crystal waveguide",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 2000,
+    "keywords": [
+      "waveguide",
+      "光波导",
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Averaged Field Approach for Obtaining the Band Structure of a Photonic Crystal with conducting inclusions",
+    "authors": [
+      "C.R. Simovski",
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "J. Electromagn. Waves Appl.",
+    "year": 2000,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Large Complete Band Gap in 2D photonic Crystals with Elliptic Air Holes",
+    "authors": [
+      "M. Qiu",
+      "S.L. He"
+    ],
+    "journal": "Phys. Rev. B",
+    "year": 1999,
+    "keywords": [
+      "photonic",
+      "光子"
+    ]
+  },
+  {
+    "id": 11,
+    "title": "A full-potential linear-muffin-tin-orbital molecular-dynamics study of the fourteen stable structures for cluster Si9",
+    "authors": [
+      "B.X. Li",
+      "M. Qiu",
+      "P.L. Cao"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 1999,
+    "keywords": []
+  },
+  {
+    "id": 10,
+    "title": "Reconstruction of small Si cluster after ethylene adsorption: A full-potential linear-muffin-tin-orbital molecular-dynamics study",
+    "authors": [
+      "M. Qiu",
+      "M. Jiang",
+      "Y.J. Zhao",
+      "P.L Cao"
+    ],
+    "journal": "J. Chem. Phys.",
+    "year": 1999,
+    "keywords": [
+      "SiC",
+      "碳化硅"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "A Theoretical study of surfactant action in the layer-by-layer homoepitaxial growth of metals: the case of In on Cu(111)",
+    "authors": [
+      "M. Jiang",
+      "M. Qiu",
+      "Y.J. Zhao",
+      "P.L. Cao"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 1998,
+    "keywords": []
+  },
+  {
+    "id": 8,
+    "title": "A Full-Potential Linear-Muffin-Tin-Orbital Molecular-Dynamics study: water adsorption and saturation on small Si clusters surface",
+    "authors": [
+      "M. Qiu",
+      "X.Y. Zhou",
+      "M. Jiang",
+      "P.L. Cao"
+    ],
+    "journal": "J. Phys: Conden. Matter",
+    "year": 2001,
+    "keywords": [
+      "SiC",
+      "碳化硅"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Ammonia adsorption and saturation on small Si clusters surface: a full-potential linear-muffin-tin-orbital molecular-dynamics study",
+    "authors": [
+      "M. Qiu",
+      "Y.Y. Zhou",
+      "M. Jiang",
+      "P.L. Cao"
+    ],
+    "journal": "Phys. Lett. A",
+    "year": 1999,
+    "keywords": [
+      "SiC",
+      "碳化硅"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "A Theoretical study of adsorption and surfactant effect of Sb on the Ag(100) surface",
+    "authors": [
+      "M. Jiang",
+      "X.Y. Zhou",
+      "M. Qiu",
+      "P.L. Cao"
+    ],
+    "journal": "J. Phys: Conden. Matter",
+    "year": 1998,
+    "keywords": []
+  },
+  {
+    "id": 5,
+    "title": "The adsorption and dissociation of ammonia on small Si clusters surface",
+    "authors": [
+      "M. Qiu",
+      "P.L. Cao",
+      "D.L. Que"
+    ],
+    "journal": "Surf. Sci.",
+    "year": 1998,
+    "keywords": [
+      "SiC",
+      "碳化硅"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "The adsorption and dissociation of ammonia on the Si10 cluster surface",
+    "authors": [
+      "M. Qiu",
+      "L.Q. Lee",
+      "P.L. Cao",
+      "D.L. Que"
+    ],
+    "journal": "J. Phys: Conden. Matter",
+    "year": 1997,
+    "keywords": []
+  },
+  {
+    "id": 3,
+    "title": "Relation between chemical surface diffusion coefficient and order of the adsorbate layer",
+    "authors": [
+      "P.L. Cao",
+      "M. Qiu",
+      "D.H. Shi"
+    ],
+    "journal": "Surf. Sci.",
+    "year": 1997,
+    "keywords": []
+  },
+  {
+    "id": 2,
+    "title": "A study of chemical diffusion on a stepped surface by the transition-type-dependent Monte Carlo method",
+    "authors": [
+      "M. Qiu",
+      "P.L. Cao",
+      "J.H. Ruan"
+    ],
+    "journal": "J. Phys: Conden. Matter",
+    "year": 1996,
+    "keywords": []
+  },
+  {
+    "id": 1,
+    "title": "Chemical surface diffusion coefficient and ordered c(2x2) adsorbate layer",
+    "authors": [
+      "P.L. Cao",
+      "M. Qiu",
+      "L.Q. Lee"
+    ],
+    "journal": "J. Phys: Conden. Matter",
+    "year": 1996,
+    "keywords": []
   }
 ]

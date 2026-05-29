@@ -6,7 +6,7 @@ import CollaborationGraph from '../components/CollaborationGraph';
 import { callKimiApi } from '../lib/kimiApi';
 import { cloudStorage } from '../services/cloudStorage';
 import { usePersons } from '../hooks/usePersons';
-import { pubUpdater, type Paper } from '../services/pubUpdaterService';
+import { type Paper } from '../services/pubUpdaterService';
 import {
   Sparkles,
   BookOpen,
@@ -20,10 +20,7 @@ import {
   Lightbulb,
   History,
   Trash2,
-  RefreshCw,
-  Database,
   ExternalLink,
-  CheckCircle2,
 } from 'lucide-react';
 
 interface CollabData {
@@ -50,15 +47,7 @@ export default function CollaborationPage() {
   const [expandedTrend, setExpandedTrend] = useState<number | null>(0);
 
   // 文献数据库更新状态
-  const [pubUpdating, setPubUpdating] = useState(false);
-  const [pubUpdateStage, setPubUpdateStage] = useState('');
-  const [pubUpdateProgress, setPubUpdateProgress] = useState(0);
-  const [pubUpdateResult, setPubUpdateResult] = useState<{
-    newCount: number;
-    totalCount: number;
-    yearDistribution: Record<number, number>;
-  } | null>(null);
-  const [pubUpdateError, setPubUpdateError] = useState('');
+  // (更新功能已改为链接到实验室官网，以下状态保留用于兼容)
   const [localPapers, setLocalPapers] = useState<Paper[]>([]);
 
   // 历史协作分析记录
@@ -136,54 +125,6 @@ export default function CollaborationPage() {
       .catch(() => {});
   }, []);
 
-
-  // 文献数据库更新处理
-  const handleUpdatePapers = async () => {
-    setPubUpdating(true);
-    setPubUpdateStage('准备更新...');
-    setPubUpdateProgress(0);
-    setPubUpdateResult(null);
-    setPubUpdateError('');
-
-    try {
-      const result = await pubUpdater.updateDatabase(localPapers, (stage, current, _total) => {
-        setPubUpdateStage(stage);
-        setPubUpdateProgress(current);
-      });
-
-      setPubUpdateResult({
-        newCount: result.newPapers.length,
-        totalCount: result.totalPapers,
-        yearDistribution: result.yearDistribution,
-      });
-
-      // 更新本地状态
-      setLocalPapers((prev) => [...prev, ...result.newPapers]);
-
-      // 更新 collabData（使用新的 nodes 和 links）
-      const newCollabData: CollabData = {
-        nodes: result.updatedNodes.map((n) => ({ ...n, group: n.group as string })),
-        links: result.updatedLinks,
-      };
-      setCollabData(newCollabData);
-
-      // 保存到 localStorage 以便持久化
-      localStorage.setItem('qlab_papers_updated', JSON.stringify({
-        papers: [...localPapers, ...result.newPapers],
-        collabData: newCollabData,
-        updatedAt: new Date().toISOString(),
-      }));
-
-      // 成功后自动触发 AI 分析
-      setPubUpdateStage('正在生成 AI 深度分析...');
-      await handleAIAnalysisWithData(newCollabData, [...localPapers, ...result.newPapers]);
-
-    } catch (err: any) {
-      setPubUpdateError(err.message || '文献更新失败');
-    } finally {
-      setPubUpdating(false);
-    }
-  };
 
   // AI 分析（使用更新后的数据，仅针对活跃成员）
   const ALL_PERSONS = usePersons();
@@ -288,7 +229,7 @@ ${topCollabs}
   }, [collabData, localPapers]);
 
   // 统计信息
-  const totalPaperCount = localPapers.length > 0 ? localPapers.length : (collabData ? 216 : 0);
+  const totalPaperCount = localPapers.length > 0 ? localPapers.length : (collabData ? 365 : 0);
   const stats = collabData ? {
     totalAuthors: collabData.nodes.length,
     totalLinks: collabData.links.length,
@@ -318,18 +259,22 @@ ${topCollabs}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            onClick={handleUpdatePapers}
-            disabled={pubUpdating || aiLoading}
-            variant="outline"
-            className="border-cyan-300 text-cyan-700 hover:bg-cyan-50 hover:text-cyan-800"
+          <a
+            href="https://qiu.lab.westlake.edu.cn/ky/fblw.htm"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {pubUpdating ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />}
-            {pubUpdating ? '更新中...' : '更新文献数据库'}
-          </Button>
+            <Button
+              variant="outline"
+              className="border-cyan-300 text-cyan-700 hover:bg-cyan-50 hover:text-cyan-800"
+            >
+              <ExternalLink className="w-4 h-4 mr-1" />
+              查看实验室论文
+            </Button>
+          </a>
           <Button
             onClick={handleAIAnalysis}
-            disabled={aiLoading || pubUpdating}
+            disabled={aiLoading}
             className="bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 text-white"
           >
             {aiLoading ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Sparkles className="w-4 h-4 mr-1" />}
@@ -381,106 +326,6 @@ ${topCollabs}
             );
           })}
         </div>
-      )}
-
-      {/* 文献更新进度 */}
-      {pubUpdating && (
-        <Card className="border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <Loader2 className="w-5 h-5 text-cyan-600 animate-spin" />
-              <div className="flex-1">
-                <div className="text-sm font-medium text-cyan-800">{pubUpdateStage}</div>
-                <div className="w-full bg-cyan-100 rounded-full h-2 mt-1.5">
-                  <div
-                    className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${pubUpdateProgress}%` }}
-                  />
-                </div>
-              </div>
-              <span className="text-xs text-cyan-600 font-medium">{pubUpdateProgress}%</span>
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-cyan-500">
-              <Database className="w-3 h-3" />
-              数据来源：Semantic Scholar API + qiu.lab.westlake.edu.cn
-              <a href="https://scholar.google.com/citations?user=FgSUsGoAAAAJ" target="_blank" rel="noopener noreferrer" className="underline hover:text-cyan-700 inline-flex items-center gap-0.5 ml-1">
-                Google Scholar <ExternalLink className="w-2.5 h-2.5" />
-              </a>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* 文献更新结果 */}
-      {pubUpdateResult && (
-        <Card className="border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50">
-          <CardHeader className="py-3 px-4">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-emerald-800">
-              <CheckCircle2 className="w-4 h-4" />
-              文献数据库更新完成
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4 pb-4">
-            <div className="grid grid-cols-3 gap-4 mb-3">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-700">+{pubUpdateResult.newCount}</div>
-                <div className="text-xs text-emerald-600">新增论文</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-700">{pubUpdateResult.totalCount}</div>
-                <div className="text-xs text-emerald-600">
-                  同步论文数
-                  <span className="text-emerald-400 mx-1">|</span>
-                  <a
-                    href="https://scholar.google.com/citations?user=FgSUsGoAAAAJ"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-emerald-800 inline-flex items-center gap-0.5"
-                  >
-                    实际400+篇 <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-700">
-                  {Object.keys(pubUpdateResult.yearDistribution).length}
-                </div>
-                <div className="text-xs text-emerald-600">覆盖年份</div>
-              </div>
-            </div>
-            {Object.keys(pubUpdateResult.yearDistribution).length > 0 && (
-              <div>
-                <div className="text-xs font-medium text-emerald-700 mb-1.5">年份分布</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {Object.entries(pubUpdateResult.yearDistribution)
-                    .sort(([a], [b]) => Number(b) - Number(a))
-                    .map(([year, count]) => (
-                      <Badge key={year} variant="outline" className="text-[10px] bg-white text-emerald-700 border-emerald-200">
-                        {year}: {count}篇
-                      </Badge>
-                    ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* 文献更新错误 */}
-      {pubUpdateError && (
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="p-4 text-sm text-red-700">
-            <div className="font-medium mb-1">文献更新失败</div>
-            {pubUpdateError}
-            <div className="mt-2 text-xs text-red-500">
-              提示：您也可以访问
-              <a href="https://qiu.lab.westlake.edu.cn/publications.html" target="_blank" rel="noopener noreferrer" className="underline">实验室网站</a>
-              或
-              <a href="https://scholar.google.com/citations?user=FgSUsGoAAAAJ" target="_blank" rel="noopener noreferrer" className="underline">Google Scholar</a>
-              手动获取最新论文列表
-            </div>
-          </CardContent>
-        </Card>
       )}
 
       {/* AI 分析结果 */}
