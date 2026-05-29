@@ -8,6 +8,7 @@ import TrendsPage from './pages/TrendsPage';
 
 import LiteraturePage from './pages/LiteraturePage';
 import CollaborationPage from './pages/CollaborationPage';
+import ScholarCitationsPage from './pages/ScholarCitationsPage';
 import SettingsPage from './pages/SettingsPage';
 import PdfReportGenerator from './components/PdfReportGenerator';
 import { cloudStorage } from './services/cloudStorage';
@@ -131,6 +132,7 @@ export default function App() {
             <Route path="/trends" element={<TrendsPage />} />
             <Route path="/literature" element={<LiteraturePage />} />
             <Route path="/collaboration" element={<CollaborationPage />} />
+            <Route path="/citations" element={<ScholarCitationsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </Layout>

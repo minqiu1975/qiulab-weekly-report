@@ -8,6 +8,7 @@ import {
   BookOpen,
   Users,
   Settings,
+  Quote,
   Menu,
   X,
 } from 'lucide-react';
@@ -21,6 +22,7 @@ const navItems = [
   { path: '/trends', label: '趋势', icon: TrendingUp },
   { path: '/literature', label: '文献', icon: BookOpen },
   { path: '/collaboration', label: '协作', icon: Users },
+  { path: '/citations', label: '引用', icon: Quote },
   { path: '/settings', label: '设置', icon: Settings },
 ];
 

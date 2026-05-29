@@ -1,0 +1,54 @@
+{
+  "authorId": "FgSUsGoAAAAJ",
+  "name": "Min Qiu",
+  "affiliation": "Westlake University",
+  "homepage": "https://qiu.lab.westlake.edu.cn",
+  "fields": [
+    "Nanophotonics",
+    "SiC Photonics",
+    "Photonics",
+    "Optoelectronics",
+    "Ice Lithography"
+  ],
+  "stats": {
+    "allTime": {
+      "citations": 27596,
+      "hIndex": 86,
+      "i10Index": 300
+    },
+    "since2021": {
+      "citations": 13116,
+      "hIndex": 56,
+      "i10Index": 187
+    }
+  },
+  "yearlyCitations": {
+    "2001": 81,
+    "2002": 113,
+    "2003": 187,
+    "2004": 280,
+    "2005": 384,
+    "2006": 443,
+    "2007": 414,
+    "2008": 565,
+    "2009": 716,
+    "2010": 684,
+    "2011": 725,
+    "2012": 811,
+    "2013": 988,
+    "2014": 1054,
+    "2015": 977,
+    "2016": 912,
+    "2017": 1020,
+    "2018": 1221,
+    "2019": 1243,
+    "2020": 1491,
+    "2021": 1785,
+    "2022": 1998,
+    "2023": 2343,
+    "2024": 2498,
+    "2025": 3095,
+    "2026": 1381
+  },
+  "lastUpdated": "2025-05-29T08:00:00.000Z"
+}
