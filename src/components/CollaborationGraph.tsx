@@ -294,7 +294,7 @@ export default function CollaborationGraph({ width = 800, height = 520 }: Props)
         <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
           <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-800">
             <Users className="w-4 h-4 text-cyan-600" />
-            PAINT Lab 论文合作网络（1996-2026，365篇论文）
+            PAINT Lab 论文合作网络（1996-2026，366篇论文）
           </CardTitle>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="sm" onClick={() => setZoom((z) => Math.min(z + 0.2, 3))}><ZoomIn className="w-4 h-4" /></Button>

@@ -135,7 +135,7 @@
     "authors": [
       "Xinyu Sun",
       "Yihan Lu",
-      "Bin Bin Jin",
+      "BinBin Jin",
       "Ding Zhao",
       "Min Qiu"
     ],
@@ -173,7 +173,7 @@
     "authors": [
       "Xinyu Sun",
       "Xiang Xu",
-      "Bin Bin Jin",
+      "BinBin Jin",
       "Yihan Lu",
       "Jichuang Shen",
       "Wei Kong",
@@ -377,7 +377,7 @@
       "Zhirong Yang",
       "Shan Wu",
       "Kang Zhao",
-      "Ding Zhao",
+      "DingZhao",
       "Min Qiu"
     ],
     "journal": "Science Bulletin",
@@ -653,7 +653,7 @@
       "Ali Akhtar",
       "Ding Zhao",
       "Min Qiu",
-      "Daru Chen"
+      "Daru Chen."
     ],
     "journal": "IEEE Transactions on Instrumentation and Measurement.V ol.73",
     "year": 0,
@@ -733,7 +733,7 @@
     "title": "A micromachined Joule-Thomson cryocooler for ice lithography",
     "authors": [
       "Limin Qi",
-      "Zheng Rui",
+      "Zheng Rui.",
       "Dongli Liu",
       "Haiyue Pei",
       "Ding Zhao",
@@ -826,7 +826,7 @@
     "title": "Pulsed polarized vortex beam enabled by metafiber lasers",
     "authors": [
       "Chenxi Zhang",
-      "Lei Zhang",
+      "LeiZhang",
       "He Zhang",
       "Bo Fu",
       "Jiyong Wang",
@@ -940,7 +940,7 @@
       "Kai Chen",
       "Yuhui Chen",
       "Min Qiu",
-      "Pieter Geiregat"
+      "Pieter Geiregat."
     ],
     "journal": "Bulletin of the American Physical Society",
     "year": 2023,
@@ -1066,7 +1066,7 @@
     "title": "Whole-infrared-band camouflage with dual-band radiative heat dissipation",
     "authors": [
       "Bing Qin",
-      "Yining Zhu",
+      "YiningZhu",
       "Yiwei Zhou",
       "Min Qiu",
       "Qiang Li"
@@ -1098,7 +1098,7 @@
       "Changlong Liu",
       "Min Qiu",
       "Guanhai Li",
-      "Xiaoshuang Chen"
+      "Xiaoshuang Chen."
     ],
     "journal": "Laser and Photonics Reviews Early View， Vol.18",
     "year": 2023,
@@ -1118,7 +1118,7 @@
       "Liye Xu",
       "Jiao Geng",
       "Liping Shi",
-      "Weicheng Cui",
+      "Weicheng Cui &",
       "Min Qiu"
     ],
     "journal": "Frontiers of Optoelectronics",
@@ -1461,6 +1461,33 @@
     ]
   },
   {
+    "id": 291,
+    "title": "Theoretical modeling of ice lithography on amorphous solid water",
+    "authors": [
+      "Tao Liu",
+      "Xujie Tong",
+      "Shuoqiu Tian",
+      "Yuying Xie",
+      "Mingsai Zhu",
+      "Bo Feng",
+      "Xiaohang Pan",
+      "Rui Zheng",
+      "Shan Wu",
+      "Ding Zhao",
+      "Yifang Chen",
+      "Bingrui Lu",
+      "Min Qiu"
+    ],
+    "journal": "Nanoscale",
+    "year": 2022,
+    "keywords": [
+      "lithography",
+      "光刻",
+      "ice lithography",
+      "冰刻"
+    ]
+  },
+  {
     "id": 290,
     "title": "Color -preserving passive radiative cooling for an actively temperature-regulated enclosure",
     "authors": [
@@ -1647,7 +1674,7 @@
       "Sandeep Kaur",
       "Min Qiu",
       "Pavel Belov",
-      "Qiang Li"
+      "Qiang Li  ."
     ],
     "journal": "Optica",
     "year": 2021,
@@ -1750,7 +1777,7 @@
       "Shelley I Fried",
       "Ding Zhao",
       "Min Qiu",
-      "Anpan Han"
+      "Anpan Han."
     ],
     "journal": "Microsystems & nanoengineering",
     "year": 2021,
@@ -1828,7 +1855,7 @@
       "Min Qiu",
       "Tian Gu",
       "Juejun Hu",
-      "Federico Capasso"
+      "Federico Capasso  ."
     ],
     "journal": "Optica",
     "year": 2021,
@@ -2045,7 +2072,7 @@
       "Min Qiu",
       "Qiaoliang Bao",
       "Stefan Maier",
-      "Cheng Wei Qiu"
+      "Cheng-Wei Qiu"
     ],
     "journal": "Laser & Photonics Reviews",
     "year": 2020,
@@ -2061,7 +2088,7 @@
       "Jinsheng Lu",
       "Min Qiu",
       "Simon Kheifets",
-      "Federico Capasso"
+      "Federico Capasso  ."
     ],
     "journal": "Science",
     "year": 2020,
@@ -2396,8 +2423,8 @@
     "id": 243,
     "title": "An ultra-thin colored textile with simultaneous solar and passive heating abilities",
     "authors": [
-      "Hao Luo",
-      "Qiang Li",
+      "HaoLuo",
+      "QiangLi",
       "Kaikai Du",
       "Ziquan Xu",
       "Huanzheng Zhu",
@@ -2446,7 +2473,7 @@
       "Shiwei Long",
       "Yang Yang",
       "Xun Cao",
-      "Hao Luo",
+      "HaoLuo",
       "Huanzheng Zhu",
       "Pintu Ghosh",
       "Weidong Shen",
@@ -2684,7 +2711,7 @@
       "Kaikai Du",
       "Min Qiu"
     ],
-    "journal": "",
+    "journal": "Laser & Photonics Reviews",
     "year": 2018,
     "keywords": [
       "metasurface",
@@ -2863,7 +2890,7 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "",
+    "journal": "Advanced Electronic Materials",
     "year": 2018,
     "keywords": [
       "thermal",
@@ -2948,7 +2975,7 @@
       "Ding Zhao",
       "S. Luo",
       "W. Wang",
-      "Jinsheng Lu",
+      "J. Lu",
       "Min Qiu",
       "Qiang Li"
     ],
@@ -2988,7 +3015,7 @@
     "title": "Light-induced reversible expansion of individual gold nanoplates",
     "authors": [
       "J .S. Lu",
-      "Yu Hong",
+      "Y. Hong",
       "Qiang Li",
       "Y. X. Xu",
       "W. Fang",
@@ -3067,11 +3094,11 @@
       "Y. R. Qu",
       "Qiang Li",
       "K. K. Du",
-      "Lu Cai",
-      "Jinsheng Lu",
+      "L. Cai",
+      "J. Lu",
       "Min Qiu"
     ],
-    "journal": "",
+    "journal": "Laser & Photonics Reviews",
     "year": 2017,
     "keywords": [
       "plasmon",
@@ -3174,7 +3201,7 @@
       "Y. R. Qu",
       "Min Qiu"
     ],
-    "journal": "",
+    "journal": "Laser & Photonics Reviews",
     "year": 2017,
     "keywords": [
       "metasurface",
@@ -3276,7 +3303,7 @@
       "Qiang Li",
       "Min Qiu"
     ],
-    "journal": "",
+    "journal": "Physics",
     "year": 2016,
     "keywords": [
       "nano",
@@ -3486,7 +3513,7 @@
       "Hui Ye",
       "Min Qiu"
     ],
-    "journal": "",
+    "journal": "Advanced Optical Materials",
     "year": 2016,
     "keywords": [
       "nano",
@@ -3503,7 +3530,7 @@
       "Min Qiu",
       "Qiang Li"
     ],
-    "journal": "",
+    "journal": "Laser & Photonics Reviews",
     "year": 2016,
     "keywords": [
       "plasmon",
@@ -3615,23 +3642,19 @@
   },
   {
     "id": 184,
-    "title": "Probing Plasmonic Gap Resonances between Gold Nanorods and a Metallic Surface",
+    "title": ",J. Phys. Chem. C, Vol. 119, Issue 32,pp 18627â18634 (2015) 183. Xingxing Chen, Yu-Hui Chen, Min Qiu, Richard J. Blaikie, and Boyang Ding,",
     "authors": [
       "Xingxing Chen",
       "Yuanqing Yang",
       "Yu-Hui Chen",
       "Min Qiu",
       "Richard J. Blaikie",
-      "Boyang Ding"
+      "Boyang Ding",
+      "a Metallic Surface"
     ],
-    "journal": "J. Phys. Chem. C",
+    "journal": "Control of fluorescence enhancement and directionality upon excitations in a thin-film system\"",
     "year": 2015,
-    "keywords": [
-      "plasmon",
-      "等离激元",
-      "nano",
-      "纳米"
-    ]
+    "keywords": []
   },
   {
     "id": 183,
@@ -4101,11 +4124,11 @@
     "title": "Transmission of Infrared Radiation Through Metallic Photonic Crystal Structures",
     "authors": [
       "Soltanmoradi",
-      "R",
+      "R.",
       "Qin Wang",
       "Min Qiu",
       "Andersson",
-      "J.Y"
+      "J.Y."
     ],
     "journal": "Photonics Journal",
     "year": 2013,
@@ -4122,7 +4145,7 @@
     "authors": [
       "Ran Hao",
       "Cassan",
-      "E",
+      "E.",
       "Yang Xu",
       "Min Qiu",
       "Xing-Chang Wei",
@@ -4379,10 +4402,10 @@
     "id": 143,
     "title": "Design of an Ultrathin Broadband Transparent and High-Conductive Screen Using Plasmonic Nanostructures",
     "authors": [
-      "Hao. J",
-      "Qiu. C. W",
+      "Hao. J.",
+      "Qiu. C. W.",
       "Min Qiu",
-      "Zouhdi. S"
+      "Zouhdi. S."
     ],
     "journal": "Opt. Lett",
     "year": 2012,
@@ -4397,12 +4420,12 @@
     "id": 142,
     "title": "Time-Resolved Photocurrents in Quantum Well/Dot Infrared Photodetectors with Different Optical Coupling Structures",
     "authors": [
-      "Chen. Z. H",
-      "Hellstrom. S",
-      "Yu. Z. Y",
+      "Chen. Z. H.",
+      "Hellstrom. S.",
+      "Yu. Z. Y.",
       "Min Qiu",
       "Fu",
-      "Y"
+      "Y."
     ],
     "journal": "Appl. Phys. Lett",
     "year": 2012,
@@ -6574,10 +6597,7 @@
     ],
     "journal": "J. Chem. Phys.",
     "year": 1999,
-    "keywords": [
-      "SiC",
-      "碳化硅"
-    ]
+    "keywords": []
   },
   {
     "id": 9,
@@ -6603,10 +6623,7 @@
     ],
     "journal": "J. Phys: Conden. Matter",
     "year": 2001,
-    "keywords": [
-      "SiC",
-      "碳化硅"
-    ]
+    "keywords": []
   },
   {
     "id": 7,
@@ -6619,10 +6636,7 @@
     ],
     "journal": "Phys. Lett. A",
     "year": 1999,
-    "keywords": [
-      "SiC",
-      "碳化硅"
-    ]
+    "keywords": []
   },
   {
     "id": 6,
@@ -6647,10 +6661,7 @@
     ],
     "journal": "Surf. Sci.",
     "year": 1998,
-    "keywords": [
-      "SiC",
-      "碳化硅"
-    ]
+    "keywords": []
   },
   {
     "id": 4,

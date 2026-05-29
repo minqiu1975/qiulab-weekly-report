@@ -229,7 +229,7 @@ ${topCollabs}
   }, [collabData, localPapers]);
 
   // 统计信息
-  const totalPaperCount = localPapers.length > 0 ? localPapers.length : (collabData ? 365 : 0);
+  const totalPaperCount = localPapers.length > 0 ? localPapers.length : (collabData ? 366 : 0);
   const stats = collabData ? {
     totalAuthors: collabData.nodes.length,
     totalLinks: collabData.links.length,
