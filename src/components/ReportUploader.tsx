@@ -53,7 +53,10 @@ const ACTIVE_STUDENT_NAMES = ACTIVE_PERSONS.filter(p => ['phd', 'undergraduate',
 // 实际消耗：~400 tokens 输入（含周报全文）+ ~70 tokens 输出 = ~470 tokens/人
 // 价格：输入 $0.95/M，输出 $4.00/M
 const TOKENS_PER_PERSON = 470;
-const COST_PER_PERSON = 0.005; // 约 0.005元/人（400*0.0068/1000 + 70*0.0288/1000）
+// 实际计费单价（从 2026-05-30 账单反推）：
+// 输入 ¥0.037/千tokens, 输出 ¥0.17/千tokens
+// 每人约 400 输入 + 70 输出 = 470 tokens
+const COST_PER_PERSON = (400 / 1000) * 0.037 + (70 / 1000) * 0.17; // ≈ 0.0267元/人
 
 /**
  * Parse date from filename.
@@ -1343,7 +1346,7 @@ export default function ReportUploader() {
               </div>
             </div>
             <div className="text-[10px] text-slate-400 mt-2">
-              仅对已提交{actualCount}人进行AI分析（未提交{missingNames.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约{COST_PER_PERSON}元/人。
+              仅对已提交{actualCount}人进行AI分析（未提交{missingNames.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(3)}元/人（输入¥0.037/千tokens + 输出¥0.17/千tokens）。
             </div>
           </CardContent>
         </Card>
@@ -1496,11 +1499,11 @@ export default function ReportUploader() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b border-slate-100">
                 <span className="text-slate-600">输入Token ({(analysisProgress.completed * 400 / 1000).toFixed(1)}K @ $0.95/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 400 * 0.0068 / 1000).toFixed(3)} 元</span>
+                <span className="font-medium">{(analysisProgress.completed * 400 * 0.037 / 1000).toFixed(3)} 元</span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100">
                 <span className="text-slate-600">输出Token ({(analysisProgress.completed * 70 / 1000).toFixed(1)}K @ $4.00/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 70 * 0.0288 / 1000).toFixed(3)} 元</span>
+                <span className="font-medium">{(analysisProgress.completed * 70 * 0.17 / 1000).toFixed(3)} 元</span>
               </div>
               <div className="flex justify-between py-1 font-semibold text-slate-800">
                 <span>合计</span>

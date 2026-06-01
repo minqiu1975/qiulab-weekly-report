@@ -120,13 +120,18 @@ function buildAnalysisPrompt(person: Person): string {
 }`;
 }
 
-/** 预估 Kimi API 调用费用 */
+/**
+ * 预估 Kimi API 调用费用
+ * 实际计费单价（从 2026-05-30 账单反推）：
+ * - 输入: ¥0.037/千tokens (¥37/百万)
+ * - 输出: ¥0.17/千tokens (¥170/百万)
+ */
 function estimateCost(): { tokens: number; cost: string } {
   const inputTokens = 200;
   const outputTokens = 510;
   const totalTokens = inputTokens + outputTokens;
-  const inputCost = (inputTokens / 1_000_000) * 0.95 * 7.2;
-  const outputCost = (outputTokens / 1_000_000) * 4.00 * 7.2;
+  const inputCost = (inputTokens / 1000) * 0.037;
+  const outputCost = (outputTokens / 1000) * 0.17;
   const totalCost = inputCost + outputCost;
   return { tokens: totalTokens, cost: totalCost.toFixed(3) };
 }
