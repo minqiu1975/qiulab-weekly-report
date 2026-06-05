@@ -627,8 +627,9 @@ class CloudStorageService {
           if (!mergedMap.has(id)) {
             mergedMap.set(id, person); // 补充对方独有的人员
           } else {
-            // 双方都有的人员：合并 collabSuggestions（以每对伙伴的 timestamp 为准）
+            // 双方都有的人员：深层字段级合并，避免任何字段修改丢失
             const mergedPerson = mergedMap.get(id)!;
+            // 1. 合并 collabSuggestions（以每对伙伴的 timestamp 为准）
             const localSugs = person.collabSuggestions || {};
             const mergedSugs = mergedPerson.collabSuggestions || {};
             const combinedSugs: Record<string, { partnerName: string; result: string; timestamp: string }> = { ...mergedSugs };
@@ -640,6 +641,15 @@ class CloudStorageService {
               }
             }
             mergedPerson.collabSuggestions = combinedSugs;
+            // 2. 补充其他字段：secondaryPerson 有非空值且 mergedPerson 为空/缺失时补充
+            for (const [key, value] of Object.entries(person)) {
+              if (key === 'collabSuggestions') continue; // 已单独处理
+              const mergedVal = (mergedPerson as any)[key];
+              if ((mergedVal === undefined || mergedVal === null || mergedVal === '') &&
+                  (value !== undefined && value !== null && value !== '')) {
+                (mergedPerson as any)[key] = value;
+              }
+            }
           }
         }
         return Array.from(mergedMap.values());
