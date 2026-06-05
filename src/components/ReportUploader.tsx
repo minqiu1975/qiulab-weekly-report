@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import mammoth from 'mammoth';
 import { ACTIVE_PERSONS, ALL_PERSONS } from '../data/mockPersons';
+import { usePersons } from '../hooks/usePersons';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -24,7 +25,8 @@ import {
 import {
   UploadCloud, FileText, CheckCircle2, CheckCircle, AlertCircle, AlertTriangle, Loader2,
   X, Users, GraduationCap, BrainCircuit, Coins, FileCheck,
-  ChevronRight, Sparkles, BarChart3, CalendarDays, Settings
+  ChevronRight, Sparkles, BarChart3, CalendarDays, Settings,
+  RefreshCw
 } from 'lucide-react';
 import { saveDynamicTrends, saveDynamicHistory, addUploadedDate, addWeekLabel, addUploadHistory, getUploadedDates } from '../lib/dynamicStorage';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
@@ -444,6 +446,55 @@ function saveNewMember(
   }
 }
 
+/** 构建周报分析 prompt */
+function buildAnalysisPrompt(
+  name: string,
+  person: typeof ACTIVE_PERSONS[0] | undefined,
+  reportText: string
+): string {
+  let planningInfo = '';
+  let planningNote = '';
+
+  if (person?.role === 'phd' && (person?.graduationDate || (person?.enrollmentYear && person?.programDuration))) {
+    const gradDateStr = person?.graduationDate;
+    const fallbackYear = person?.enrollmentYear && person?.programDuration ? person.enrollmentYear + person.programDuration : null;
+    const gradDate = gradDateStr
+      ? new Date(gradDateStr + 'T00:00:00')
+      : (fallbackYear ? new Date(fallbackYear, 5, 1) : new Date());
+    const gradYear = gradDate.getFullYear();
+    const gradMonth = gradDate.getMonth() + 1;
+    const now = new Date();
+    const monthsUntilGrad = (gradDate.getFullYear() - now.getFullYear()) * 12 + (gradDate.getMonth() - now.getMonth());
+
+    if (monthsUntilGrad < 0) {
+      const monthsOverdue = Math.abs(monthsUntilGrad);
+      const overdueStr = monthsOverdue >= 12
+        ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月`
+        : `${monthsOverdue}个月`;
+      const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
+      planningInfo = `\n学制：${person?.programDuration || '?'}年制，应${dateLabel}毕业，⚠️ 已延毕${overdueStr}`;
+      planningNote = '\n【紧急】该人员为博士生，已超期未毕业！评估时必须关注其延毕原因和加速毕业的紧迫性。';
+    } else if (monthsUntilGrad <= 6) {
+      const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
+      planningInfo = `\n学制：${person?.programDuration || '?'}年制，预计${dateLabel}毕业，⏰ 仅剩${monthsUntilGrad}个月`;
+      planningNote = '\n【注意】该人员为博士生，毕业在即，评估时请关注其毕业冲刺进展。';
+    } else {
+      const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
+      planningInfo = `\n学制：${person?.programDuration || '?'}年制，预计${dateLabel}毕业（还剩${monthsUntilGrad}个月）`;
+      planningNote = '\n【注意】该人员为博士生，评估时请考虑其毕业时间规划。';
+    }
+  } else if (person?.role === 'postdoc' && person?.exitDate) {
+    planningInfo = `\n出站日期：${person.exitDate}`;
+    planningNote = '\n【注意】该人员为博士后，评估时请考虑其出站规划，确保研究进展有助于顺利出站。';
+  } else if (person?.role === 'researcher' || person?.role === 'associate_researcher' || person?.role === 'assistant_researcher') {
+    if (person?.contractEndDate) {
+      planningInfo = `\n合同到期：${person.contractEndDate}`;
+    }
+  }
+
+  return `请对以下科研人员的周报进行分析，给出简要总结。\n\n姓名：${name}\n身份：${person?.roleLabel || '成员'}${person?.subRole ? `(${person.subRole})` : ''}${planningInfo}\n研究方向：${person?.researchDirection || ''}${planningNote}\n\n本周报内容：\n${reportText}\n\n请输出以下结构的 JSON（不要有任何其他文字）：\n{\n  "summary": "对该人员本周工作的简要总结（50字左右）",\n  "progress": 70,\n  "problems": 0,\n  "tag": "稳步推进"\n}\nprogress 为 50-95 的整数，problems 为 0-2 的整数，tag 从 ["稳步推进","论文推进","实验攻坚","数据分析","文献调研","毕业准备","出站准备"] 中选择。`;
+}
+
 export default function ReportUploader() {
   const [phase, setPhase] = useState<Phase>('upload');
   const [researcherFile, setResearcherFile] = useState<File | null>(null);
@@ -475,6 +526,11 @@ export default function ReportUploader() {
   });
   const [showOverrideDialog, setShowOverrideDialog] = useState(false);
   const [detectedDate, setDetectedDate] = useState<string | null>(null);
+
+  // 429 重试机制
+  const [failedPersons, setFailedPersons] = useState<Array<{ name: string; person: typeof ACTIVE_PERSONS[0] | undefined; reportText: string; error: string }>>([]);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const handleResearcherFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -591,6 +647,8 @@ export default function ReportUploader() {
   };
 
   // Step 2: Start AI analysis after user clicks "开始分析"
+  const allPersons = usePersons();
+
   const startAnalysis = async () => {
     // Check Kimi API version before starting
     const userPref = localStorage.getItem('kimi_model_preference');
@@ -614,30 +672,54 @@ export default function ReportUploader() {
     }
 
     setPhase('analyzing');
+    setFailedPersons([]);
+    setRetryCount(0);
     const weekDate = detectedDate || new Date().toISOString().slice(0, 10).replace(/-/g, '.');
     // 保存文件信息（分析是异步的，state 可能被清空）
     const savedResearcherFile = researcherFile;
     const savedPhdFile = phdFile;
+
+    // ===== 使用最新人员数据（包含 localStorage 修改）=====
+    const currentPersons = allPersons.length > 0 ? allPersons : ACTIVE_PERSONS;
+
+    // 排除已毕业/已离职/非活跃人员（这些人不需要提交周报）
+    const needSubmitPersons = currentPersons.filter(p =>
+      p.status === 'active' || p.status === undefined
+    );
+    const excludedPersons = currentPersons.filter(p =>
+      p.status === 'graduated' || p.status === 'left' || p.status === 'inactive'
+    );
+
     const analysisResults: Record<string, { summary: string; progress: number; problems: number; tag: string }> = {};
 
-    // 先为未提交的人生成默认结果，然后只对已提交的人调用 API
+    // 先为排除的人生成默认结果
+    for (const p of excludedPersons) {
+      const statusLabel = p.status === 'graduated' ? '已毕业' : p.status === 'left' ? '已离职' : '非活跃';
+      analysisResults[p.name] = {
+        summary: `该成员状态为「${statusLabel}」，无需提交周报。`,
+        progress: 0,
+        problems: 0,
+        tag: statusLabel,
+      };
+    }
+
+    // 处理需要提交周报的人员
     const submittedItems: { name: string; person: typeof ACTIVE_PERSONS[0] | undefined; reportText: string }[] = [];
     const missingNames: string[] = [];
-    for (const name of ALL_PERSONS_NAMES) {
-      const person = ACTIVE_PERSONS.find(p => p.name === name);
-      const reportText = parsedReports[name] ?? '';
+    for (const person of needSubmitPersons) {
+      const reportText = parsedReports[person.name] ?? '';
       if (!reportText || reportText.trim().length < 10) {
-        // 未提交周报，直接生成默认结果
-        analysisResults[name] = {
+        // 未提交周报
+        analysisResults[person.name] = {
           summary: '此人本周未提交周报。',
           progress: 0,
           problems: 0,
           tag: '未提交',
         };
-        missingNames.push(name);
+        missingNames.push(person.name);
       } else {
         // 已提交周报，加入 API 调用队列
-        submittedItems.push({ name, person, reportText });
+        submittedItems.push({ name: person.name, person, reportText });
       }
     }
     const personItems = submittedItems;
@@ -649,13 +731,22 @@ export default function ReportUploader() {
       ? `[${new Date().toLocaleTimeString()}] 模型: Kimi ${EXPECTED_VERSION} ✅`
       : `[${new Date().toLocaleTimeString()}] 模型: Kimi ${actualVersion} ⚠️ (期望: ${EXPECTED_VERSION})`;
 
+    const logs: string[] = [
+      `[${new Date().toLocaleTimeString()}] 启动AI分析流程...`,
+      versionLine,
+    ];
+    if (excludedPersons.length > 0) {
+      logs.push(`[${new Date().toLocaleTimeString()}] ℹ️ ${excludedPersons.length}人已毕业/离职/非活跃，无需提交周报：${excludedPersons.map(p => p.name).join('、')}`);
+    }
+    logs.push(`[${new Date().toLocaleTimeString()}] 本周已提交${submittedCount}人，未提交${missingNames.length}人（需提交${needSubmitPersons.length}人），预计消耗: ${submittedCount}人 × ~${TOKENS_PER_PERSON} tokens ≈ ${(submittedCount * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens / 约¥${estimatedCost.toFixed(3)}`);
+
     setAnalysisProgress({
       currentPerson: personItems[0]?.name || '',
       completed: 0,
       total: submittedCount,
       estimatedCost,
       tokensUsed: 0,
-      logs: [`[${new Date().toLocaleTimeString()}] 启动AI分析流程...`, versionLine, `[${new Date().toLocaleTimeString()}] 本周已提交${submittedCount}人，未提交${missingNames.length}人，预计消耗: ${submittedCount}人 × ~${TOKENS_PER_PERSON} tokens ≈ ${(submittedCount * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens / 约 ${estimatedCost.toFixed(2)} 元`],
+      logs,
     });
 
     // 并行调用 Kimi API，每次最多5个
@@ -688,48 +779,7 @@ export default function ReportUploader() {
               return;
             }
 
-            // 根据角色构建规划信息
-            let planningInfo = '';
-            let planningNote = '';
-
-            if (person?.role === 'phd' && (person?.graduationDate || (person?.enrollmentYear && person?.programDuration))) {
-              const gradDateStr = person?.graduationDate;
-              const fallbackYear = person?.enrollmentYear && person?.programDuration ? person.enrollmentYear + person.programDuration : null;
-              const gradDate = gradDateStr
-                ? new Date(gradDateStr + 'T00:00:00')
-                : (fallbackYear ? new Date(fallbackYear, 5, 1) : new Date());
-              const gradYear = gradDate.getFullYear();
-              const gradMonth = gradDate.getMonth() + 1;
-              const now = new Date();
-              const monthsUntilGrad = (gradDate.getFullYear() - now.getFullYear()) * 12 + (gradDate.getMonth() - now.getMonth());
-
-              if (monthsUntilGrad < 0) {
-                const monthsOverdue = Math.abs(monthsUntilGrad);
-                const overdueStr = monthsOverdue >= 12
-                  ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月`
-                  : `${monthsOverdue}个月`;
-                const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
-                planningInfo = `\n学制：${person?.programDuration || '?'}年制，应${dateLabel}毕业，⚠️ 已延毕${overdueStr}`;
-                planningNote = '\n【紧急】该人员为博士生，已超期未毕业！评估时必须关注其延毕原因和加速毕业的紧迫性。';
-              } else if (monthsUntilGrad <= 6) {
-                const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
-                planningInfo = `\n学制：${person?.programDuration || '?'}年制，预计${dateLabel}毕业，⏰ 仅剩${monthsUntilGrad}个月`;
-                planningNote = '\n【注意】该人员为博士生，毕业在即，评估时请关注其毕业冲刺进展。';
-              } else {
-                const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
-                planningInfo = `\n学制：${person?.programDuration || '?'}年制，预计${dateLabel}毕业（还剩${monthsUntilGrad}个月）`;
-                planningNote = '\n【注意】该人员为博士生，评估时请考虑其毕业时间规划。';
-              }
-            } else if (person?.role === 'postdoc' && person?.exitDate) {
-              planningInfo = `\n出站日期：${person.exitDate}`;
-              planningNote = '\n【注意】该人员为博士后，评估时请考虑其出站规划，确保研究进展有助于顺利出站。';
-            } else if (person?.role === 'researcher' || person?.role === 'associate_researcher' || person?.role === 'assistant_researcher') {
-              if (person?.contractEndDate) {
-                planningInfo = `\n合同到期：${person.contractEndDate}`;
-              }
-            }
-
-            const prompt = `请对以下科研人员的周报进行分析，给出简要总结。\n\n姓名：${name}\n身份：${person?.roleLabel || '成员'}${person?.subRole ? `(${person.subRole})` : ''}${planningInfo}\n研究方向：${person?.researchDirection || ''}${planningNote}\n\n本周报内容：\n${reportText}\n\n请输出以下结构的 JSON（不要有任何其他文字）：\n{\n  "summary": "对该人员本周工作的简要总结（50字左右）",\n  "progress": 70,\n  "problems": 0,\n  "tag": "稳步推进"\n}\nprogress 为 50-95 的整数，problems 为 0-2 的整数，tag 从 ["稳步推进","论文推进","实验攻坚","数据分析","文献调研","毕业准备","出站准备"] 中选择。`;
+            const prompt = buildAnalysisPrompt(name, person, reportText);
 
             const content = await callKimiApi(prompt, {
               systemPrompt: '你是一个专业的科研团队管理助手，擅长分析周报并给出简洁的评估。',
@@ -749,14 +799,33 @@ export default function ReportUploader() {
             analysisResults[name] = result;
           } catch (e) {
             const errMsg = e instanceof Error ? e.message : String(e);
-            analysisResults[name] = {
-              summary: `${name}本周科研工作持续推进。（API调用出错: ${errMsg.slice(0, 50)}）`,
-              progress: 70, problems: 0, tag: '稳步推进',
-            };
-            setAnalysisProgress(prev => ({
-              ...prev,
-              logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ❌ ${name} 分析失败: ${errMsg.slice(0, 80)}`],
-            }));
+            const is429 = errMsg.includes('429') || errMsg.includes('overloaded');
+
+            if (is429) {
+              // 429 错误：记录到重试队列，稍后自动重试
+              setFailedPersons(prev => {
+                if (prev.some(f => f.name === name)) return prev; // 避免重复
+                return [...prev, { name, person, reportText, error: errMsg }];
+              });
+              analysisResults[name] = {
+                summary: `${name}的周报分析暂未完成（API引擎过载，将自动重试）。`,
+                progress: 0, problems: 0, tag: '等待重试',
+              };
+              setAnalysisProgress(prev => ({
+                ...prev,
+                logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ⚠️ ${name} API引擎过载(429)，加入重试队列`],
+              }));
+            } else {
+              // 其他错误：直接记录失败
+              analysisResults[name] = {
+                summary: `${name}本周科研工作持续推进。（API调用出错: ${errMsg.slice(0, 50)}）`,
+                progress: 70, problems: 0, tag: '稳步推进',
+              };
+              setAnalysisProgress(prev => ({
+                ...prev,
+                logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ❌ ${name} 分析失败: ${errMsg.slice(0, 80)}`],
+              }));
+            }
           }
         })
       );
@@ -771,6 +840,83 @@ export default function ReportUploader() {
         logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 完成 ${completed}/${personItems.length} 人`],
       }));
     }
+
+    // ===== 自动重试 429 失败的人员 =====
+    let currentFailed = failedPersons;
+    let attempt = 0;
+    const MAX_RETRY_ATTEMPTS = 3;
+
+    while (currentFailed.length > 0 && attempt < MAX_RETRY_ATTEMPTS) {
+      attempt++;
+      const waitSec = attempt * 3; // 递增等待：3s, 6s, 9s
+      setAnalysisProgress(prev => ({
+        ...prev,
+        logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 🔄 第${attempt}次重试 ${currentFailed.length}人（等待${waitSec}秒）: ${currentFailed.map(f => f.name).join(', ')}`],
+      }));
+
+      await new Promise(r => setTimeout(r, waitSec * 1000));
+
+      const nextFailed: typeof currentFailed = [];
+      await Promise.all(
+        currentFailed.map(async ({ name, person, reportText }) => {
+          try {
+            const prompt = buildAnalysisPrompt(name, person, reportText);
+            const content = await callKimiApi(prompt, {
+              systemPrompt: '你是一个专业的科研团队管理助手，擅长分析周报并给出简洁的评估。',
+              maxTokens: 500,
+            });
+            let result: { summary: string; progress: number; problems: number; tag: string };
+            try {
+              const cleaned = content.replace(/```json\s*/g, '').replace(/```\s*$/g, '').trim();
+              result = JSON.parse(cleaned);
+            } catch {
+              result = { summary: content.slice(0, 100), progress: 70, problems: 0, tag: '稳步推进' };
+            }
+            analysisResults[name] = result;
+            setFailedPersons(prev => prev.filter(f => f.name !== name));
+            setAnalysisProgress(prev => ({
+              ...prev,
+              logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ✅ ${name} 重试成功`],
+            }));
+          } catch (e: any) {
+            const errMsg = e instanceof Error ? e.message : String(e);
+            const still429 = errMsg.includes('429') || errMsg.includes('overloaded');
+            if (still429 && attempt < MAX_RETRY_ATTEMPTS) {
+              nextFailed.push({ name, person, reportText, error: errMsg });
+            } else {
+              // 最终失败
+              analysisResults[name] = {
+                summary: `${name}本周科研工作持续推进。（API调用出错: ${errMsg.slice(0, 50)}）`,
+                progress: 70, problems: 0, tag: '稳步推进',
+              };
+              setFailedPersons(prev => prev.filter(f => f.name !== name));
+            }
+            setAnalysisProgress(prev => ({
+              ...prev,
+              logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ${still429 && attempt < MAX_RETRY_ATTEMPTS ? '⚠️' : '❌'} ${name} 重试${attempt}失败: ${errMsg.slice(0, 60)}`],
+            }));
+          }
+        })
+      );
+
+      currentFailed = nextFailed;
+    }
+
+    if (currentFailed.length > 0) {
+      // 最终仍有失败的，标记为失败
+      for (const { name } of currentFailed) {
+        analysisResults[name] = {
+          summary: `${name}的周报分析失败（API多次重试后仍不可用，请稍后手动重试）。`,
+          progress: 70, problems: 0, tag: '重试失败',
+        };
+      }
+      setAnalysisProgress(prev => ({
+        ...prev,
+        logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ⚠️ ${currentFailed.length}人经过${MAX_RETRY_ATTEMPTS}次重试后仍失败: ${currentFailed.map(f => f.name).join(', ')}。可点击"仅重试失败人员"按钮稍后重试。`],
+      }));
+    }
+
+    setRetryCount(attempt);
 
     // 保存动态数据到 localStorage
     const personTrends: Record<string, WeekTrend> = {};
@@ -842,14 +988,94 @@ export default function ReportUploader() {
         });
     }
 
+    const retryInfo = attempt > 0 ? `（含${attempt}次自动重试）` : '';
     setAnalysisProgress(prev => ({
       ...prev,
       currentPerson: '',
       completed: prev.total,
       tokensUsed: prev.total * TOKENS_PER_PERSON,
-      logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 分析完成！共处理 ${prev.total} 位成员（未提交成员已跳过）`, `[${new Date().toLocaleTimeString()}] 总消耗: ~${(prev.total * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens`, `[${new Date().toLocaleTimeString()}] 数据已保存至本地存储（${weekDate}）`],
+      logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 分析完成${retryInfo}！共处理 ${prev.total} 位成员（未提交成员已跳过）`, `[${new Date().toLocaleTimeString()}] 总消耗: ~${(prev.total * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens`, `[${new Date().toLocaleTimeString()}] 数据已保存至本地存储（${weekDate}）`],
     }));
     setPhase('done');
+  };
+
+  /** 手动重试：仅对失败的人员重新分析 */
+  const handleRetryFailed = async () => {
+    if (failedPersons.length === 0) return;
+    setIsRetrying(true);
+    const weekDate = detectedDate || new Date().toISOString().slice(0, 10).replace(/-/g, '.');
+
+    setAnalysisProgress(prev => ({
+      ...prev,
+      logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 🔄 手动重试 ${failedPersons.length}人: ${failedPersons.map(f => f.name).join(', ')}`],
+    }));
+
+    const stillFailed: typeof failedPersons = [];
+    await Promise.all(
+      failedPersons.map(async ({ name, person, reportText }) => {
+        try {
+          await new Promise(r => setTimeout(r, 2000)); // 先等待2秒让引擎恢复
+          const prompt = buildAnalysisPrompt(name, person, reportText);
+          const content = await callKimiApi(prompt, {
+            systemPrompt: '你是一个专业的科研团队管理助手，擅长分析周报并给出简洁的评估。',
+            maxTokens: 500,
+          });
+          let result: { summary: string; progress: number; problems: number; tag: string };
+          try {
+            const cleaned = content.replace(/```json\s*/g, '').replace(/```\s*$/g, '').trim();
+            result = JSON.parse(cleaned);
+          } catch {
+            result = { summary: content.slice(0, 100), progress: 70, problems: 0, tag: '稳步推进' };
+          }
+
+          // 更新本地存储的结果
+          const savedTrends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}');
+          const savedHistory = JSON.parse(localStorage.getItem('qlab_dynamic_history') || '{}');
+          const personId = (person?.id) || name;
+          if (savedTrends[weekDate]) {
+            savedTrends[weekDate][personId] = {
+              progress: result.progress,
+              problems: result.problems,
+              characterTag: result.tag,
+              summary: result.summary,
+            };
+          }
+          if (!savedHistory[personId]) savedHistory[personId] = {};
+          savedHistory[personId][weekDate] = result.summary;
+          localStorage.setItem('qlab_dynamic_trends', JSON.stringify(savedTrends));
+          localStorage.setItem('qlab_dynamic_history', JSON.stringify(savedHistory));
+          localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
+
+          setFailedPersons(prev => prev.filter(f => f.name !== name));
+          setAnalysisProgress(prev => ({
+            ...prev,
+            logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ✅ ${name} 手动重试成功`],
+          }));
+        } catch (e: any) {
+          const errMsg = e instanceof Error ? e.message : String(e);
+          stillFailed.push({ name, person, reportText, error: errMsg });
+          setAnalysisProgress(prev => ({
+            ...prev,
+            logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ❌ ${name} 手动重试失败: ${errMsg.slice(0, 60)}`],
+          }));
+        }
+      })
+    );
+
+    if (stillFailed.length > 0) {
+      setFailedPersons(stillFailed);
+      setAnalysisProgress(prev => ({
+        ...prev,
+        logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ⚠️ ${stillFailed.length}人手动重试仍失败，可再次点击重试`],
+      }));
+    } else {
+      setAnalysisProgress(prev => ({
+        ...prev,
+        logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 🎉 所有失败人员重试成功！`],
+      }));
+    }
+
+    setIsRetrying(false);
   };
 
   const reset = () => {
@@ -859,6 +1085,9 @@ export default function ReportUploader() {
     setError('');
     setShowOverrideDialog(false);
     setDetectedDate(null);
+    setFailedPersons([]);
+    setRetryCount(0);
+    setIsRetrying(false);
     setAnalysisProgress({ currentPerson: '', completed: 0, total: 0, estimatedCost: 0, tokensUsed: 0, logs: [] });
   };
 
@@ -1465,12 +1694,12 @@ export default function ReportUploader() {
                 <div className="text-[10px] text-slate-500">总费用 (元)</div>
               </div>
               <div className="bg-white rounded-lg p-3">
-                <div className="text-xl font-bold text-slate-800">k2.6</div>
-                <div className="text-[10px] text-slate-500">使用模型</div>
+                <div className="text-xl font-bold text-slate-800">{retryCount > 0 ? `${retryCount}次` : '—'}</div>
+                <div className="text-[10px] text-slate-500">自动重试</div>
               </div>
             </div>
 
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center gap-3 flex-wrap">
               <Button
                 onClick={() => window.location.hash = '#/analysis'}
                 className="bg-cyan-600 hover:bg-cyan-700"
@@ -1478,6 +1707,16 @@ export default function ReportUploader() {
                 <BarChart3 className="w-4 h-4 mr-1" />
                 查看人员分析
               </Button>
+              {failedPersons.length > 0 && (
+                <Button
+                  onClick={handleRetryFailed}
+                  disabled={isRetrying}
+                  className="bg-amber-600 hover:bg-amber-700 text-white"
+                >
+                  {isRetrying ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+                  {isRetrying ? '重试中...' : `仅重试失败人员 (${failedPersons.length}人)`}
+                </Button>
+              )}
               <Button
                 onClick={() => window.location.hash = '#/pdf-report'}
                 variant="outline"
