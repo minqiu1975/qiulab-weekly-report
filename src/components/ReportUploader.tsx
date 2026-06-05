@@ -45,11 +45,10 @@ interface AnalysisProgress {
   logs: string[];
 }
 
-// 从数据模块获取在职人员名单（排除已出站/已毕业）
-const ALL_PERSONS_NAMES = ACTIVE_PERSONS.map(p => p.name);
-const ALL_PERSONS_COUNT = ACTIVE_PERSONS.length;
-const ACTIVE_RESEARCHER_NAMES = ACTIVE_PERSONS.filter(p => ['researcher', 'associate_researcher', 'assistant_researcher', 'postdoc'].includes(p.role)).map(p => p.name);
-const ACTIVE_STUDENT_NAMES = ACTIVE_PERSONS.filter(p => ['phd', 'undergraduate', 'visitor'].includes(p.role)).map(p => p.name);
+// 注意：以下函数替代了原来的静态常量，确保使用动态人员数据
+function getAllPersonsNames(persons: typeof ACTIVE_PERSONS) { return persons.map(p => p.name); }
+function getActiveResearcherNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['researcher', 'associate_researcher', 'assistant_researcher', 'postdoc'].includes(p.role)).map(p => p.name); }
+function getActiveStudentNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['phd', 'undergraduate', 'visitor'].includes(p.role)).map(p => p.name); }
 
 // Cost estimation: Kimi k2.6（周报批量分析）
 // 实际消耗：~400 tokens 输入（含周报全文）+ ~70 tokens 输出 = ~470 tokens/人
@@ -501,8 +500,10 @@ export default function ReportUploader() {
   const [phdFile, setPhdFile] = useState<File | null>(null);
   const researcherInputRef = useRef<HTMLInputElement>(null);
   const phdInputRef = useRef<HTMLInputElement>(null);
+  const allPersons = usePersons();
+
   const [analysisProgress, setAnalysisProgress] = useState<AnalysisProgress>({
-    currentPerson: '', completed: 0, total: ALL_PERSONS_COUNT, estimatedCost: 0, tokensUsed: 0, logs: [],
+    currentPerson: '', completed: 0, total: ACTIVE_PERSONS.length, estimatedCost: 0, tokensUsed: 0, logs: [],
   });
   const [error, setError] = useState('');
 
@@ -603,7 +604,7 @@ export default function ReportUploader() {
         return;
       }
 
-      const personReports = extractPersonReports(fullText, ALL_PERSONS_NAMES);
+      const personReports = extractPersonReports(fullText, getAllPersonsNames(allPersons));
       setParsedReports(personReports);
       setPhase('review');
     } catch (e) {
@@ -647,8 +648,6 @@ export default function ReportUploader() {
   };
 
   // Step 2: Start AI analysis after user clicks "开始分析"
-  const allPersons = usePersons();
-
   const startAnalysis = async () => {
     // Check Kimi API version before starting
     const userPref = localStorage.getItem('kimi_model_preference');
@@ -1136,7 +1135,7 @@ export default function ReportUploader() {
               <div className="flex flex-col items-center justify-center text-center">
                 <Users className={`w-8 h-8 mb-2 ${researcherFile ? 'text-emerald-500' : 'text-slate-400'}`} />
                 <p className="text-sm font-semibold text-slate-700 mb-0.5">研究员与博后版</p>
-                <p className="text-xs text-slate-500 mb-3">包含{ACTIVE_RESEARCHER_NAMES.length}位在职研究人员</p>
+                <p className="text-xs text-slate-500 mb-3">包含{getActiveResearcherNames(allPersons).length}位在职研究人员</p>
                 {researcherFile ? (
                   <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-100 rounded-full px-3 py-1">
                     <CheckCircle2 className="w-4 h-4" />
@@ -1167,7 +1166,7 @@ export default function ReportUploader() {
               <div className="flex flex-col items-center justify-center text-center">
                 <GraduationCap className={`w-8 h-8 mb-2 ${phdFile ? 'text-emerald-500' : 'text-slate-400'}`} />
                 <p className="text-sm font-semibold text-slate-700 mb-0.5">博士版</p>
-                <p className="text-xs text-slate-500 mb-3">包含{ACTIVE_STUDENT_NAMES.length}位学生</p>
+                <p className="text-xs text-slate-500 mb-3">包含{getActiveStudentNames(allPersons).length}位学生</p>
                 {phdFile ? (
                   <div className="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-100 rounded-full px-3 py-1">
                     <CheckCircle2 className="w-4 h-4" />
@@ -1330,7 +1329,7 @@ export default function ReportUploader() {
                   }
 
                   // 没有新成员，直接进入 review
-                  const personReports = extractPersonReports(parsedFullText, ALL_PERSONS_NAMES);
+                  const personReports = extractPersonReports(parsedFullText, getAllPersonsNames(allPersons));
                   setParsedReports(personReports);
                   setPhase('review');
                 }}
@@ -1440,7 +1439,7 @@ export default function ReportUploader() {
                 className="text-xs"
                 onClick={() => {
                   // 跳过新成员，继续解析
-                  const personReports = extractPersonReports(parsedFullText, ALL_PERSONS_NAMES);
+                  const personReports = extractPersonReports(parsedFullText, getAllPersonsNames(allPersons));
                   setParsedReports(personReports);
                   setPhase('review');
                 }}
@@ -1457,19 +1456,25 @@ export default function ReportUploader() {
 
   // ─── Phase: Review (parse complete, ready to analyze) ───
   if (phase === 'review') {
-    // 基于 parsedReports 实际解析结果，分类显示
-    const submittedNames = ALL_PERSONS_NAMES.filter(name => {
+    // 基于 parsedReports 实际解析结果，分类显示（使用动态人员数据）
+    const activePersonsList = allPersons.length > 0 ? allPersons : ACTIVE_PERSONS;
+    const activeNeedSubmitPersons = activePersonsList.filter(p => p.status === 'active' || p.status === undefined);
+    const activeNeedSubmitNames = getAllPersonsNames(activeNeedSubmitPersons);
+    const activeResearcherNames = getActiveResearcherNames(activeNeedSubmitPersons);
+    const activeStudentNames = getActiveStudentNames(activeNeedSubmitPersons);
+
+    const submittedNames = activeNeedSubmitNames.filter(name => {
       const text = parsedReports[name];
       return text && text.trim().length >= 10;
     });
-    const missingNames = ALL_PERSONS_NAMES.filter(name => {
+    const missingNames = activeNeedSubmitNames.filter(name => {
       const text = parsedReports[name];
       return !text || text.trim().length < 10;
     });
-    const submittedResearchers = submittedNames.filter(n => ACTIVE_RESEARCHER_NAMES.includes(n));
-    const missingResearchers = missingNames.filter(n => ACTIVE_RESEARCHER_NAMES.includes(n));
-    const submittedStudents = submittedNames.filter(n => ACTIVE_STUDENT_NAMES.includes(n));
-    const missingStudents = missingNames.filter(n => ACTIVE_STUDENT_NAMES.includes(n));
+    const submittedResearchers = submittedNames.filter(n => activeResearcherNames.includes(n));
+    const missingResearchers = missingNames.filter(n => activeResearcherNames.includes(n));
+    const submittedStudents = submittedNames.filter(n => activeStudentNames.includes(n));
+    const missingStudents = missingNames.filter(n => activeStudentNames.includes(n));
     const actualCount = submittedNames.length;
 
     return (
