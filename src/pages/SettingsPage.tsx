@@ -1315,7 +1315,7 @@ export default function SettingsPage() {
                                       placeholder="合同到期"
                                     />
                                   )}
-                                  {(editForm.role === 'undergraduate' || editForm.role === 'visitor' || editForm.role === 'alumni') && (
+                                  {(editForm.role === 'undergraduate' || editForm.role === 'alumni') && (
                                     <span className="text-xs text-slate-400">-</span>
                                   )}
                                 </TableCell>
@@ -1346,7 +1346,7 @@ export default function SettingsPage() {
                                 <TableCell className="text-xs">
                                   {m.role === 'phd' && m.graduationDate ? (
                                     <span className="text-emerald-600 font-medium">{m.graduationDate}</span>
-                                  ) : m.role === 'postdoc' && m.exitDate ? (
+                                  ) : (m.role === 'postdoc' || m.role === 'visitor') && m.exitDate ? (
                                     <span className="text-amber-600 font-medium">{m.exitDate}</span>
                                   ) : (m.role === 'researcher' || m.role === 'associate_researcher' || m.role === 'assistant_researcher') && m.contractEndDate ? (
                                     <span className="text-blue-600">{m.contractEndDate}</span>
