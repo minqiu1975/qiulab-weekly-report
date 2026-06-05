@@ -1315,6 +1315,15 @@ export default function SettingsPage() {
                                       placeholder="合同到期"
                                     />
                                   )}
+                                  {editForm.role === 'visitor' && (
+                                    <Input
+                                      type="date"
+                                      value={editForm.exitDate || ''}
+                                      onChange={e => setEditForm({ ...editForm, exitDate: e.target.value })}
+                                      className="h-7 text-xs w-[130px]"
+                                      placeholder="访问结束日期"
+                                    />
+                                  )}
                                   {(editForm.role === 'undergraduate' || editForm.role === 'alumni') && (
                                     <span className="text-xs text-slate-400">-</span>
                                   )}
