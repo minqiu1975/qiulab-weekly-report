@@ -1137,6 +1137,17 @@ export default function SettingsPage() {
                       />
                     </div>
                   )}
+                  {addForm.role === 'visitor' && (
+                    <div>
+                      <label className="text-xs text-slate-600 mb-1 block">访问结束日期</label>
+                      <Input
+                        type="date"
+                        value={addForm.exitDate || ''}
+                        onChange={e => setAddForm({ ...addForm, exitDate: e.target.value })}
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" className="text-xs bg-cyan-600 hover:bg-cyan-700" onClick={confirmAdd} disabled={!addForm.name.trim()}>
@@ -1421,7 +1432,8 @@ export default function SettingsPage() {
                                 {editForm.role === 'phd' && <Input type="date" value={editForm.graduationDate || ''} onChange={e => setEditForm({ ...editForm, graduationDate: e.target.value })} className="h-7 text-xs w-[130px]" placeholder="预计毕业日期" />}
                                 {editForm.role === 'postdoc' && <Input type="date" value={editForm.exitDate || ''} onChange={e => setEditForm({ ...editForm, exitDate: e.target.value })} className="h-7 text-xs w-[130px]" placeholder="出站日期" />}
                                 {(editForm.role === 'researcher' || editForm.role === 'associate_researcher' || editForm.role === 'assistant_researcher') && <Input type="date" value={editForm.contractEndDate || ''} onChange={e => setEditForm({ ...editForm, contractEndDate: e.target.value })} className="h-7 text-xs w-[130px]" placeholder="合同到期" />}
-                                {(editForm.role === 'undergraduate' || editForm.role === 'visitor' || editForm.role === 'alumni') && <span className="text-xs text-slate-400">-</span>}
+                                {editForm.role === 'visitor' && <Input type="date" value={editForm.exitDate || ''} onChange={e => setEditForm({ ...editForm, exitDate: e.target.value })} className="h-7 text-xs w-[130px]" placeholder="访问结束日期" />}
+                                {(editForm.role === 'undergraduate' || editForm.role === 'alumni') && <span className="text-xs text-slate-400">-</span>}
                               </TableCell>
                               <TableCell>
                                 <div className="flex gap-1">
@@ -1438,7 +1450,7 @@ export default function SettingsPage() {
                               <TableCell>{getStatusBadge(m.status)}</TableCell>
                               <TableCell className="text-xs text-slate-400">{m.joinDate}</TableCell>
                               <TableCell className="text-xs">
-                                {m.role === 'phd' && m.graduationDate ? <span className="text-emerald-500">{m.graduationDate}</span> : m.role === 'postdoc' && m.exitDate ? <span className="text-amber-500">{m.exitDate}</span> : (m.role === 'researcher' || m.role === 'associate_researcher' || m.role === 'assistant_researcher') && m.contractEndDate ? <span className="text-blue-400">{m.contractEndDate}</span> : <span className="text-slate-300">-</span>}
+                                {m.role === 'phd' && m.graduationDate ? <span className="text-emerald-500">{m.graduationDate}</span> : (m.role === 'postdoc' || m.role === 'visitor') && m.exitDate ? <span className="text-amber-500">{m.exitDate}</span> : (m.role === 'researcher' || m.role === 'associate_researcher' || m.role === 'assistant_researcher') && m.contractEndDate ? <span className="text-blue-400">{m.contractEndDate}</span> : <span className="text-slate-300">-</span>}
                               </TableCell>
                               <TableCell>
                                 <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-cyan-600" onClick={() => startEdit(m)}><Pencil className="w-3.5 h-3.5" /></Button>
