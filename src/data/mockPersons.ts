@@ -23,19 +23,19 @@ export const ASSISTANT_RESEARCHERS: Person[] = [
 // ==================== 博士后 (4人) ====================
 export const POSTDOCS: Person[] = [
   { id: 'p9', name: '吕未', role: 'postdoc', roleLabel: '博士后', subRole: '博士后', joinDate: '2023-09-01', exitDate: '2026-08-31', researchDirection: '微纳光子学、光场调控', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'p10', name: '孙歆语', role: 'postdoc', roleLabel: '博士后', subRole: '博士后', joinDate: '2023-03-15', exitDate: '2026-03-14', researchDirection: '冰刻剥离与范德华接触', status: 'active', lastSeenWeek: '2026.05.09' },
+  { id: 'p10', name: '孙歆语', role: 'postdoc', roleLabel: '博士后', subRole: '博士后', joinDate: '2023-03-15', exitDate: '2026-03-14', researchDirection: '冰刻剥离与范德华接触', status: 'left', lastSeenWeek: '2026.05.09' },
   { id: 'p11', name: '刘天远', role: 'postdoc', roleLabel: '博士后', subRole: '博士后', joinDate: '2024-01-10', exitDate: '2027-01-09', researchDirection: '随机介质涡旋光学', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'x1', name: '薛淑雯', role: 'postdoc', roleLabel: '博士后', subRole: '博士后', joinDate: '2023-06-01', exitDate: '2026-05-31', researchDirection: '消色差超透镜与跨波段成像', status: 'active', lastSeenWeek: '2026.02.12' },
+  { id: 'x1', name: '薛淑雯', role: 'postdoc', roleLabel: '博士后', subRole: '博士后', joinDate: '2023-06-01', exitDate: '2026-05-31', researchDirection: '消色差超透镜与跨波段成像', status: 'left', lastSeenWeek: '2026.02.12' },
 ];
 
 // ==================== 博士生 (18人) ====================
 export const PHD_STUDENTS: Person[] = [
-  { id: 'd1', name: '陈博取', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC并行激光加工与可调超表面', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'd2', name: '卢奕含', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC超表面审稿回复', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'd3', name: '齐利民', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC光子学表征', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'd4', name: '孙潇雨', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC微孔制备与毕业论文', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'd5', name: '邓卉彤', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: '毕业论文修改与盲审回复', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'd6', name: '周子博', role: 'phd', roleLabel: '博士生', subRole: '2022级', enrollmentYear: 2022, programDuration: 5, graduationDate: '2027-06-30', joinDate: '2022-09-01', researchDirection: '毕业论文修改与答辩准备', status: 'active', lastSeenWeek: '2026.05.09' },
+  { id: 'd1', name: '陈博取', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC并行激光加工与可调超表面', status: 'graduated', lastSeenWeek: '2026.05.09' },
+  { id: 'd2', name: '卢奕含', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC超表面审稿回复', status: 'graduated', lastSeenWeek: '2026.05.09' },
+  { id: 'd3', name: '齐利民', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC光子学表征', status: 'graduated', lastSeenWeek: '2026.05.09' },
+  { id: 'd4', name: '孙潇雨', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: 'SiC微孔制备与毕业论文', status: 'graduated', lastSeenWeek: '2026.05.09' },
+  { id: 'd5', name: '邓卉彤', role: 'phd', roleLabel: '博士生', subRole: '2021级', enrollmentYear: 2021, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2021-09-01', researchDirection: '毕业论文修改与盲审回复', status: 'graduated', lastSeenWeek: '2026.05.09' },
+  { id: 'd6', name: '周子博', role: 'phd', roleLabel: '博士生', subRole: '2022级', enrollmentYear: 2022, programDuration: 5, graduationDate: '2026-06-30', joinDate: '2022-09-01', researchDirection: '毕业论文修改与答辩准备', status: 'graduated', lastSeenWeek: '2026.05.09' },
   { id: 'd7', name: '裴海月', role: 'phd', roleLabel: '博士生', subRole: '2022级', enrollmentYear: 2022, programDuration: 5, graduationDate: '2027-06-30', joinDate: '2022-09-01', researchDirection: '低温制冷系统与嵌入式芯片', status: 'active', lastSeenWeek: '2026.05.09' },
   { id: 'd8', name: '杨治蓉', role: 'phd', roleLabel: '博士生', subRole: '2022级', enrollmentYear: 2022, programDuration: 5, graduationDate: '2027-06-30', joinDate: '2022-09-01', researchDirection: '冰刻金属结构与水熊虫光热', status: 'active', lastSeenWeek: '2026.05.09' },
   { id: 'd19', name: '王启南', role: 'phd', roleLabel: '博士生', subRole: '2022级', enrollmentYear: 2022, programDuration: 5, graduationDate: '2027-06-30', joinDate: '2022-09-01', researchDirection: '钙钛矿探测器与TRPL表征', status: 'active', lastSeenWeek: '2026.05.09' },
@@ -53,7 +53,7 @@ export const PHD_STUDENTS: Person[] = [
 // ==================== 本科生 (2人) ====================
 export const UNDERGRADUATES: Person[] = [
   { id: 'x3', name: '郑豪杰', role: 'undergraduate', roleLabel: '本科生', subRole: '2022级', enrollmentYear: 2022, programDuration: 5, joinDate: '2022-09-01', researchDirection: '本科毕业论文', status: 'active', lastSeenWeek: '2026.05.09' },
-  { id: 'x2', name: '王旭杰', role: 'undergraduate', roleLabel: '本科生', subRole: '已毕业(2022级)', enrollmentYear: 2022, programDuration: 5, joinDate: '2021-09-01', researchDirection: '冰刻生物机器人与冷冻保存', status: 'active', lastSeenWeek: '2026.02.12' },
+  { id: 'x2', name: '王旭杰', role: 'undergraduate', roleLabel: '本科生', subRole: '已毕业(2022级)', enrollmentYear: 2022, programDuration: 5, joinDate: '2021-09-01', researchDirection: '冰刻生物机器人与冷冻保存', status: 'graduated', lastSeenWeek: '2026.02.12' },
 ];
 
 // ==================== 访问学生 (1人) ====================
