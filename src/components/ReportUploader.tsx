@@ -51,13 +51,14 @@ function getActiveResearcherNames(persons: typeof ACTIVE_PERSONS) { return perso
 function getActiveStudentNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['phd', 'undergraduate', 'visitor'].includes(p.role)).map(p => p.name); }
 
 // Cost estimation: Kimi k2.6（周报批量分析）
+// 官方定价 (platform.kimi.com)：
+// - 输入(缓存未命中): ¥6.50/百万tokens
+// - 输入(缓存命中): ¥1.10/百万tokens
+// - 输出: ¥27.00/百万tokens
 // 实际消耗：~400 tokens 输入（含周报全文）+ ~70 tokens 输出 = ~470 tokens/人
-// 价格：输入 $0.95/M，输出 $4.00/M
 const TOKENS_PER_PERSON = 470;
-// 实际计费单价（从 2026-05-30 账单反推）：
-// 输入 ¥0.037/千tokens, 输出 ¥0.17/千tokens
-// 每人约 400 输入 + 70 输出 = 470 tokens
-const COST_PER_PERSON = (400 / 1000) * 0.037 + (70 / 1000) * 0.17; // ≈ 0.0267元/人
+// 保守预估按缓存未命中计算
+const COST_PER_PERSON = (400 / 1_000_000) * 6.50 + (70 / 1_000_000) * 27.00; // ≈ 0.0045元/人
 
 /**
  * Parse date from filename.
@@ -737,7 +738,7 @@ export default function ReportUploader() {
     if (excludedPersons.length > 0) {
       logs.push(`[${new Date().toLocaleTimeString()}] ℹ️ ${excludedPersons.length}人已毕业/离职/非活跃，无需提交周报：${excludedPersons.map(p => p.name).join('、')}`);
     }
-    logs.push(`[${new Date().toLocaleTimeString()}] 本周已提交${submittedCount}人，未提交${missingNames.length}人（需提交${needSubmitPersons.length}人），预计消耗: ${submittedCount}人 × ~${TOKENS_PER_PERSON} tokens ≈ ${(submittedCount * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens / 约¥${estimatedCost.toFixed(3)}`);
+    logs.push(`[${new Date().toLocaleTimeString()}] 本周已提交${submittedCount}人，未提交${missingNames.length}人（需提交${needSubmitPersons.length}人），预计消耗: ${submittedCount}人 × ~${TOKENS_PER_PERSON} tokens ≈ ${(submittedCount * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens / 约¥${estimatedCost.toFixed(4)}（官方定价: 输入¥6.50/百万 + 输出¥27.00/百万）`);
 
     setAnalysisProgress({
       currentPerson: personItems[0]?.name || '',
@@ -1580,7 +1581,7 @@ export default function ReportUploader() {
               </div>
             </div>
             <div className="text-[10px] text-slate-400 mt-2">
-              仅对已提交{actualCount}人进行AI分析（未提交{missingNames.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(3)}元/人（输入¥0.037/千tokens + 输出¥0.17/千tokens）。
+              仅对已提交{actualCount}人进行AI分析（未提交{missingNames.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(4)}元/人（Kimi官方: 输入¥6.50/百万 + 输出¥27.00/百万）。
             </div>
           </CardContent>
         </Card>
@@ -1743,11 +1744,11 @@ export default function ReportUploader() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b border-slate-100">
                 <span className="text-slate-600">输入Token ({(analysisProgress.completed * 400 / 1000).toFixed(1)}K @ $0.95/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 400 * 0.037 / 1000).toFixed(3)} 元</span>
+                <span className="font-medium">{(analysisProgress.completed * 400 * 6.50 / 1_000_000).toFixed(4)} 元</span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100">
                 <span className="text-slate-600">输出Token ({(analysisProgress.completed * 70 / 1000).toFixed(1)}K @ $4.00/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 70 * 0.17 / 1000).toFixed(3)} 元</span>
+                <span className="font-medium">{(analysisProgress.completed * 70 * 27.00 / 1_000_000).toFixed(4)} 元</span>
               </div>
               <div className="flex justify-between py-1 font-semibold text-slate-800">
                 <span>合计</span>

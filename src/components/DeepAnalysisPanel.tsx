@@ -122,18 +122,22 @@ function buildAnalysisPrompt(person: Person): string {
 
 /**
  * 预估 Kimi API 调用费用
- * 实际计费单价（从 2026-05-30 账单反推）：
- * - 输入: ¥0.037/千tokens (¥37/百万)
- * - 输出: ¥0.17/千tokens (¥170/百万)
+ * Kimi K2.6 官方定价 (platform.kimi.com)：
+ * - 输入(缓存未命中): ¥6.50/百万tokens
+ * - 输入(缓存命中): ¥1.10/百万tokens
+ * - 输出: ¥27.00/百万tokens
+ * 保守预估按缓存未命中计算
  */
 function estimateCost(): { tokens: number; cost: string } {
   const inputTokens = 200;
   const outputTokens = 510;
   const totalTokens = inputTokens + outputTokens;
-  const inputCost = (inputTokens / 1000) * 0.037;
-  const outputCost = (outputTokens / 1000) * 0.17;
+  // 官方定价 ¥6.50/百万 = ¥0.0065/千
+  const inputCost = (inputTokens / 1_000_000) * 6.50;
+  // 官方定价 ¥27.00/百万 = ¥0.027/千
+  const outputCost = (outputTokens / 1_000_000) * 27.00;
   const totalCost = inputCost + outputCost;
-  return { tokens: totalTokens, cost: totalCost.toFixed(3) };
+  return { tokens: totalTokens, cost: totalCost.toFixed(4) };
 }
 
 type Phase = 'idle' | 'confirming' | 'analyzing' | 'done' | 'error';
