@@ -57,20 +57,45 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const ALL_PERSONS = usePersons();
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
+  const [syncDetail, setSyncDetail] = useState('');
 
+  // 同步诊断：对比本地 vs 云端数据
   const handleSync = async () => {
     setSyncStatus('syncing');
+    setSyncDetail('正在检查云端连接...');
+
     try {
-      // 1. 先推送本地数据到云端（确保本机最新数据上传）
+      // 1. 获取本地数据摘要
       const localData = cloudStorage.loadFromLocal();
+      const localTrends = localData.dynamic?.trends || {};
+      const localWeeks = Object.keys(localTrends).sort();
+      const localLatest = localWeeks.length > 0 ? localWeeks[localWeeks.length - 1] : '无';
+      const localCount = localWeeks.length;
+      setSyncDetail(`本地: ${localLatest} (${localCount}期) → 正在推送到云端...`);
+
+      // 2. 推送本地数据到云端
       await cloudStorage.saveAllData(localData);
-      // 2. 再拉取云端数据并合并（获取其他设备的更新）
-      await cloudStorage.loadAllData();
+      setSyncDetail(`本地已推送 → 正在从云端拉取...`);
+
+      // 3. 拉取云端数据并合并
+      const merged = await cloudStorage.loadAllData();
+      const mergedTrends = merged.dynamic?.trends || {};
+      const mergedWeeks = Object.keys(mergedTrends).sort();
+      const mergedLatest = mergedWeeks.length > 0 ? mergedWeeks[mergedWeeks.length - 1] : '无';
+      const mergedCount = mergedWeeks.length;
+
+      if (mergedLatest !== localLatest || mergedCount !== localCount) {
+        setSyncDetail(`发现新数据！云端最新: ${mergedLatest} (${mergedCount}期) → 已合并`);
+      } else {
+        setSyncDetail(`同步完成。本地与云端一致: ${localLatest} (${localCount}期)`);
+      }
       setSyncStatus('success');
-      setTimeout(() => setSyncStatus('idle'), 3000);
-    } catch (e) {
+      setTimeout(() => { setSyncStatus('idle'); setSyncDetail(''); }, 5000);
+    } catch (e: any) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setSyncDetail(`同步失败: ${msg}`);
       setSyncStatus('error');
-      setTimeout(() => setSyncStatus('idle'), 3000);
+      setTimeout(() => { setSyncStatus('idle'); setSyncDetail(''); }, 5000);
     }
   };
   const activePeople = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left');
@@ -200,22 +225,31 @@ export default function Dashboard() {
           <p className="text-xs text-slate-400 mt-0.5">团队概况 · 第{latestWeekNumber}期 ({latestWeekLabel})</p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleSync}
-            disabled={syncStatus === 'syncing'}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              syncStatus === 'success' ? 'bg-emerald-100 text-emerald-700' :
-              syncStatus === 'error' ? 'bg-red-100 text-red-700' :
-              syncStatus === 'syncing' ? 'bg-amber-100 text-amber-700' :
-              'bg-blue-50 text-blue-600 hover:bg-blue-100'
-            }`}
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
-            {syncStatus === 'syncing' ? '同步中...' :
-             syncStatus === 'success' ? '已同步' :
-             syncStatus === 'error' ? '同步失败' :
-             '同步数据'}
-          </button>
+          <div className="flex flex-col items-end">
+            <button
+              onClick={handleSync}
+              disabled={syncStatus === 'syncing'}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                syncStatus === 'success' ? 'bg-emerald-100 text-emerald-700' :
+                syncStatus === 'error' ? 'bg-red-100 text-red-700' :
+                syncStatus === 'syncing' ? 'bg-amber-100 text-amber-700' :
+                'bg-blue-50 text-blue-600 hover:bg-blue-100'
+              }`}
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
+              {syncStatus === 'syncing' ? '同步中...' :
+               syncStatus === 'success' ? '已同步' :
+               syncStatus === 'error' ? '同步失败' :
+               '同步数据'}
+            </button>
+            {syncDetail && (
+              <span className={`text-[10px] mt-1 max-w-[200px] text-right leading-tight ${
+                syncStatus === 'error' ? 'text-red-500' :
+                syncStatus === 'success' ? 'text-emerald-600' :
+                'text-amber-600'
+              }`}>{syncDetail}</span>
+            )}
+          </div>
           <button
             onClick={() => navigate('/pdf-report')}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-800 text-white text-sm font-medium hover:bg-slate-700 transition-colors"
