@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import PersonStatusCard from '../components/PersonStatusCard';
-import ExportButton from '../components/ExportButton';
 import { MOCK_REPORTS, getPersonStatusChanges } from '../data/mockReports';
 import { getUploadHistory } from '../lib/dynamicStorage';
 import { usePersons } from '../hooks/usePersons';
@@ -28,6 +27,8 @@ import {
   BookOpen,
   UserCog,
   Microscope,
+  Download,
+  Upload,
 } from 'lucide-react';
 import { cloudStorage } from '../services/cloudStorage';
 
@@ -58,6 +59,68 @@ export default function Dashboard() {
   const ALL_PERSONS = usePersons();
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
   const [syncDetail, setSyncDetail] = useState('');
+  const [importStatus, setImportStatus] = useState('');
+
+  // 导出所有 QiuLab 数据为 JSON 文件
+  const handleExport = () => {
+    const data: Record<string, string> = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('qlab_')) {
+        data[key] = localStorage.getItem(key) || '';
+      }
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `qiulab_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setImportStatus('数据已导出');
+    setTimeout(() => setImportStatus(''), 3000);
+  };
+
+  // 从 JSON 文件导入数据
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target?.result as string) as Record<string, string>;
+        let count = 0;
+        for (const [key, value] of Object.entries(data)) {
+          if (key.startsWith('qlab_')) {
+            // 合并策略：如果两边都有，取 timestamp 较新的
+            const existing = localStorage.getItem(key);
+            if (existing && (key.includes('trends') || key.includes('history'))) {
+              try {
+                const existingObj = JSON.parse(existing);
+                const newObj = JSON.parse(value);
+                const merged = { ...existingObj, ...newObj };
+                localStorage.setItem(key, JSON.stringify(merged));
+              } catch {
+                localStorage.setItem(key, value);
+              }
+            } else {
+              localStorage.setItem(key, value);
+            }
+            count++;
+          }
+        }
+        setImportStatus(`导入完成：${count} 项数据已合并`);
+        setTimeout(() => setImportStatus(''), 5000);
+        // 刷新页面以应用新数据
+        setTimeout(() => window.location.reload(), 1500);
+      } catch (err) {
+        setImportStatus(`导入失败：${err instanceof Error ? err.message : '文件格式错误'}`);
+        setTimeout(() => setImportStatus(''), 5000);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = ''; // 允许重复导入同一文件
+  };
 
   // 同步诊断：对比本地 vs 云端数据
   const handleSync = async () => {
@@ -93,9 +156,9 @@ export default function Dashboard() {
       setTimeout(() => { setSyncStatus('idle'); setSyncDetail(''); }, 5000);
     } catch (e: any) {
       const msg = e instanceof Error ? e.message : String(e);
-      setSyncDetail(`同步失败: ${msg}`);
+      setSyncDetail(`云端不可用(${msg})，请使用导出/导入同步`);
       setSyncStatus('error');
-      setTimeout(() => { setSyncStatus('idle'); setSyncDetail(''); }, 5000);
+      setTimeout(() => { setSyncStatus('idle'); setSyncDetail(''); }, 8000);
     }
   };
   const activePeople = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left');
@@ -224,7 +287,7 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Dashboard</h1>
           <p className="text-xs text-slate-400 mt-0.5">团队概况 · 第{latestWeekNumber}期 ({latestWeekLabel})</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <div className="flex flex-col items-end">
             <button
               onClick={handleSync}
@@ -257,7 +320,24 @@ export default function Dashboard() {
             <Printer className="w-4 h-4" />
             生成全组PDF报告
           </button>
-          <ExportButton label="导出数据" fileName="dashboard-data.json" data={{ stats, timestamp: new Date().toISOString() }} />
+          <button
+            onClick={handleExport}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
+            title="导出所有周报数据到 JSON 文件，可在其他浏览器导入"
+          >
+            <Download className="w-4 h-4" />
+            导出
+          </button>
+          <div className="relative">
+            <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors cursor-pointer"
+              title="从 JSON 文件导入周报数据"
+            >
+              <Upload className="w-4 h-4" />
+              导入
+              <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+            </label>
+            {importStatus && <span className="text-[10px] text-slate-500 absolute left-0 -bottom-5 whitespace-nowrap">{importStatus}</span>}
+          </div>
         </div>
       </div>
 
