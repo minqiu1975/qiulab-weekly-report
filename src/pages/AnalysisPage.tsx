@@ -602,6 +602,11 @@ export default function AnalysisPage() {
   const [selectedId, setSelectedId] = useState(searchParams.get('person') || '');
   const ALL_PERSONS = usePersons();
 
+  // 打开页面时拉取云端最新数据，确保跨设备同步
+  useEffect(() => {
+    cloudStorage.loadAllData().catch(() => {});
+  }, []);
+
   // 双人协作分析状态（成员A跟随当前选中的成员）
   const [memberB, setMemberB] = useState('');
   const [collabAnalyzing, setCollabAnalyzing] = useState(false);

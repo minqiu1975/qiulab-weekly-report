@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent } from '../components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import TrendChart from '../components/TrendChart';
@@ -6,12 +6,18 @@ import ExportButton from '../components/ExportButton';
 import { TREND_LABELS, PERSON_BASELINE_TRENDS } from '../data/mockTrends';
 import { getAllWeekLabels, getMergedPersonTrend } from '../lib/dynamicStorage';
 import { usePersons } from '../hooks/usePersons';
+import { cloudStorage } from '../services/cloudStorage';
 import { ROLE_LABEL_MAP } from '../data/mockPersons';
 import { TrendingUp } from 'lucide-react';
 
 export default function TrendsPage() {
   const [selectedId, setSelectedId] = useState('');
   const ALL_PERSONS = usePersons();
+
+  // 打开页面时拉取云端最新数据，确保跨设备同步
+  useEffect(() => {
+    cloudStorage.loadAllData().catch(() => {});
+  }, []);
 
   // 使用动态合并数据（静态基线 + 用户上传的动态数据）
   const trend = useMemo(() => {
