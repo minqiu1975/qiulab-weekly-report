@@ -61,6 +61,10 @@ export default function Dashboard() {
   const handleSync = async () => {
     setSyncStatus('syncing');
     try {
+      // 1. 先推送本地数据到云端（确保本机最新数据上传）
+      const localData = cloudStorage.loadFromLocal();
+      await cloudStorage.saveAllData(localData);
+      // 2. 再拉取云端数据并合并（获取其他设备的更新）
       await cloudStorage.loadAllData();
       setSyncStatus('success');
       setTimeout(() => setSyncStatus('idle'), 3000);

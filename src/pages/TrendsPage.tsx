@@ -12,11 +12,14 @@ import { TrendingUp } from 'lucide-react';
 
 export default function TrendsPage() {
   const [selectedId, setSelectedId] = useState('');
+  const [syncVersion, setSyncVersion] = useState(0);
   const ALL_PERSONS = usePersons();
 
   // 打开页面时拉取云端最新数据，确保跨设备同步
   useEffect(() => {
-    cloudStorage.loadAllData().catch(() => {});
+    cloudStorage.loadAllData()
+      .then(() => setSyncVersion(v => v + 1)) // 同步完成后强制刷新
+      .catch(() => {});
   }, []);
 
   // 使用动态合并数据（静态基线 + 用户上传的动态数据）
@@ -55,7 +58,7 @@ export default function TrendsPage() {
       data,
     };
     return result;
-  }, [selectedId, ALL_PERSONS]);
+  }, [selectedId, ALL_PERSONS, syncVersion]);
 
   // 在职人员（按新角色体系分组）
   const activePersons = useMemo(() => ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left' && p.status !== 'inactive'), [ALL_PERSONS]);

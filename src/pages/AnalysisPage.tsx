@@ -602,9 +602,13 @@ export default function AnalysisPage() {
   const [selectedId, setSelectedId] = useState(searchParams.get('person') || '');
   const ALL_PERSONS = usePersons();
 
+  const [syncVersion, setSyncVersion] = useState(0);
+
   // 打开页面时拉取云端最新数据，确保跨设备同步
   useEffect(() => {
-    cloudStorage.loadAllData().catch(() => {});
+    cloudStorage.loadAllData()
+      .then(() => setSyncVersion(v => v + 1)) // 同步完成后强制刷新
+      .catch(() => {});
   }, []);
 
   // 双人协作分析状态（成员A跟随当前选中的成员）
@@ -734,9 +738,10 @@ PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室�
   };
 
   // 直接从 localStorage 读取最新评估（静态+动态合并），不使用 useMemo 缓存
-  // 确保上传新周报后自动显示最新数据
+  // syncVersion 变化时重新读取（云端同步后刷新）
   const assessment = (() => {
     if (!selectedId) return null;
+    void syncVersion; // 触发重新渲染时重新读取
     const p = ALL_PERSONS.find((x) => x.id === selectedId);
     return getLatestAssessmentMerged(selectedId, p?.name);
   })();
@@ -786,9 +791,10 @@ PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室�
 
   // 获取选中人员的历史数据（静态基线 + 动态上传数据合并）
   // 直接从 localStorage 读取最新历史（静态+动态合并），不使用 useMemo 缓存
-  // 传入 personId 因为动态数据保存时用的是 personId 作为 key
+  // syncVersion 变化时重新读取（云端同步后刷新）
   const personHistory = (() => {
     if (!person) return null;
+    void syncVersion; // 触发重新渲染时重新读取
     const staticData = PERSON_HISTORY[person.name] || [];
     return getMergedPersonHistory(person.name, staticData, person.id);
   })();
