@@ -217,33 +217,52 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
     '严', '潘', '欧', '邓', '裴', '章', '欧', '李', '卢', '杨',
   ]);
 
-  // ===== 策略1：匹配带编号前缀的人名行（如 "1. 严巍"、"2、谢宇"）=====
-  // 模式：数字[.、. ] + 2-3个中文字符（人名）+ 可选的研究方向/角色
-  const numberedNamePattern = /^\d+[\.、\s]+([\u4e00-\u9fa5]{2,3})(?:\s*[（(][^)）]*[)）])?\s*$/;
+  // ===== 策略1：匹配带编号前缀的人名行 =====
+  // 支持格式：
+  //   "1. 严巍" - 纯人名
+  //   "1. 严巍（SiC超表面）" - 人名+括号注释
+  //   "3. 王晨荷  微纳光学" - 人名+空格+描述（新格式）
+  //   "18. Jonah Johnson 江骏浪" - 英文名+中文名
+  // 模式：数字[.、] + 空格 + 名字部分
+  const numberedNamePattern1 = /^\d+[\.、\s]+([\u4e00-\u9fa5]{2,3})\s*(?:[（(][^)）]*[)）])?\s*$/; // 纯中文名
 
   for (const line of lines) {
     // 只处理带编号的行（行首是数字）
     if (!/^\d+/.test(line)) continue;
 
-    const match = line.match(numberedNamePattern);
-    if (!match) continue;
+    let candidate: string | null = null;
 
-    const candidate = match[1]; // 2-3个中文字符
+    // 尝试匹配纯中文名格式 "1. 严巍" 或 "1. 严巍（方向）"
+    const match1 = line.match(numberedNamePattern1);
+    if (match1) {
+      candidate = match1[1];
+    } else {
+      // 尝试匹配 "3. 王晨荷  微纳光学" 格式
+      const match2 = line.match(/^\d+[\.、\s]+([\u4e00-\u9fa5]{2,3})\s+[^\d（(].*$/);
+      if (match2) {
+        candidate = match2[1];
+      } else {
+        // 尝试匹配 "Jonah Johnson 江骏浪" 格式
+        const match3 = line.match(/^\d+[\.、\s]+[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
+        if (match3) {
+          candidate = match3[1];
+        }
+      }
+    }
+
+    if (!candidate) continue;
 
     // 排除已知成员
     if (existingNames.includes(candidate)) continue;
 
     // 排除排除词库
     if (excludeWords.has(candidate)) continue;
-    // 也检查候选是否以排除词开头（如"基于超快" -> "基于"是排除词）
+    // 也检查候选是否以排除词开头
     let isExcluded = false;
     for (const ew of excludeWords) {
-      if (candidate.startsWith(ew) || ew.startsWith(candidate)) {
-        // 只有当排除词>=2字且候选以排除词开头时才排除
-        if (ew.length >= 2 && candidate.startsWith(ew)) {
-          isExcluded = true;
-          break;
-        }
+      if (ew.length >= 2 && candidate.startsWith(ew)) {
+        isExcluded = true;
+        break;
       }
     }
     if (isExcluded) continue;
@@ -251,18 +270,17 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
     // 验证：候选的第一个字应该是常见姓氏
     const firstChar = candidate.charAt(0);
     if (!commonSurnames.has(firstChar)) {
-      // 非常见姓氏，更严格检查：整行是否只有编号+2-3字，且后面没有工作内容
-      // 如果行尾有研究方向括号注释，可能是人名
+      // 非常见姓氏，检查是否有括号注释作为辅助判断
       const hasDirectionNote = /[（(][^)）]{3,}[)）]/.test(line);
       if (!hasDirectionNote) continue;
     }
 
-    // 验证：检查下一行是否有工作内容（人名后面应该有工作内容描述）
+    // 验证：检查下一行是否有工作内容
     const lineIndex = lines.indexOf(line);
     if (lineIndex >= 0 && lineIndex + 1 < lines.length) {
       const nextLine = lines[lineIndex + 1];
       // 下一行应该是工作内容（不是另一个编号行，不是空行）
-      if (/^\d+/.test(nextLine)) continue; // 下一行是另一个人名
+      if (/^\d+[\.、\s]+/.test(nextLine)) continue; // 下一行是另一个人名
       if (nextLine.length < 5) continue; // 下一行太短
 
       // 通过所有检查
