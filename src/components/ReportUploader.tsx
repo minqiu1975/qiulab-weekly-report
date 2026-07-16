@@ -226,6 +226,9 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
   // 模式：数字[.、] + 空格 + 名字部分
   const numberedNamePattern1 = /^\d+[\.、\s]+([\u4e00-\u9fa5]{2,3})\s*(?:[（(][^)）]*[)）])?\s*$/; // 纯中文名
 
+  console.log('[Detect] 开始检测，现有成员数:', existingNames.length, '总现有:', existingNames);
+  console.log('[Detect] 周报总行数:', lines.length);
+
   for (const line of lines) {
     // 只处理带编号的行（行首是数字）
     if (!/^\d+/.test(line)) continue;
@@ -250,10 +253,17 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
       }
     }
 
-    if (!candidate) continue;
+    if (!candidate) {
+      console.log('[Detect] 未匹配行:', line.substring(0, 50));
+      continue;
+    }
+    console.log('[Detect] 候选:', candidate, '| 行:', line.substring(0, 50));
 
     // 排除已知成员
-    if (existingNames.includes(candidate)) continue;
+    if (existingNames.includes(candidate)) {
+      console.log('[Detect] 跳过(已存在):', candidate);
+      continue;
+    }
 
     // 排除排除词库
     if (excludeWords.has(candidate)) continue;
@@ -270,26 +280,37 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
     // 验证：候选的第一个字应该是常见姓氏
     const firstChar = candidate.charAt(0);
     if (!commonSurnames.has(firstChar)) {
-      // 非常见姓氏，检查是否有括号注释作为辅助判断
       const hasDirectionNote = /[（(][^)）]{3,}[)）]/.test(line);
-      if (!hasDirectionNote) continue;
+      if (!hasDirectionNote) {
+        console.log('[Detect] 跳过(罕见姓):', candidate, '姓:', firstChar);
+        continue;
+      }
     }
 
     // 验证：检查下一行是否有工作内容
     const lineIndex = lines.indexOf(line);
     if (lineIndex >= 0 && lineIndex + 1 < lines.length) {
       const nextLine = lines[lineIndex + 1];
-      // 下一行应该是工作内容（不是另一个编号行，不是空行）
-      if (/^\d+[\.、\s]+/.test(nextLine)) continue; // 下一行是另一个人名
-      if (nextLine.length < 5) continue; // 下一行太短
+      if (/^\d+[\.、\s]+/.test(nextLine)) {
+        console.log('[Detect] 跳过(下一个是人名):', candidate);
+        continue;
+      }
+      if (nextLine.length < 5) {
+        console.log('[Detect] 跳过(下一行太短):', candidate, 'next:', nextLine);
+        continue;
+      }
 
       // 通过所有检查
       if (!detectedNames.includes(candidate)) {
+        console.log('[Detect] ✅ 检测到新成员:', candidate);
         detectedNames.push(candidate);
       }
+    } else {
+      console.log('[Detect] 跳过(无下一行):', candidate);
     }
   }
 
+  console.log('[Detect] 最终结果:', detectedNames);
   return detectedNames;
 }
 
@@ -572,8 +593,8 @@ export default function ReportUploader() {
 
       // 检测周报中是否有已毕业/已离职/非活跃成员的内容
       const inactiveMembers = detectInactiveMembersInReport(fullText);
+      console.log('[Parse] 非活跃成员检测:', inactiveMembers);
       if (inactiveMembers.length > 0) {
-        // 有非活跃成员提交周报，进入确认阶段
         setInactiveMembersDetected(inactiveMembers);
         setParsedFullText(fullText);
         setPhase('inactive_check');
@@ -583,7 +604,9 @@ export default function ReportUploader() {
       // 检测新成员
       const currentMembers = loadCurrentMembers();
       const currentNames = currentMembers.map(m => m.name);
+      console.log('[Parse] 现有成员数:', currentNames.length);
       const detectedNewNames = detectNamesFromReport(fullText, currentNames);
+      console.log('[Parse] 新成员检测:', detectedNewNames);
 
       if (detectedNewNames.length > 0) {
         // 有新成员发现，进入新成员确认阶段
@@ -1305,11 +1328,11 @@ export default function ReportUploader() {
                 variant="outline"
                 className="text-xs"
                 onClick={() => {
-                  // 跳过这些成员，继续正常解析流程
-                  // 先尝试检测新成员
+                  console.log('[Skip] 跳过非活跃成员，检测新成员...');
                   const currentMembers = loadCurrentMembers();
                   const currentNames = currentMembers.map(m => m.name);
                   const detectedNewNames = detectNamesFromReport(parsedFullText, currentNames);
+                  console.log('[Skip] 新成员检测:', detectedNewNames);
 
                   if (detectedNewNames.length > 0) {
                     setNewMembersDetected(detectedNewNames);
