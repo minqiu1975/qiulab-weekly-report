@@ -492,7 +492,10 @@ function buildAnalysisPrompt(
     }
   }
 
-  return `请对以下科研人员的周报进行分析，给出简要总结。\n\n姓名：${name}\n身份：${person?.roleLabel || '成员'}${person?.subRole ? `(${person.subRole})` : ''}${planningInfo}\n研究方向：${person?.researchDirection || ''}${planningNote}\n\n本周报内容：\n${reportText}\n\n请输出以下结构的 JSON（不要有任何其他文字）：\n{\n  "summary": "对该人员本周工作的简要总结（50字左右）",\n  "progress": 70,\n  "problems": 0,\n  "tag": "稳步推进"\n}\nprogress 为 50-95 的整数，problems 为 0-2 的整数，tag 从 ["稳步推进","论文推进","实验攻坚","数据分析","文献调研","毕业准备","出站准备"] 中选择。`;
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+
+  return `请对以下科研人员的周报进行分析，给出简要总结。\n\n【重要】当前日期：${todayStr}。所有时间计算必须以此为基准。\n\n姓名：${name}\n身份：${person?.roleLabel || '成员'}${person?.subRole ? `(${person.subRole})` : ''}${planningInfo}\n研究方向：${person?.researchDirection || ''}${planningNote}\n\n本周报内容：\n${reportText}\n\n请输出以下结构的 JSON（不要有任何其他文字）：\n{\n  "summary": "对该人员本周工作的简要总结（50字左右）",\n  "progress": 70,\n  "problems": 0,\n  "tag": "稳步推进"\n}\nprogress 为 50-95 的整数，problems 为 0-2 的整数，tag 从 ["稳步推进","论文推进","实验攻坚","数据分析","文献调研","毕业准备","出站准备"] 中选择。`;
 }
 
 export default function ReportUploader() {
