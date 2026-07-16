@@ -16,6 +16,7 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
 } from 'recharts';
 import { UserSearch, Printer, CalendarDays, History, ChevronDown, ChevronRight, AlertTriangle, Sparkles, Loader2, Users, Lightbulb } from 'lucide-react';
+import { getTodayStr, formatTimeInfo } from '../lib/dateContext';
 
 const COLORS = ['#059669', '#d97706', '#dc2626'];
 
@@ -676,44 +677,29 @@ export default function AnalysisPage() {
       const weekDataA = latestLabel && trends[latestLabel] ? trends[latestLabel][selectedId] || trends[latestLabel][personA.name] : null;
       const weekDataB = latestLabel && trends[latestLabel] ? trends[latestLabel][memberB] || trends[latestLabel][personB.name] : null;
       // 计算时间信息
-      const today = new Date();
-      const todayStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-      function getTimeInfo(person: NonNullable<typeof personA>) {
-        if (person.role === 'phd' && person.graduationDate) {
-          const gradDate = new Date(person.graduationDate + 'T00:00:00');
-          const monthsUntil = (gradDate.getFullYear() - today.getFullYear()) * 12 + (gradDate.getMonth() - today.getMonth());
-          if (monthsUntil < 0) return `，预计毕业：${person.graduationDate}，⚠️ 已延毕${Math.abs(monthsUntil)}个月`;
-          if (monthsUntil <= 6) return `，预计毕业：${person.graduationDate}，⏰ 仅剩${monthsUntil}个月`;
-          return `，预计毕业：${person.graduationDate}（还剩${monthsUntil}个月）`;
-        }
-        if (person.role === 'postdoc' && person.exitDate) {
-          const exitDate = new Date(person.exitDate + 'T00:00:00');
-          const monthsUntil = (exitDate.getFullYear() - today.getFullYear()) * 12 + (exitDate.getMonth() - today.getMonth());
-          if (monthsUntil < 0) return `，出站日期：${person.exitDate}，⚠️ 已超期${Math.abs(monthsUntil)}个月`;
-          if (monthsUntil <= 6) return `，出站日期：${person.exitDate}，⏰ 仅剩${monthsUntil}个月`;
-          return `，出站日期：${person.exitDate}（还剩${monthsUntil}个月）`;
-        }
-        if ((person.role === 'researcher' || person.role === 'assistant_researcher' || person.role === 'associate_researcher') && person.contractEndDate) {
-          return `，合同到期：${person.contractEndDate}`;
-        }
-        return '';
-      }
-      const timeInfoA = getTimeInfo(personA);
-      const timeInfoB = getTimeInfo(personB);
+      const todayStr = getTodayStr();
+      const timeInfoA = formatTimeInfo({
+        role: personA.role, graduationDate: personA.graduationDate, exitDate: personA.exitDate,
+        contractEndDate: personA.contractEndDate, programDuration: personA.programDuration, enrollmentYear: personA.enrollmentYear,
+      });
+      const timeInfoB = formatTimeInfo({
+        role: personB.role, graduationDate: personB.graduationDate, exitDate: personB.exitDate,
+        contractEndDate: personB.contractEndDate, programDuration: personB.programDuration, enrollmentYear: personB.enrollmentYear,
+      });
 
       const prompt = `你是一位资深的科研合作顾问，精通光子学、微纳加工、材料科学等交叉领域。请基于以下两位仇旻实验室（PAINT Lab）成员的研究背景和最新周报进展，提出**具体、可行的合作研究课题**（不是研究方向，而是具体的研究内容/课题）。
 
 【重要】当前日期：${todayStr}。以下所有时间判断必须以此为基准。任何关于"剩余时间"的计算都基于此日期。
 
 ## 成员A：${personA.name}
-- 角色：${personA.roleLabel}${personA.subRole ? `(${personA.subRole})` : ''}${timeInfoA}
-- 研究方向：${personA.researchDirection}
+- 角色：${personA.roleLabel}${personA.subRole ? `(${personA.subRole})` : ''}${timeInfoA.planningInfo}
+- 研究方向：${personA.researchDirection}${timeInfoA.planningNote}
 - 入组时间：${personA.joinDate || '未知'}
 ${weekDataA ? `- 最新周报摘要：${weekDataA.summary || '无摘要'}` : ''}
 
 ## 成员B：${personB.name}
-- 角色：${personB.roleLabel}${personB.subRole ? `(${personB.subRole})` : ''}${timeInfoB}
-- 研究方向：${personB.researchDirection}
+- 角色：${personB.roleLabel}${personB.subRole ? `(${personB.subRole})` : ''}${timeInfoB.planningInfo}
+- 研究方向：${personB.researchDirection}${timeInfoB.planningNote}
 - 入组时间：${personB.joinDate || '未知'}
 ${weekDataB ? `- 最新周报摘要：${weekDataB.summary || '无摘要'}` : ''}
 

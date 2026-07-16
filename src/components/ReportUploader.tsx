@@ -31,6 +31,7 @@ import {
 import { saveDynamicTrends, saveDynamicHistory, addUploadedDate, addWeekLabel, addUploadHistory, getUploadedDates } from '../lib/dynamicStorage';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { cloudStorage } from '../services/cloudStorage';
+import { getTodayStr, formatTimeInfo } from '../lib/dateContext';
 import { callKimiApi } from '../lib/kimiApi';
 import type { WeekTrend } from '../data/mockTrends';
 
@@ -446,82 +447,22 @@ function saveNewMember(
   }
 }
 
-/** 构建周报分析 prompt */
+/** 构建周报分析 prompt（使用全局日期工具） */
 function buildAnalysisPrompt(
   name: string,
   person: typeof ACTIVE_PERSONS[0] | undefined,
   reportText: string
 ): string {
-  let planningInfo = '';
-  let planningNote = '';
+  const { planningInfo, planningNote } = formatTimeInfo({
+    role: person?.role || '',
+    graduationDate: person?.graduationDate,
+    exitDate: person?.exitDate,
+    contractEndDate: person?.contractEndDate,
+    programDuration: person?.programDuration,
+    enrollmentYear: person?.enrollmentYear,
+  });
 
-  if (person?.role === 'phd' && (person?.graduationDate || (person?.enrollmentYear && person?.programDuration))) {
-    const gradDateStr = person?.graduationDate;
-    const fallbackYear = person?.enrollmentYear && person?.programDuration ? person.enrollmentYear + person.programDuration : null;
-    const gradDate = gradDateStr
-      ? new Date(gradDateStr + 'T00:00:00')
-      : (fallbackYear ? new Date(fallbackYear, 5, 1) : new Date());
-    const gradYear = gradDate.getFullYear();
-    const gradMonth = gradDate.getMonth() + 1;
-    const now = new Date();
-    const monthsUntilGrad = (gradDate.getFullYear() - now.getFullYear()) * 12 + (gradDate.getMonth() - now.getMonth());
-
-    if (monthsUntilGrad < 0) {
-      const monthsOverdue = Math.abs(monthsUntilGrad);
-      const overdueStr = monthsOverdue >= 12
-        ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月`
-        : `${monthsOverdue}个月`;
-      const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
-      planningInfo = `\n学制：${person?.programDuration || '?'}年制，应${dateLabel}毕业，⚠️ 已延毕${overdueStr}`;
-      planningNote = '\n【紧急】该人员为博士生，已超期未毕业！评估时必须关注其延毕原因和加速毕业的紧迫性。';
-    } else if (monthsUntilGrad <= 6) {
-      const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
-      planningInfo = `\n学制：${person?.programDuration || '?'}年制，预计${dateLabel}毕业，⏰ 仅剩${monthsUntilGrad}个月`;
-      planningNote = '\n【注意】该人员为博士生，毕业在即，评估时请关注其毕业冲刺进展。';
-    } else {
-      const dateLabel = gradDateStr ? `${gradYear}年${gradMonth}月` : `${gradYear}年6月`;
-      planningInfo = `\n学制：${person?.programDuration || '?'}年制，预计${dateLabel}毕业（还剩${monthsUntilGrad}个月）`;
-      planningNote = '\n【注意】该人员为博士生，评估时请考虑其毕业时间规划。';
-    }
-  } else if (person?.role === 'postdoc' && person?.exitDate) {
-    const exitDate = new Date(person.exitDate + 'T00:00:00');
-    const now = new Date();
-    const monthsUntilExit = (exitDate.getFullYear() - now.getFullYear()) * 12 + (exitDate.getMonth() - now.getMonth());
-    if (monthsUntilExit < 0) {
-      const monthsOverdue = Math.abs(monthsUntilExit);
-      const overdueStr = monthsOverdue >= 12 ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月` : `${monthsOverdue}个月`;
-      planningInfo = `\n出站日期：${person.exitDate}，⚠️ 已超期${overdueStr}`;
-      planningNote = '\n【紧急】该博士后已超期未出站！评估时必须关注超期原因和出站进展。';
-    } else if (monthsUntilExit <= 6) {
-      planningInfo = `\n出站日期：${person.exitDate}，⏰ 仅剩${monthsUntilExit}个月`;
-      planningNote = '\n【注意】该博士后出站在即，评估时请关注出站冲刺进展。';
-    } else {
-      planningInfo = `\n出站日期：${person.exitDate}（还剩${monthsUntilExit}个月）`;
-      planningNote = '\n【注意】该人员为博士后，评估时请考虑其出站规划，确保研究进展有助于顺利出站。';
-    }
-  } else if (person?.role === 'researcher' || person?.role === 'associate_researcher' || person?.role === 'assistant_researcher') {
-    if (person?.contractEndDate) {
-      const contractDate = new Date(person.contractEndDate + 'T00:00:00');
-      const now = new Date();
-      const monthsUntilContract = (contractDate.getFullYear() - now.getFullYear()) * 12 + (contractDate.getMonth() - now.getMonth());
-      if (monthsUntilContract < 0) {
-        const monthsOverdue = Math.abs(monthsUntilContract);
-        const overdueStr = monthsOverdue >= 12 ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月` : `${monthsOverdue}个月`;
-        planningInfo = `\n合同到期：${person.contractEndDate}，⚠️ 已过期${overdueStr}`;
-        planningNote = '\n【紧急】该研究员合同已过期！评估时必须关注续约进展。';
-      } else if (monthsUntilContract <= 6) {
-        planningInfo = `\n合同到期：${person.contractEndDate}，⏰ 仅剩${monthsUntilContract}个月`;
-        planningNote = '\n【注意】该研究员合同即将到期，评估时请关注续约进展。';
-      } else {
-        planningInfo = `\n合同到期：${person.contractEndDate}（还剩${monthsUntilContract}个月）`;
-      }
-    }
-  }
-
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-
-  return `请对以下科研人员的周报进行分析，给出简要总结。\n\n【重要】当前日期：${todayStr}。所有时间计算必须以此为基准。\n\n姓名：${name}\n身份：${person?.roleLabel || '成员'}${person?.subRole ? `(${person.subRole})` : ''}${planningInfo}\n研究方向：${person?.researchDirection || ''}${planningNote}\n\n本周报内容：\n${reportText}\n\n请输出以下结构的 JSON（不要有任何其他文字）：\n{\n  "summary": "对该人员本周工作的简要总结（50字左右）",\n  "progress": 70,\n  "problems": 0,\n  "tag": "稳步推进"\n}\nprogress 为 50-95 的整数，problems 为 0-2 的整数，tag 从 ["稳步推进","论文推进","实验攻坚","数据分析","文献调研","毕业准备","出站准备"] 中选择。`;
+  return `请对以下科研人员的周报进行分析，给出简要总结。\n\n【重要】当前日期：${getTodayStr()}。所有时间计算必须以此为基准。\n\n姓名：${name}\n身份：${person?.roleLabel || '成员'}${person?.subRole ? `(${person.subRole})` : ''}${planningInfo}\n研究方向：${person?.researchDirection || ''}${planningNote}\n\n本周报内容：\n${reportText}\n\n请输出以下结构的 JSON（不要有任何其他文字）：\n{\n  "summary": "对该人员本周工作的简要总结（50字左右）",\n  "progress": 70,\n  "problems": 0,\n  "tag": "稳步推进"\n}\nprogress 为 50-95 的整数，problems 为 0-2 的整数，tag 从 ["稳步推进","论文推进","实验攻坚","数据分析","文献调研","毕业准备","出站准备"] 中选择。`;
 }
 
 export default function ReportUploader() {

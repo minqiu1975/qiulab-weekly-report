@@ -25,9 +25,12 @@ export interface KimiApiOptions {
   enableThinking?: boolean;
 }
 
+import { getDatePrefix } from './dateContext';
+
 /**
  * 调用 Kimi k2.6 API
  * 如果 API 不可用，直接抛出错误，绝不降级
+ * 所有调用自动注入当前日期前缀，防止AI时间幻觉
  */
 export async function callKimiApi(
   userPrompt: string,
@@ -39,13 +42,17 @@ export async function callKimiApi(
     enableThinking = false,
   } = options;
 
+  // 自动注入当前日期前缀到 systemPrompt，防止AI时间幻觉
+  const datePrefix = getDatePrefix();
+  const finalSystemPrompt = `${datePrefix}\n\n${systemPrompt}`;
+
   const apiKey = getApiKey();
   const baseUrl = getBaseUrl();
 
   const body: Record<string, unknown> = {
     model: 'kimi-k2.6',
     messages: [
-      { role: 'system', content: systemPrompt },
+      { role: 'system', content: finalSystemPrompt },
       { role: 'user', content: userPrompt },
     ],
     max_tokens: maxTokens,
