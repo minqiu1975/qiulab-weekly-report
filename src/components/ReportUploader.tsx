@@ -129,7 +129,7 @@ function extractPersonReports(fullText: string, personNames: string[]): Record<s
 
 /**
  * 从 docx 转换的 HTML 中检测新成员
- * HTML 保留了 <li> 列表结构，比纯文本更可靠（纯文本可能丢失编号）
+ * 周报中的成员名在 <p> 段落中，格式为 "N、名字" 或 "N、英文名 中文名"
  */
 function detectNewMembersFromHtml(html: string, existingNames: string[]): string[] {
   const detectedNames: string[] = [];
@@ -143,31 +143,29 @@ function detectNewMembersFromHtml(html: string, existingNames: string[]): string
     '严','欧','虞',
   ]);
 
-  // 周报标题行排除模式（这些不是人名）
-  const weekDayPattern = /^(周一|周二|周三|周四|周五|周六|周日|本周|上周|下周)/;
-  const sectionPattern = /^(第\d+周|周报|总结|计划|备注|说明|附件|目录|引言|结论)/;
+  // 提取所有 <p> 标签的内容（成员名在 <p> 段落中，不在 <li> 中）
+  const pMatches = html.matchAll(/<p>(.*?)<\/p>/gi);
+  for (const match of pMatches) {
+    const pContent = match[1].replace(/<[^>]+>/g, '').trim(); // 去掉 <strong> 等内部标签
+    if (!pContent || pContent.length < 3) continue;
 
-  // 提取所有 <li> 标签的内容
-  const liMatches = html.matchAll(/<li>(.*?)<\/li>/gi);
-  for (const match of liMatches) {
-    const liContent = match[1].replace(/<[^>]+>/g, '').trim();
-    if (!liContent || liContent.length < 10) continue;
+    // 匹配模式："N、名字" 或 "N、英文名 中文名"
+    // 如 "一、王旭杰", "十六、Jonah Johnson 江骏浪", "十七、王晨荷"
+    let candidate: string | null = null;
 
-    // 排除明显的周报标题行（如"周一收到"、"第3周"等）
-    if (weekDayPattern.test(liContent)) {
-      console.log('[Detect] 跳过(周标题):', liContent.substring(0, 40));
-      continue;
+    // 模式1: "N、中文名" (一、王旭杰, 十七、王晨荷)
+    const match1 = pContent.match(/^[一二三四五六七八九十百]+、([\u4e00-\u9fa5]{2,4})\s*$/);
+    if (match1) {
+      candidate = match1[1];
+    } else {
+      // 模式2: "N、英文名 中文名" (十六、Jonah Johnson 江骏浪)
+      const match2 = pContent.match(/^[一二三四五六七八九十百]+、[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
+      if (match2) {
+        candidate = match2[1];
+      }
     }
-    if (sectionPattern.test(liContent)) {
-      console.log('[Detect] 跳过(章节标题):', liContent.substring(0, 40));
-      continue;
-    }
 
-    // 尝试提取人名：<li> 中的第一个 2-4 个中文字符
-    const nameMatch = liContent.match(/^([\u4e00-\u9fa5]{2,4})/);
-    if (!nameMatch) continue;
-
-    const candidate = nameMatch[1];
+    if (!candidate) continue;
 
     // 排除已知成员
     if (existingNamesSet.has(candidate)) continue;
@@ -179,16 +177,8 @@ function detectNewMembersFromHtml(html: string, existingNames: string[]): string
     // 验证：候选的第一个字应该是常见姓氏
     if (!commonSurnames.has(candidate.charAt(0))) continue;
 
-    // 最终验证：检查 <li> 内容是否包含工作描述特征（人名后应有工作内容）
-    // 如果只有 4-6 个字且没有工作内容关键词，可能是标题
-    const workKeywords = /(完成|进行|开展|推进|继续|深入|优化|设计|仿真|制备|测试|分析|研究|实验|整理|撰写|阅读|学习|讨论|会议|投稿|审稿|修改|测试|表征|测量|计算|模拟|合成|生长|刻蚀|沉积|镀膜|抛光|清洗|组装|调试|校准|安装|拆卸|检查|维护|培训|指导|合作|交流|访问|出差|采购|申请|获批|提交|接收|反馈|解决|发现|验证|确认|准备|安排|协调|管理|组织|参加|举办|接待|汇报|总结|计划|目标|进度|结果|数据|样品|器件|设备|材料|文献|论文|专利|项目|课题|经费|基金|合同|协议|报告|文档|代码|程序|软件|硬件|系统|平台|模型|算法|方案|方法|技术|工艺|流程|标准|规范|指南|手册|教程|课程|讲座|会议|研讨|论坛|展览|展示|发布|更新|升级|改进|修复|替换|补充|扩展|延伸|迁移|转换|翻译|编辑|校对|排版|印刷|出版|发行|推广|宣传|营销|销售|服务|支持|维护|保养|检修|更新|替换|补充|扩展|迁移|转换|翻译|编辑|校对)/;
-    if (liContent.length < 30 && !workKeywords.test(liContent.substring(candidate.length))) {
-      console.log('[Detect] 跳过(无工作描述):', candidate, '|', liContent.substring(0, 50));
-      continue;
-    }
-
     if (!detectedNames.includes(candidate)) {
-      console.log('[Detect] ✅ HTML检测到新成员:', candidate, '| 内容:', liContent.substring(0, 40));
+      console.log('[Detect] ✅ HTML检测到新成员:', candidate, '| 原文:', pContent);
       detectedNames.push(candidate);
     }
   }
