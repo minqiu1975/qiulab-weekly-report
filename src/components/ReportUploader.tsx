@@ -484,11 +484,37 @@ function buildAnalysisPrompt(
       planningNote = '\n【注意】该人员为博士生，评估时请考虑其毕业时间规划。';
     }
   } else if (person?.role === 'postdoc' && person?.exitDate) {
-    planningInfo = `\n出站日期：${person.exitDate}`;
-    planningNote = '\n【注意】该人员为博士后，评估时请考虑其出站规划，确保研究进展有助于顺利出站。';
+    const exitDate = new Date(person.exitDate + 'T00:00:00');
+    const now = new Date();
+    const monthsUntilExit = (exitDate.getFullYear() - now.getFullYear()) * 12 + (exitDate.getMonth() - now.getMonth());
+    if (monthsUntilExit < 0) {
+      const monthsOverdue = Math.abs(monthsUntilExit);
+      const overdueStr = monthsOverdue >= 12 ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月` : `${monthsOverdue}个月`;
+      planningInfo = `\n出站日期：${person.exitDate}，⚠️ 已超期${overdueStr}`;
+      planningNote = '\n【紧急】该博士后已超期未出站！评估时必须关注超期原因和出站进展。';
+    } else if (monthsUntilExit <= 6) {
+      planningInfo = `\n出站日期：${person.exitDate}，⏰ 仅剩${monthsUntilExit}个月`;
+      planningNote = '\n【注意】该博士后出站在即，评估时请关注出站冲刺进展。';
+    } else {
+      planningInfo = `\n出站日期：${person.exitDate}（还剩${monthsUntilExit}个月）`;
+      planningNote = '\n【注意】该人员为博士后，评估时请考虑其出站规划，确保研究进展有助于顺利出站。';
+    }
   } else if (person?.role === 'researcher' || person?.role === 'associate_researcher' || person?.role === 'assistant_researcher') {
     if (person?.contractEndDate) {
-      planningInfo = `\n合同到期：${person.contractEndDate}`;
+      const contractDate = new Date(person.contractEndDate + 'T00:00:00');
+      const now = new Date();
+      const monthsUntilContract = (contractDate.getFullYear() - now.getFullYear()) * 12 + (contractDate.getMonth() - now.getMonth());
+      if (monthsUntilContract < 0) {
+        const monthsOverdue = Math.abs(monthsUntilContract);
+        const overdueStr = monthsOverdue >= 12 ? `${Math.floor(monthsOverdue / 12)}年${monthsOverdue % 12}个月` : `${monthsOverdue}个月`;
+        planningInfo = `\n合同到期：${person.contractEndDate}，⚠️ 已过期${overdueStr}`;
+        planningNote = '\n【紧急】该研究员合同已过期！评估时必须关注续约进展。';
+      } else if (monthsUntilContract <= 6) {
+        planningInfo = `\n合同到期：${person.contractEndDate}，⏰ 仅剩${monthsUntilContract}个月`;
+        planningNote = '\n【注意】该研究员合同即将到期，评估时请关注续约进展。';
+      } else {
+        planningInfo = `\n合同到期：${person.contractEndDate}（还剩${monthsUntilContract}个月）`;
+      }
     }
   }
 
