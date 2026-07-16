@@ -13,6 +13,7 @@ interface StoredMember {
   role: string;
   roleLabel: string;
   subRole: string;
+  group?: string;
   researchDirection: string;
   status: string;
   joinDate?: string;
@@ -38,7 +39,8 @@ function mergeWithLocalStorage(staticPersons: Person[]): Person[] {
     if (!Array.isArray(storedMembers) || storedMembers.length === 0) return staticPersons;
     const storedMap = new Map(storedMembers.map((m) => [m.id, m]));
 
-    return staticPersons.map((p) => {
+    // 1. 合并已有静态成员的属性修改
+    const merged = staticPersons.map((p) => {
       const stored = storedMap.get(p.id);
       if (!stored) return p;
       return {
@@ -58,6 +60,36 @@ function mergeWithLocalStorage(staticPersons: Person[]): Person[] {
         collabSuggestions: stored.collabSuggestions ?? p.collabSuggestions,
       };
     });
+
+    // 2. 添加 localStorage 中有但静态数据中没有的新成员（如从周报检测添加的新成员）
+    const staticIds = new Set(staticPersons.map((p) => p.id));
+    const nowIso = new Date().toISOString();
+    const newMembers: Person[] = storedMembers
+      .filter((m) => !staticIds.has(m.id))
+      .map((stored) => ({
+        id: stored.id,
+        name: stored.name,
+        role: (stored.role as Person['role']) || 'phd',
+        roleLabel: stored.roleLabel || '成员',
+        subRole: stored.subRole || '',
+        joinDate: stored.joinDate || nowIso.slice(0, 10),
+        enrollmentYear: stored.enrollmentYear,
+        programDuration: stored.programDuration,
+        exitDate: stored.exitDate,
+        contractEndDate: stored.contractEndDate,
+        graduationDate: stored.graduationDate,
+        researchDirection: stored.researchDirection || '',
+        status: (stored.status as Person['status']) || 'active',
+        lastSeenWeek: nowIso,
+        collabSuggestions: stored.collabSuggestions,
+      }));
+
+    if (newMembers.length > 0) {
+      console.log('[usePersons] 添加新成员到列表:', newMembers.map((m) => m.name));
+      merged.push(...newMembers);
+    }
+
+    return merged;
   } catch {
     return staticPersons;
   }

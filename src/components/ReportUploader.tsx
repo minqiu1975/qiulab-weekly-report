@@ -997,7 +997,7 @@ export default function ReportUploader() {
     // 保存动态数据到 localStorage
     const personTrends: Record<string, WeekTrend> = {};
     const personSummaries: Record<string, string> = {};
-    const nameToId = new Map(ACTIVE_PERSONS.map(p => [p.name, p.id]));
+    const nameToId = new Map(currentPersons.map(p => [p.name, p.id]));
 
     for (const [name, result] of Object.entries(analysisResults)) {
       const personId = nameToId.get(name) || name;
