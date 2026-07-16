@@ -87,12 +87,16 @@ function parseDateFromFileName(fileName: string): string | null {
 }
 
 /**
- * 从 docx 文件中提取纯文本
+ * 从 docx 文件中提取纯文本 + HTML
+ * HTML 用于检测新成员（保留列表结构）
  */
-async function extractTextFromDocx(file: File): Promise<string> {
+async function extractTextFromDocx(file: File): Promise<{ text: string; html: string }> {
   const arrayBuffer = await file.arrayBuffer();
-  const result = await mammoth.extractRawText({ arrayBuffer });
-  return result.value;
+  const [textResult, htmlResult] = await Promise.all([
+    mammoth.extractRawText({ arrayBuffer }),
+    mammoth.convertToHtml({ arrayBuffer }),
+  ]);
+  return { text: textResult.value, html: htmlResult.value };
 }
 
 /**
@@ -124,13 +128,58 @@ function extractPersonReports(fullText: string, personNames: string[]): Record<s
 }
 
 /**
- * 从周报全文中自动发现人名
- * 
- * 策略（保守优先）：
- * 1. 周报格式通常为：编号 + 人名（如 "1. 严巍"、"1、严巍"）
- * 2. 只识别带编号前缀的行（如 "N. 名字"、"N、名字"、"N 名字"）
- * 3. 人名部分应为2-3个中文字符（中国人名极少4字以上）
- * 4. 大量使用排除词库过滤工作内容短语
+ * 从 docx 转换的 HTML 中检测新成员
+ * HTML 保留了 <li> 列表结构，比纯文本更可靠（纯文本可能丢失编号）
+ */
+function detectNewMembersFromHtml(html: string, existingNames: string[]): string[] {
+  const detectedNames: string[] = [];
+  const existingNamesSet = new Set(existingNames);
+  const commonSurnames = new Set([
+    '王','李','张','刘','陈','杨','赵','黄','周','吴','徐','孙','胡','朱','高','林','何','郭','马','罗',
+    '梁','宋','郑','谢','韩','唐','冯','于','董','萧','程','曹','袁','邓','许','傅','沈','曾','彭','吕',
+    '苏','卢','蒋','蔡','贾','丁','魏','薛','叶','阎','余','潘','杜','戴','夏','钟','汪','田','任','姜',
+    '范','方','石','姚','谭','廖','邹','熊','金','陆','郝','孔','白','崔','康','毛','邱','秦','江','史',
+    '顾','侯','邵','孟','龙','万','段','雷','钱','汤','尹','黎','易','常','武','乔','贺','赖','龚','文',
+    '严','欧','虞',
+  ]);
+
+  // 提取所有 <li> 标签的内容
+  const liMatches = html.matchAll(/<li>(.*?)<\/li>/gi);
+  for (const match of liMatches) {
+    const liContent = match[1].replace(/<[^>]+>/g, '').trim();
+    if (!liContent || liContent.length < 3) continue;
+
+    // 尝试提取人名：<li> 中的第一个 2-4 个中文字符
+    const nameMatch = liContent.match(/^([\u4e00-\u9fa5]{2,4})/);
+    if (!nameMatch) continue;
+
+    const candidate = nameMatch[1];
+
+    // 排除已知成员
+    if (existingNamesSet.has(candidate)) continue;
+
+    // 排除排除词库
+    const excludeWords = new Set(['本周','下周','基于','通过','利用','研究','设计','实验','分析','测试','制备','优化']);
+    if (excludeWords.has(candidate)) continue;
+
+    // 验证：候选的第一个字应该是常见姓氏
+    if (!commonSurnames.has(candidate.charAt(0))) continue;
+
+    // 验证：内容足够长（排除标题行）
+    if (liContent.length < 10) continue;
+
+    if (!detectedNames.includes(candidate)) {
+      console.log('[Detect] ✅ HTML检测到新成员:', candidate, '| 内容:', liContent.substring(0, 40));
+      detectedNames.push(candidate);
+    }
+  }
+
+  console.log('[Detect] HTML检测结果:', detectedNames);
+  return detectedNames;
+}
+
+/**
+ * 从周报全文中自动发现人名（备用方案：基于纯文本编号行）
  */
 function detectNamesFromReport(fullText: string, existingNames: string[]): string[] {
   const lines = fullText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -523,6 +572,7 @@ export default function ReportUploader() {
   // 非活跃成员检测相关状态
   const [inactiveMembersDetected, setInactiveMembersDetected] = useState<Array<{ id: string; name: string; role: string; status: string; roleLabel: string }>>([]);
   const [parsedFullText, setParsedFullText] = useState('');
+  const [parsedFullHtml, setParsedFullHtml] = useState('');
 
   // 新成员检测相关状态
   const [newMembersDetected, setNewMembersDetected] = useState<string[]>([]);
@@ -585,11 +635,12 @@ export default function ReportUploader() {
       setUploadedDates(prev => [...prev, detectedDate]);
     }
 
-    // 解析两份 docx 文件，提取每个人的周报内容
+    // 解析两份 docx 文件，提取每个人的周报内容（纯文本 + HTML）
     try {
-      const researcherText = researcherFile ? await extractTextFromDocx(researcherFile) : '';
-      const phdText = phdFile ? await extractTextFromDocx(phdFile) : '';
-      const fullText = researcherText + '\n' + phdText;
+      const researcherResult = researcherFile ? await extractTextFromDocx(researcherFile) : null;
+      const phdResult = phdFile ? await extractTextFromDocx(phdFile) : null;
+      const fullText = (researcherResult?.text || '') + '\n' + (phdResult?.text || '');
+      const fullHtml = (researcherResult?.html || '') + '\n' + (phdResult?.html || '');
 
       // 检测周报中是否有已毕业/已离职/非活跃成员的内容
       const inactiveMembers = detectInactiveMembersInReport(fullText);
@@ -597,16 +648,21 @@ export default function ReportUploader() {
       if (inactiveMembers.length > 0) {
         setInactiveMembersDetected(inactiveMembers);
         setParsedFullText(fullText);
+        setParsedFullHtml(fullHtml);
         setPhase('inactive_check');
         return;
       }
 
-      // 检测新成员
+      // 检测新成员（优先使用 HTML 检测，更可靠）
       const currentMembers = loadCurrentMembers();
       const currentNames = currentMembers.map(m => m.name);
       console.log('[Parse] 现有成员数:', currentNames.length);
-      const detectedNewNames = detectNamesFromReport(fullText, currentNames);
-      console.log('[Parse] 新成员检测:', detectedNewNames);
+      // 先用 HTML 检测（保留列表结构），再用纯文本检测（编号行）
+      const detectedFromHtml = detectNewMembersFromHtml(fullHtml, currentNames);
+      const detectedFromText = detectNamesFromReport(fullText, currentNames);
+      // 合并结果（去重）
+      const detectedNewNames = [...new Set([...detectedFromHtml, ...detectedFromText])];
+      console.log('[Parse] HTML检测:', detectedFromHtml, '| 文本检测:', detectedFromText, '| 合并:', detectedNewNames);
 
       if (detectedNewNames.length > 0) {
         // 有新成员发现，进入新成员确认阶段
@@ -1331,8 +1387,10 @@ export default function ReportUploader() {
                   console.log('[Skip] 跳过非活跃成员，检测新成员...');
                   const currentMembers = loadCurrentMembers();
                   const currentNames = currentMembers.map(m => m.name);
-                  const detectedNewNames = detectNamesFromReport(parsedFullText, currentNames);
-                  console.log('[Skip] 新成员检测:', detectedNewNames);
+                  const detectedFromHtml = detectNewMembersFromHtml(parsedFullHtml, currentNames);
+                  const detectedFromText = detectNamesFromReport(parsedFullText, currentNames);
+                  const detectedNewNames = [...new Set([...detectedFromHtml, ...detectedFromText])];
+                  console.log('[Skip] HTML检测:', detectedFromHtml, '| 文本检测:', detectedFromText, '| 合并:', detectedNewNames);
 
                   if (detectedNewNames.length > 0) {
                     setNewMembersDetected(detectedNewNames);
