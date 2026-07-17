@@ -12,7 +12,8 @@ export type ReportStatus = 'pending' | 'parsing' | 'completed' | 'error';
 
 export type RiskLevel = 'low' | 'medium' | 'high';
 
-export type PersonStatus = 'active' | 'graduated' | 'left' | 'sick' | 'vacation' | 'business_trip' | 'inactive';
+/** 有效状态值（UI仅提供3个选项，其余为历史遗留兼容） */
+export type PersonStatus = 'active' | 'graduated' | 'left' | 'inactive';
 
 export interface Person {
   id: string;
@@ -51,7 +52,7 @@ export interface WeeklyWorkItem {
 
 export interface PersonStatusChange {
   name: string;
-  type: 'new' | 'left' | 'returned' | 'sick' | 'vacation' | 'business_trip';
+  type: 'new' | 'left' | 'returned';
   previousWeek?: string;
 }
 

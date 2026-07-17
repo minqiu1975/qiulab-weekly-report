@@ -19,7 +19,6 @@ import {
   Sparkles,
   UserPlus,
   UserMinus,
-  FileDown,
   Printer,
   RefreshCw,
   FlaskConical,
@@ -248,9 +247,7 @@ export default function Dashboard() {
   })();
   const newCount = statusChanges.filter((s) => s.type === 'new').length;
   const leftCount = statusChanges.filter((s) => s.type === 'left').length;
-  const sickCount = statusChanges.filter((s) => s.type === 'sick').length;
-  const tripCount = statusChanges.filter((s) => s.type === 'business_trip').length;
-  const vacationCount = statusChanges.filter((s) => s.type === 'vacation').length;
+
 
   const stats = [
     { label: '活跃成员总数', value: totalPeople, icon: Users, color: 'text-blue-600', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', ring: 'ring-blue-100', href: '' as string },
@@ -425,21 +422,7 @@ export default function Dashboard() {
                 <UserMinus className="w-3 h-3 mr-1" />已毕业/离职 {leftCount} 人
               </Badge>
             )}
-            {sickCount > 0 && (
-              <Badge className="bg-red-100 text-red-700 text-xs px-2 py-1">
-                <AlertTriangle className="w-3 h-3 mr-1" />生病请假 {sickCount} 人
-              </Badge>
-            )}
-            {tripCount > 0 && (
-              <Badge className="bg-blue-100 text-blue-700 text-xs px-2 py-1">
-                <FileDown className="w-3 h-3 mr-1" />出差 {tripCount} 人
-              </Badge>
-            )}
-            {vacationCount > 0 && (
-              <Badge className="bg-orange-100 text-orange-700 text-xs px-2 py-1">
-                休假 {vacationCount} 人
-              </Badge>
-            )}
+
             {statusChanges.length === 0 && (
               <span className="text-xs text-slate-500">本周无人员状态变动</span>
             )}
@@ -454,9 +437,6 @@ export default function Dashboard() {
                     {change.type === 'new' && '新加入团队'}
                     {change.type === 'left' && '已毕业/离职'}
                     {change.type === 'returned' && '已返回团队'}
-                    {change.type === 'sick' && '生病请假中'}
-                    {change.type === 'vacation' && '休假中'}
-                    {change.type === 'business_trip' && '出差中'}
                   </span>
                   {change.previousWeek && (
                     <span className="text-[10px] text-slate-400">（上周：{change.previousWeek}）</span>

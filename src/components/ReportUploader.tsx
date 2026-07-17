@@ -1343,7 +1343,7 @@ export default function ReportUploader() {
               </Badge>
             </div>
             <p className="text-xs text-orange-700 mb-4">
-              以下成员当前状态为非活跃，但周报中检测到他们的工作内容。请确认是否要将其状态更新为「在研」，以便继续分析和统计。
+              以下成员当前状态为非活跃，但周报中检测到他们的工作内容。请确认是否要将其状态更新为「在岗」，以便继续分析和统计。
             </p>
 
             <div className="space-y-2 mb-4">
@@ -1386,7 +1386,7 @@ export default function ReportUploader() {
                 }}
               >
                 <CheckCircle className="w-3 h-3 mr-1" />
-                确认更新为「在研」并继续
+                确认更新为「在岗」并继续
               </Button>
               <Button
                 size="sm"

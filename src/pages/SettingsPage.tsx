@@ -49,15 +49,21 @@ const ROLE_GROUPS = [
 const ENROLLMENT_YEAR_OPTIONS = Array.from({ length: 16 }, (_, i) => 2020 + i);
 
 const STATUS_OPTIONS = [
-  { value: 'active', label: '在研', color: 'bg-emerald-100 text-emerald-700' },
+  { value: 'active', label: '在岗', color: 'bg-emerald-100 text-emerald-700' },
   { value: 'graduated', label: '已毕业', color: 'bg-blue-100 text-blue-700' },
   { value: 'left', label: '已离职', color: 'bg-gray-100 text-gray-700' },
-  { value: 'sick', label: '生病请假', color: 'bg-red-100 text-red-700' },
-  { value: 'vacation', label: '休假', color: 'bg-amber-100 text-amber-700' },
-  { value: 'business_trip', label: '出差', color: 'bg-purple-100 text-purple-700' },
-  { value: 'warning', label: '预警', color: 'bg-orange-100 text-orange-700' },
-  { value: 'inactive', label: '已出站/已毕业', color: 'bg-gray-100 text-gray-500' },
 ];
+
+/** 遗留状态映射：旧数据中的其他状态显示为对应的有效状态 */
+function normalizeStatusForDisplay(status: string): { label: string; color: string } {
+  const found = STATUS_OPTIONS.find(o => o.value === status);
+  if (found) return { label: found.label, color: found.color };
+  // 遗留状态兼容
+  if (status === 'inactive') return { label: '已毕业', color: 'bg-blue-100 text-blue-700' };
+  if (status === 'sick' || status === 'vacation' || status === 'business_trip') return { label: '不在岗', color: 'bg-amber-100 text-amber-700' };
+  if (status === 'warning') return { label: '在岗', color: 'bg-emerald-100 text-emerald-700' };
+  return { label: status, color: 'bg-gray-100 text-gray-500' };
+}
 
 // ==================== 云端同步面板 ====================
 
@@ -886,8 +892,8 @@ export default function SettingsPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const s = STATUS_OPTIONS.find(o => o.value === status);
-    return s ? <Badge className={s.color}>{s.label}</Badge> : <Badge>{status}</Badge>;
+    const { label, color } = normalizeStatusForDisplay(status);
+    return <Badge className={color}>{label}</Badge>;
   };
 
   const [showAddForm, setShowAddForm] = useState(false);
