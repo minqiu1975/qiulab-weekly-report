@@ -941,10 +941,10 @@ export default function SettingsPage() {
     notifyPersonsUpdated();
   };
 
-  // 按角色分组（排除已毕业/已离职的成员）
-  const getMembersByRole = (role: string) => members.filter(m => m.role === role && m.status !== 'graduated' && m.status !== 'left');
-  // 已毕业/已离职的成员
-  const inactiveMembers = members.filter(m => m.status === 'graduated' || m.status === 'left');
+  // 按角色分组（排除已毕业/已离职/已出站等非活跃成员）
+  const getMembersByRole = (role: string) => members.filter(m => m.role === role && m.status !== 'graduated' && m.status !== 'left' && m.status !== 'inactive');
+  // 已毕业/已离职/已出站的成员
+  const inactiveMembers = members.filter(m => m.status === 'graduated' || m.status === 'left' || m.status === 'inactive');
 
   return (
     <div className="space-y-6">
@@ -984,7 +984,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="border-slate-200">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-slate-800">{members.filter(m => m.status !== 'graduated' && m.status !== 'left').length}</div>
+                <div className="text-2xl font-bold text-slate-800">{members.filter(m => m.status !== 'graduated' && m.status !== 'left' && m.status !== 'inactive').length}</div>
                 <div className="text-xs text-slate-500">活跃成员总数</div>
               </CardContent>
             </Card>
@@ -1500,7 +1500,7 @@ export default function SettingsPage() {
                 </div>
                 <div className="flex items-center justify-between p-2 rounded bg-slate-50">
                   <span>活跃成员数</span>
-                  <Badge variant="outline">{members.filter(m => m.status !== 'graduated' && m.status !== 'left').length}人</Badge>
+                  <Badge variant="outline">{members.filter(m => m.status !== 'graduated' && m.status !== 'left' && m.status !== 'inactive').length}人</Badge>
                 </div>
                 <div className="flex items-center justify-between p-2 rounded bg-slate-50">
                   <span>已保存周报</span>
