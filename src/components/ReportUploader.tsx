@@ -33,7 +33,10 @@ import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { cloudStorage } from '../services/cloudStorage';
 import { getTodayStr, formatTimeInfo } from '../lib/dateContext';
 import { callKimiApi } from '../lib/kimiApi';
+import { callKimiDeepAnalysis, estimateDeepAnalysisCost } from './DeepAnalysisPanel';
+import { saveDeepAnalysis } from '../lib/dynamicStorage';
 import type { WeekTrend } from '../data/mockTrends';
+
 
 type Phase = 'upload' | 'inactive_check' | 'new_members' | 'review' | 'analyzing' | 'done';
 
@@ -602,6 +605,11 @@ export default function ReportUploader() {
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
 
+  // 深度分析选项
+  const [includeDeepAnalysis, setIncludeDeepAnalysis] = useState(false);
+  const [deepAnalysisProgress, setDeepAnalysisProgress] = useState({ current: 0, total: 0, currentName: '' });
+  const [deepAnalysisDone, setDeepAnalysisDone] = useState(false);
+
   const handleResearcherFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.name.endsWith('.docx')) {
@@ -1064,13 +1072,79 @@ export default function ReportUploader() {
         });
     }
 
+    // ===== 科研进展深度评估（可选） =====
+    if (includeDeepAnalysis) {
+      const deepTargetPersons = currentPersons.filter(p => p.status === 'active' || p.status === undefined);
+      setDeepAnalysisProgress({ current: 0, total: deepTargetPersons.length, currentName: '' });
+      setAnalysisProgress(prev => ({
+        ...prev,
+        logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 🧠 启动科研进展深度评估：${deepTargetPersons.length}人...`],
+      }));
+
+      let deepCompleted = 0;
+      const deepBatchSize = 3; // 深度分析每次3个并行（更保守，因为输出更长）
+      for (let i = 0; i < deepTargetPersons.length; i += deepBatchSize) {
+        const batch = deepTargetPersons.slice(i, Math.min(i + deepBatchSize, deepTargetPersons.length));
+        setDeepAnalysisProgress({ current: deepCompleted, total: deepTargetPersons.length, currentName: batch[0]?.name || '' });
+        setAnalysisProgress(prev => ({
+          ...prev,
+          logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 🧠 深度评估批次 ${Math.floor(i / deepBatchSize) + 1}/${Math.ceil(deepTargetPersons.length / deepBatchSize)}: ${batch.map(p => p.name).join(', ')}`],
+        }));
+
+        await Promise.all(
+          batch.map(async (person) => {
+            try {
+              const result = await callKimiDeepAnalysis(person);
+              // 保存到 localStorage
+              saveDeepAnalysis({
+                personId: person.id,
+                personName: person.name,
+                analysisDate: new Date().toISOString(),
+                model: 'kimi-k2.6',
+                researchProgress: result.researchProgress,
+                researchHotspots: result.researchHotspots,
+                suggestedDirections: result.suggestedDirections,
+                riskAssessment: result.riskAssessment,
+                overallAdvice: result.overallAdvice,
+              });
+              deepCompleted++;
+              setDeepAnalysisProgress({ current: deepCompleted, total: deepTargetPersons.length, currentName: '' });
+              setAnalysisProgress(prev => ({
+                ...prev,
+                logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ✅ ${person.name} 深度评估完成`],
+              }));
+            } catch (e: any) {
+              const errMsg = e instanceof Error ? e.message : String(e);
+              setAnalysisProgress(prev => ({
+                ...prev,
+                logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ❌ ${person.name} 深度评估失败: ${errMsg.slice(0, 60)}`],
+              }));
+            }
+          })
+        );
+      }
+
+      setDeepAnalysisProgress({ current: deepCompleted, total: deepTargetPersons.length, currentName: '' });
+      setDeepAnalysisDone(true);
+      setAnalysisProgress(prev => ({
+        ...prev,
+        logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 🧠 科研进展深度评估完成：${deepCompleted}/${deepTargetPersons.length}人`],
+      }));
+
+      // 深度分析结果同步到云端
+      if (cloudStorage.isCloudEnabled()) {
+        cloudStorage.saveAllData(cloudStorage.loadFromLocal()).catch(() => {});
+      }
+    }
+
     const retryInfo = attempt > 0 ? `（含${attempt}次自动重试）` : '';
+    const deepInfo = includeDeepAnalysis ? ` + ${deepAnalysisProgress.current}人深度评估` : '';
     setAnalysisProgress(prev => ({
       ...prev,
       currentPerson: '',
       completed: prev.total,
       tokensUsed: prev.total * TOKENS_PER_PERSON,
-      logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 分析完成${retryInfo}！共处理 ${prev.total} 位成员（未提交成员已跳过）`, `[${new Date().toLocaleTimeString()}] 总消耗: ~${(prev.total * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens`, `[${new Date().toLocaleTimeString()}] 数据已保存至本地存储（${weekDate}）`],
+      logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] 分析完成${retryInfo}${deepInfo}！共处理 ${prev.total} 位成员（未提交成员已跳过）`, `[${new Date().toLocaleTimeString()}] 总消耗: ~${(prev.total * TOKENS_PER_PERSON / 1000).toFixed(0)}K tokens`, `[${new Date().toLocaleTimeString()}] 数据已保存至本地存储（${weekDate}）`],
     }));
     setPhase('done');
   };
@@ -1164,6 +1238,9 @@ export default function ReportUploader() {
     setFailedPersons([]);
     setRetryCount(0);
     setIsRetrying(false);
+    setIncludeDeepAnalysis(false);
+    setDeepAnalysisProgress({ current: 0, total: 0, currentName: '' });
+    setDeepAnalysisDone(false);
     setAnalysisProgress({ currentPerson: '', completed: 0, total: 0, estimatedCost: 0, tokensUsed: 0, logs: [] });
   };
 
@@ -1646,20 +1723,44 @@ export default function ReportUploader() {
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-lg font-bold text-slate-800">{(actualCount * TOKENS_PER_PERSON / 1000).toFixed(0)}K</div>
+                <div className="text-lg font-bold text-slate-800">{(((actualCount * TOKENS_PER_PERSON) + (includeDeepAnalysis ? activeNeedSubmitPersons.length * estimateDeepAnalysisCost().tokens : 0)) / 1000).toFixed(0)}K</div>
                 <div className="text-[10px] text-slate-500">预计Token消耗</div>
               </div>
               <div>
-                <div className="text-lg font-bold text-slate-800">{(actualCount * COST_PER_PERSON).toFixed(2)}</div>
+                <div className="text-lg font-bold text-slate-800">{((actualCount * COST_PER_PERSON) + (includeDeepAnalysis ? activeNeedSubmitPersons.length * estimateDeepAnalysisCost().cost : 0)).toFixed(2)}</div>
                 <div className="text-[10px] text-slate-500">预计费用 (元)</div>
               </div>
               <div>
-                <div className="text-lg font-bold text-slate-800">~{Math.ceil(actualCount * 0.6)}</div>
+                <div className="text-lg font-bold text-slate-800">~{Math.ceil((actualCount * 0.6) + (includeDeepAnalysis ? activeNeedSubmitPersons.length * 3 : 0))}</div>
                 <div className="text-[10px] text-slate-500">预计耗时 (秒)</div>
               </div>
             </div>
             <div className="text-[10px] text-slate-400 mt-2">
               仅对已提交{actualCount}人进行AI分析（未提交{missingNames.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(4)}元/人（Kimi官方: 输入¥6.50/百万 + 输出¥27.00/百万）。
+              {includeDeepAnalysis && (
+                <span className="text-cyan-600 ml-1">+ 深度评估{activeNeedSubmitPersons.length}人，~{estimateDeepAnalysisCost().tokens}tokens/人，约¥{estimateDeepAnalysisCost().cost.toFixed(4)}元/人。</span>
+              )}
+            </div>
+
+            {/* 深度分析选项 */}
+            <div className="mt-3 pt-3 border-t border-amber-200">
+              <label className="flex items-start gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={includeDeepAnalysis}
+                  onChange={e => setIncludeDeepAnalysis(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500"
+                />
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-slate-700 group-hover:text-cyan-700 transition-colors flex items-center gap-1.5">
+                    <BrainCircuit className="w-4 h-4 text-cyan-600" />
+                    同时对所有成员进行科研进展深度评估
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">
+                    勾选后，在分析完周报后，将对<strong>{activeNeedSubmitPersons.length}位活跃成员</strong>逐一进行科研进展深度评估（含研究热点分析、下一步建议、风险提示），额外消耗约<strong>{(activeNeedSubmitPersons.length * estimateDeepAnalysisCost().cost).toFixed(2)}元</strong>。
+                  </div>
+                </div>
+              </label>
             </div>
           </CardContent>
         </Card>
@@ -1716,6 +1817,15 @@ export default function ReportUploader() {
               </div>
             )}
 
+            {/* Deep analysis progress */}
+            {includeDeepAnalysis && deepAnalysisProgress.total > 0 && (
+              <div className="flex items-center gap-2 text-sm text-purple-700 bg-purple-50 rounded-lg px-3 py-2 mb-4">
+                <Sparkles className="w-4 h-4 animate-pulse" />
+                深度评估: <strong>{deepAnalysisProgress.current}/{deepAnalysisProgress.total}</strong> 人
+                {deepAnalysisProgress.currentName && ` (${deepAnalysisProgress.currentName})`}
+              </div>
+            )}
+
             {/* Cost tracking */}
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="bg-slate-50 rounded-lg p-2 text-center">
@@ -1762,7 +1872,12 @@ export default function ReportUploader() {
               <CheckCircle2 className="w-8 h-8 text-emerald-600" />
             </div>
             <h3 className="text-lg font-bold text-emerald-800 mb-1">AI分析完成！</h3>
-            <p className="text-sm text-emerald-600 mb-4">已完成{analysisProgress.total}位已提交成员的深度研判（未提交成员已跳过）</p>
+            <p className="text-sm text-emerald-600 mb-4">
+              已完成{analysisProgress.total}位已提交成员的深度研判（未提交成员已跳过）
+              {deepAnalysisDone && (
+                <span className="text-purple-600 block mt-1">+ {deepAnalysisProgress.current}人科研进展深度评估已完成</span>
+              )}
+            </p>
 
             <div className="grid grid-cols-4 gap-3 mb-4">
               <div className="bg-white rounded-lg p-3">
@@ -1791,6 +1906,16 @@ export default function ReportUploader() {
                 <BarChart3 className="w-4 h-4 mr-1" />
                 查看人员分析
               </Button>
+              {deepAnalysisDone && (
+                <Button
+                  onClick={() => window.location.hash = '#/analysis'}
+                  variant="outline"
+                  className="border-purple-300 text-purple-700 hover:bg-purple-50"
+                >
+                  <Sparkles className="w-4 h-4 mr-1" />
+                  查看深度评估结果
+                </Button>
+              )}
               {failedPersons.length > 0 && (
                 <Button
                   onClick={handleRetryFailed}

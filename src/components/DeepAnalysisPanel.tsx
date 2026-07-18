@@ -30,9 +30,9 @@ export interface DeepAnalysisResult {
   overallAdvice: string;
 }
 
-/** 真实调用 Kimi k2.6 API 进行深度分析 */
-async function callKimiDeepAnalysis(person: Person): Promise<DeepAnalysisResult> {
-  const prompt = buildAnalysisPrompt(person);
+/** 导出：真实调用 Kimi k2.6 API 进行深度分析（供 ReportUploader 批量调用） */
+export async function callKimiDeepAnalysis(person: Person): Promise<DeepAnalysisResult> {
+  const prompt = buildDeepAnalysisPrompt(person);
 
   const content = await callKimiApi(prompt, {
     systemPrompt: '你是一个专业的科研顾问助手，擅长分析科研人员的进展并给出具体的下一步研究建议。请以严格的 JSON 格式输出，不要包含任何其他文字。',
@@ -54,7 +54,8 @@ async function callKimiDeepAnalysis(person: Person): Promise<DeepAnalysisResult>
   return parsed;
 }
 
-function buildAnalysisPrompt(person: Person): string {
+/** 导出：构建深度分析 prompt（供 ReportUploader 批量调用） */
+export function buildDeepAnalysisPrompt(person: Person): string {
   // 根据角色构建规划信息
   let planningInfo = '';
   let planningContext = '';
@@ -128,7 +129,8 @@ function buildAnalysisPrompt(person: Person): string {
  * - 输出: ¥27.00/百万tokens
  * 保守预估按缓存未命中计算
  */
-function estimateCost(): { tokens: number; cost: string } {
+/** 导出：预估单个人深度分析费用 */
+export function estimateDeepAnalysisCost(): { tokens: number; cost: number } {
   const inputTokens = 200;
   const outputTokens = 510;
   const totalTokens = inputTokens + outputTokens;
@@ -137,7 +139,7 @@ function estimateCost(): { tokens: number; cost: string } {
   // 官方定价 ¥27.00/百万 = ¥0.027/千
   const outputCost = (outputTokens / 1_000_000) * 27.00;
   const totalCost = inputCost + outputCost;
-  return { tokens: totalTokens, cost: totalCost.toFixed(4) };
+  return { tokens: totalTokens, cost: totalCost };
 }
 
 type Phase = 'idle' | 'confirming' | 'analyzing' | 'done' | 'error';
@@ -221,7 +223,7 @@ export default function DeepAnalysisPanel({ person }: Props) {
     }
   };
 
-  const cost = estimateCost();
+  const cost = estimateDeepAnalysisCost();
 
   // ─── 渲染 ───
 
