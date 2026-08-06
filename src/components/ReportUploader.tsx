@@ -103,41 +103,47 @@ async function extractTextFromDocx(file: File): Promise<{ text: string; html: st
 
 /**
  * 从周报全文中按编号提取每个人名及其周报内容
- * 基于编号格式（如 "一、虞阳", "二十二、Sara Elena Bruj"）自动识别所有成员
+ * 基于中文编号（一、二、三...）自动识别所有成员，不依赖现有成员列表
  * 返回：人名 → 该人的周报段落文本
  */
 function extractPersonReports(fullText: string): Record<string, string> {
   const reports: Record<string, string> = {};
   const lines = fullText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-  // 匹配编号人名行的正则
-  // 支持："一、虞阳", "十二、 陈飞霖", "十四、Jonah Johnson 江骏浪", "二十二、Sara Elena Bruj"
-  const namePatterns = [
-    // 模式1: "N、中文名" — 顿号后可选空格
-    { regex: /^[一二三四五六七八九十百]+、\s*([\u4e00-\u9fa5]{2,4})\s*$/, extract: (m: RegExpMatchArray) => m[1] },
-    // 模式2: "N、英文名 中文名" — 提取中文名部分
-    { regex: /^[一二三四五六七八九十百]+、\s*[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/, extract: (m: RegExpMatchArray) => m[1] },
-    // 模式3: "N、纯英文名" — 提取英文名（至少两个单词，或一个单词）
-    { regex: /^[一二三四五六七八九十百]+、\s*([A-Za-z]+(?:\s+[A-Za-z]+)*)\s*$/, extract: (m: RegExpMatchArray) => m[1].trim() },
-  ];
+  // 人名编号行：必须以中文数字+顿号开头（如 "一、虞阳"）
+  // 注意：顿号后可能有空格（如 "十二、 陈飞霖"）
+  const nameLineRegex = /^[一二三四五六七八九十百]+、\s*(.+)$/;
+
+  // 从编号行提取人名
+  function extractName(line: string): string | null {
+    const match = line.match(nameLineRegex);
+    if (!match) return null;
+    const namePart = match[1].trim();
+    if (!namePart) return null;
+
+    // 尝试提取中文名（最后的中文名部分）
+    const cnMatch = namePart.match(/([\u4e00-\u9fa5]{2,4})$/);
+    if (cnMatch) return cnMatch[1];
+
+    // 纯英文名（如 Sara Elena Bruj）
+    if (/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/.test(namePart)) return namePart;
+
+    // 英文名+中文名混合（如 Jonah Johnson 江骏浪）— 提取中文名
+    const mixedMatch = namePart.match(/([\u4e00-\u9fa5]{2,4})$/);
+    if (mixedMatch) return mixedMatch[1];
+
+    return namePart;
+  }
 
   let currentName: string | null = null;
   let currentContent: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    let matchedName: string | null = null;
 
-    // 尝试匹配人名行
-    for (const pattern of namePatterns) {
-      const match = line.match(pattern.regex);
-      if (match) {
-        matchedName = pattern.extract(match);
-        break;
-      }
-    }
-
-    if (matchedName) {
+    // 检查是否是人名编号行（中文数字+顿号开头）
+    const newName = extractName(line);
+    if (newName) {
       // 保存前一个人的内容
       if (currentName && currentContent.length > 0) {
         const content = currentContent.join('\n');
@@ -146,24 +152,12 @@ function extractPersonReports(fullText: string): Record<string, string> {
         }
       }
       // 开始新的人
-      currentName = matchedName;
+      currentName = newName;
       currentContent = [];
     } else if (currentName) {
-      // 检查是否是下一个人名（数字编号开头）
-      if (/^\d+[\.、\s]/.test(line)) {
-        // 保存前一个人的内容
-        if (currentContent.length > 0) {
-          const content = currentContent.join('\n');
-          if (content.length >= 10) {
-            reports[currentName] = content;
-          }
-        }
-        currentName = null;
-        currentContent = [];
-      } else {
-        // 积累当前人的周报内容
-        currentContent.push(line);
-      }
+      // 不是人名编号行 → 积累为当前人的周报内容
+      // 周报内容中的阿拉伯数字（1. 2. 3.）不需要特殊处理
+      currentContent.push(line);
     }
   }
 
