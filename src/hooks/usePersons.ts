@@ -66,29 +66,35 @@ function mergeWithLocalStorage(staticPersons: Person[]): Person[] {
     const nowIso = new Date().toISOString();
     const newMembers: Person[] = storedMembers
       .filter((m) => !staticIds.has(m.id))
-      .map((stored) => ({
-        id: stored.id,
-        name: stored.name,
-        role: (stored.role as Person['role']) || 'phd',
-        roleLabel: stored.roleLabel || '成员',
-        subRole: stored.subRole || '',
-        joinDate: stored.joinDate || nowIso.slice(0, 10),
-        enrollmentYear: stored.enrollmentYear,
-        programDuration: stored.programDuration,
-        exitDate: stored.exitDate,
-        contractEndDate: stored.contractEndDate,
-        graduationDate: stored.graduationDate,
-        researchDirection: stored.researchDirection || '',
-        status: (stored.status as Person['status']) || 'active',
-        lastSeenWeek: nowIso,
-        collabSuggestions: stored.collabSuggestions,
-      }));
+      .map((stored) => {
+        const person: Person = {
+          id: stored.id,
+          name: stored.name,
+          role: (stored.role as Person['role']) || 'phd',
+          roleLabel: stored.roleLabel || '成员',
+          subRole: stored.subRole || '',
+          joinDate: stored.joinDate || nowIso.slice(0, 10),
+          enrollmentYear: stored.enrollmentYear,
+          programDuration: stored.programDuration,
+          exitDate: stored.exitDate,
+          contractEndDate: stored.contractEndDate,
+          graduationDate: stored.graduationDate,
+          researchDirection: stored.researchDirection || '',
+          status: (stored.status as Person['status']) || 'active',
+          lastSeenWeek: nowIso,
+          collabSuggestions: stored.collabSuggestions,
+        };
+        return person;
+      });
 
     if (newMembers.length > 0) {
       console.log('[usePersons] 添加新成员到列表:', newMembers.map((m) => m.name));
       merged.push(...newMembers);
+    } else {
+      console.log('[usePersons] 无新成员需要添加');
     }
 
+    console.log('[usePersons] 最终合并结果:', merged.length, '人, 名单:', merged.map(p => p.name).join('、'));
     return merged;
   } catch {
     return staticPersons;

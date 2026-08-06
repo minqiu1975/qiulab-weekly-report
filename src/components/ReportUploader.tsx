@@ -156,13 +156,13 @@ function detectNewMembersFromHtml(html: string, existingNames: string[]): string
     // 如 "一、王旭杰", "十六、Jonah Johnson 江骏浪", "十七、王晨荷"
     let candidate: string | null = null;
 
-    // 模式1: "N、中文名" (一、王旭杰, 十七、王晨荷)
-    const match1 = pContent.match(/^[一二三四五六七八九十百]+、([\u4e00-\u9fa5]{2,4})\s*$/);
+    // 模式1: "N、中文名" (一、王旭杰, 十七、王晨荷) — 注意顿号后可能有空格如 "十二、 陈飞霖"
+    const match1 = pContent.match(/^[一二三四五六七八九十百]+、\s*([\u4e00-\u9fa5]{2,4})\s*$/);
     if (match1) {
       candidate = match1[1];
     } else {
-      // 模式2: "N、英文名 中文名" (十六、Jonah Johnson 江骏浪)
-      const match2 = pContent.match(/^[一二三四五六七八九十百]+、[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
+      // 模式2: "N、英文名 中文名" (十六、Jonah Johnson 江骏浪) — 顿号后可能有空格
+      const match2 = pContent.match(/^[一二三四五六七八九十百]+、\s*[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
       if (match2) {
         candidate = match2[1];
       }
@@ -1614,10 +1614,15 @@ export default function ReportUploader() {
   if (phase === 'review') {
     // 基于 parsedReports 实际解析结果，分类显示（使用动态人员数据）
     const activePersonsList = allPersons.length > 0 ? allPersons : ACTIVE_PERSONS;
+    console.log('[Review] allPersons.length:', allPersons.length, 'ACTIVE_PERSONS.length:', ACTIVE_PERSONS.length);
+    console.log('[Review] allPersons 名单:', allPersons.map(p => p.name).join('、'));
     const activeNeedSubmitPersons = activePersonsList.filter(p => p.status === 'active' || p.status === undefined);
     const activeNeedSubmitNames = getAllPersonsNames(activeNeedSubmitPersons);
     const activeResearcherNames = getActiveResearcherNames(activeNeedSubmitPersons);
     const activeStudentNames = getActiveStudentNames(activeNeedSubmitPersons);
+    console.log('[Review] activeNeedSubmitNames:', activeNeedSubmitNames.length, activeNeedSubmitNames.join('、'));
+    console.log('[Review] activeStudentNames:', activeStudentNames.length, activeStudentNames.join('、'));
+    console.log('[Review] parsedReports keys:', Object.keys(parsedReports).join('、'));
 
     const submittedNames = activeNeedSubmitNames.filter(name => {
       const text = parsedReports[name];
