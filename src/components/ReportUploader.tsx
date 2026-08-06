@@ -24,7 +24,7 @@ import {
 } from './ui/dialog';
 import {
   UploadCloud, FileText, CheckCircle2, CheckCircle, AlertCircle, AlertTriangle, Loader2,
-  X, Users, GraduationCap, BrainCircuit, Coins, FileCheck,
+  X, Users, GraduationCap, BrainCircuit, Coins, FileCheck, Plane,
   ChevronRight, Sparkles, BarChart3, CalendarDays, Settings,
   RefreshCw
 } from 'lucide-react';
@@ -175,7 +175,7 @@ function extractPersonReports(fullText: string): Record<string, string> {
 
 /**
  * 从 docx 转换的 HTML 中检测新成员
- * 周报中的成员名在 <p> 段落中，格式为 "N、名字" 或 "N、英文名 中文名"
+ * 周报中的成员名在 <p> 段落中，格式为 "N、名字" 或 "N、英文名 中文名" 或 "N、纯英文名"
  */
 function detectNewMembersFromHtml(html: string, existingNames: string[]): string[] {
   const detectedNames: string[] = [];
@@ -186,28 +186,43 @@ function detectNewMembersFromHtml(html: string, existingNames: string[]): string
     '苏','卢','蒋','蔡','贾','丁','魏','薛','叶','阎','余','潘','杜','戴','夏','钟','汪','田','任','姜',
     '范','方','石','姚','谭','廖','邹','熊','金','陆','郝','孔','白','崔','康','毛','邱','秦','江','史',
     '顾','侯','邵','孟','龙','万','段','雷','钱','汤','尹','黎','易','常','武','乔','贺','赖','龚','文',
-    '严','欧','虞',
+    '严','欧','虞','欧阳','裴','章','岑',
   ]);
 
-  // 提取所有 <p> 标签的内容（成员名在 <p> 段落中，不在 <li> 中）
+  // 提取所有 <p> 标签的内容（成员名在 <p> 段落中）
   const pMatches = html.matchAll(/<p>(.*?)<\/p>/gi);
   for (const match of pMatches) {
     const pContent = match[1].replace(/<[^>]+>/g, '').trim(); // 去掉 <strong> 等内部标签
     if (!pContent || pContent.length < 3) continue;
 
-    // 匹配模式："N、名字" 或 "N、英文名 中文名"
-    // 如 "一、王旭杰", "十六、Jonah Johnson 江骏浪", "十七、王晨荷"
+    // 只处理以中文数字+顿号开头的行
+    const numberingMatch = pContent.match(/^([一二三四五六七八九十百]+、)(.*)$/);
+    if (!numberingMatch) continue;
+    const namePart = numberingMatch[2].trim();
+
     let candidate: string | null = null;
 
-    // 模式1: "N、中文名" (一、王旭杰, 十七、王晨荷) — 注意顿号后可能有空格如 "十二、 陈飞霖"
-    const match1 = pContent.match(/^[一二三四五六七八九十百]+、\s*([\u4e00-\u9fa5]{2,4})\s*$/);
+    // 模式1: 纯中文名（"N、中文名"）
+    const match1 = namePart.match(/^([\u4e00-\u9fa5]{2,4})\s*$/);
     if (match1) {
       candidate = match1[1];
     } else {
-      // 模式2: "N、英文名 中文名" (十六、Jonah Johnson 江骏浪) — 顿号后可能有空格
-      const match2 = pContent.match(/^[一二三四五六七八九十百]+、\s*[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
+      // 模式2: 英文名+中文名（"N、Jonah Johnson 江骏浪"）— 提取中文名
+      const match2 = namePart.match(/^[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
       if (match2) {
         candidate = match2[1];
+      } else {
+        // 模式3: 纯英文名（"N、Sara Elena Bruj"）— 检查是否不在现有成员中
+        const match3 = namePart.match(/^([A-Za-z]+(?:\s+[A-Za-z]+)*)\s*$/);
+        if (match3) {
+          const engName = match3[1].trim();
+          // 纯英文名直接作为候选，后续检查是否在现有成员中
+          if (engName.length >= 2 && !existingNamesSet.has(engName)) {
+            console.log('[Detect] ✅ HTML检测到纯英文新成员:', engName, '| 原文:', pContent);
+            detectedNames.push(engName);
+          }
+          continue; // 已处理，跳过后续检查
+        }
       }
     }
 
@@ -216,12 +231,15 @@ function detectNewMembersFromHtml(html: string, existingNames: string[]): string
     // 排除已知成员
     if (existingNamesSet.has(candidate)) continue;
 
-    // 排除排除词库
-    const excludeWords = new Set(['本周','下周','基于','通过','利用','研究','设计','实验','分析','测试','制备','优化']);
-    if (excludeWords.has(candidate)) continue;
-
-    // 验证：候选的第一个字应该是常见姓氏
-    if (!commonSurnames.has(candidate.charAt(0))) continue;
+    // 验证：第一个字应该是常见姓氏（或常见复姓）
+    if (commonSurnames.has(candidate)) {
+      // 单字姓
+    } else if (commonSurnames.has(candidate.slice(0, 2))) {
+      // 复姓（如欧阳）
+    } else {
+      console.log('[Detect] 跳过(罕见姓):', candidate, '姓:', candidate.charAt(0));
+      continue;
+    }
 
     if (!detectedNames.includes(candidate)) {
       console.log('[Detect] ✅ HTML检测到新成员:', candidate, '| 原文:', pContent);
@@ -327,15 +345,15 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
   //   "1. 严巍（SiC超表面）" - 人名+括号注释
   //   "3. 王晨荷  微纳光学" - 人名+空格+描述（新格式）
   //   "18. Jonah Johnson 江骏浪" - 英文名+中文名
-  // 模式：数字[.、] + 空格 + 名字部分
-  const numberedNamePattern1 = /^\d+[\.、\s]+([\u4e00-\u9fa5]{2,3})\s*(?:[（(][^)）]*[)）])?\s*$/; // 纯中文名
+  // 模式：数字[.、] 或 中文数字[、] + 名字部分
+  const numberedNamePattern1 = /^(?:\d+|[一二三四五六七八九十百]+)[\.、\s]+([\u4e00-\u9fa5]{2,3})\s*(?:[（(][^)）]*[)）])?\s*$/; // 纯中文名
 
   console.log('[Detect] 开始检测，现有成员数:', existingNames.length, '总现有:', existingNames);
   console.log('[Detect] 周报总行数:', lines.length);
 
   for (const line of lines) {
-    // 只处理带编号的行（行首是数字）
-    if (!/^\d+/.test(line)) continue;
+    // 只处理带编号的行（行首是数字或中文数字）
+    if (!/^(\d+|[一二三四五六七八九十百]+)/.test(line)) continue;
 
     let candidate: string | null = null;
 
@@ -345,12 +363,12 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
       candidate = match1[1];
     } else {
       // 尝试匹配 "3. 王晨荷  微纳光学" 格式
-      const match2 = line.match(/^\d+[\.、\s]+([\u4e00-\u9fa5]{2,3})\s+[^\d（(].*$/);
+      const match2 = line.match(/^(?:\d+|[一二三四五六七八九十百]+)[\.、\s]+([\u4e00-\u9fa5]{2,3})\s+[^\d（(].*$/);
       if (match2) {
         candidate = match2[1];
       } else {
         // 尝试匹配 "Jonah Johnson 江骏浪" 格式
-        const match3 = line.match(/^\d+[\.、\s]+[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
+        const match3 = line.match(/^(?:\d+|[一二三四五六七八九十百]+)[\.、\s]+[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/);
         if (match3) {
           candidate = match3[1];
         }
@@ -395,7 +413,7 @@ function detectNamesFromReport(fullText: string, existingNames: string[]): strin
     const lineIndex = lines.indexOf(line);
     if (lineIndex >= 0 && lineIndex + 1 < lines.length) {
       const nextLine = lines[lineIndex + 1];
-      if (/^\d+[\.、\s]+/.test(nextLine)) {
+      if (/^(?:\d+|[一二三四五六七八九十百]+)[\.、\s]+/.test(nextLine)) {
         console.log('[Detect] 跳过(下一个是人名):', candidate);
         continue;
       }
@@ -702,22 +720,14 @@ export default function ReportUploader() {
       const fullText = (researcherResult?.text || '') + '\n' + (phdResult?.text || '');
       const fullHtml = (researcherResult?.html || '') + '\n' + (phdResult?.html || '');
 
+      // 提取周报内容（基于编号自动提取所有人，不依赖现有成员列表）
+      const personReports = extractPersonReports(fullText);
+      setParsedReports(personReports);
+
       // 检测周报中是否有已毕业/已离职/非活跃成员的内容
       const inactiveMembers = detectInactiveMembersInReport(fullText);
       console.log('[Parse] 非活跃成员检测:', inactiveMembers);
       
-      // 提取周报内容（基于编号自动提取所有人，不依赖现有成员列表）
-      const personReports = extractPersonReports(fullText);
-      setParsedReports(personReports);
-      
-      if (inactiveMembers.length > 0) {
-        setInactiveMembersDetected(inactiveMembers);
-        setParsedFullText(fullText);
-        setParsedFullHtml(fullHtml);
-        setPhase('inactive_check');
-        return;
-      }
-
       // 检测新成员（优先使用 HTML 检测，更可靠）
       const currentMembers = loadCurrentMembers();
       const currentNames = currentMembers.map(m => m.name);
@@ -729,10 +739,24 @@ export default function ReportUploader() {
       const detectedNewNames = [...new Set([...detectedFromHtml, ...detectedFromText])];
       console.log('[Parse] HTML检测:', detectedFromHtml, '| 文本检测:', detectedFromText, '| 合并:', detectedNewNames);
 
+      // 保存检测结果到状态（供后续阶段使用）
+      if (inactiveMembers.length > 0) {
+        setInactiveMembersDetected(inactiveMembers);
+      }
       if (detectedNewNames.length > 0) {
-        // 有新成员发现，进入新成员确认阶段
         setNewMembersDetected(detectedNewNames);
         setParsedFullText(fullText);
+      }
+
+      // 决定进入哪个阶段：先处理非活跃成员，再处理新成员
+      if (inactiveMembers.length > 0) {
+        setParsedFullText(fullText);
+        setParsedFullHtml(fullHtml);
+        setPhase('inactive_check');
+        return;
+      }
+
+      if (detectedNewNames.length > 0) {
         setPhase('new_members');
         return;
       }
@@ -1682,21 +1706,33 @@ export default function ReportUploader() {
     const activeCount = activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length;
     
     // 按角色进一步分组
+    const researcherRoles = ['researcher','associate_researcher','assistant_researcher','postdoc'];
+    const studentRoles = ['phd','undergraduate'];
+    const visitorRoles = ['visitor'];
+
     const knownSubmittedResearchers = knownSubmitted.filter(n => {
       const r = knownNameMap.get(n)?.role;
-      return r && !['phd','undergraduate'].includes(r);
+      return r && researcherRoles.includes(r);
     });
     const knownSubmittedStudents = knownSubmitted.filter(n => {
       const r = knownNameMap.get(n)?.role;
-      return r && ['phd','undergraduate'].includes(r);
+      return r && studentRoles.includes(r);
+    });
+    const knownSubmittedVisitors = knownSubmitted.filter(n => {
+      const r = knownNameMap.get(n)?.role;
+      return r && visitorRoles.includes(r);
     });
     const knownMissingResearchers = knownMissing.filter(n => {
       const r = knownNameMap.get(n)?.role;
-      return r && !['phd','undergraduate'].includes(r);
+      return r && researcherRoles.includes(r);
     });
     const knownMissingStudents = knownMissing.filter(n => {
       const r = knownNameMap.get(n)?.role;
-      return r && ['phd','undergraduate'].includes(r);
+      return r && studentRoles.includes(r);
+    });
+    const knownMissingVisitors = knownMissing.filter(n => {
+      const r = knownNameMap.get(n)?.role;
+      return r && visitorRoles.includes(r);
     });
     
     const actualCount = knownSubmitted.length; // 实际应分析的人数（活跃且已提交）
@@ -1782,6 +1818,35 @@ export default function ReportUploader() {
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {knownMissingStudents.map(name => (
+                      <Badge key={name} variant="outline" className="text-slate-400 text-[11px] px-2 py-0.5 border-dashed">{name}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* === 访问学生 - 已提交 === */}
+              {knownSubmittedVisitors.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <Plane className="w-3.5 h-3.5 text-purple-600" />
+                    <span className="text-xs font-medium text-emerald-700">访问学生 - 已提交 ({knownSubmittedVisitors.length}人)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {knownSubmittedVisitors.map(name => (
+                      <Badge key={name} className="bg-purple-100 text-purple-700 text-[11px] px-2 py-0.5 border border-purple-300">{name}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* === 访问学生 - 未提交 === */}
+              {knownMissingVisitors.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <Plane className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-xs font-medium text-slate-500">访问学生 - 未提交 ({knownMissingVisitors.length}人)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {knownMissingVisitors.map(name => (
                       <Badge key={name} variant="outline" className="text-slate-400 text-[11px] px-2 py-0.5 border-dashed">{name}</Badge>
                     ))}
                   </div>
