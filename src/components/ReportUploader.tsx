@@ -50,7 +50,6 @@ interface AnalysisProgress {
 }
 
 // 注意：以下函数替代了原来的静态常量，确保使用动态人员数据
-function getAllPersonsNames(persons: typeof ACTIVE_PERSONS) { return persons.map(p => p.name); }
 function getActiveResearcherNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['researcher', 'associate_researcher', 'assistant_researcher', 'postdoc'].includes(p.role)).map(p => p.name); }
 function getActiveStudentNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['phd', 'undergraduate', 'visitor'].includes(p.role)).map(p => p.name); }
 
@@ -103,30 +102,80 @@ async function extractTextFromDocx(file: File): Promise<{ text: string; html: st
 }
 
 /**
- * 从周报全文中按人名提取每个人的周报内容
+ * 从周报全文中按编号提取每个人名及其周报内容
+ * 基于编号格式（如 "一、虞阳", "二十二、Sara Elena Bruj"）自动识别所有成员
  * 返回：人名 → 该人的周报段落文本
  */
-function extractPersonReports(fullText: string, personNames: string[]): Record<string, string> {
+function extractPersonReports(fullText: string): Record<string, string> {
   const reports: Record<string, string> = {};
   const lines = fullText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-  for (const name of personNames) {
-    // 找到包含人名的行，提取该行及其后续几行作为该人的周报
-    for (let i = 0; i < lines.length; i++) {
-      if (lines[i].includes(name) && lines[i].length < 50) {
-        // 提取人名行及后续最多 15 行（该人的周报段落）
-        const segment = lines.slice(i, Math.min(i + 15, lines.length)).join('\n');
-        if (segment.length > 10) {
-          reports[name] = segment;
-          break;
-        }
+  // 匹配编号人名行的正则
+  // 支持："一、虞阳", "十二、 陈飞霖", "十四、Jonah Johnson 江骏浪", "二十二、Sara Elena Bruj"
+  const namePatterns = [
+    // 模式1: "N、中文名" — 顿号后可选空格
+    { regex: /^[一二三四五六七八九十百]+、\s*([\u4e00-\u9fa5]{2,4})\s*$/, extract: (m: RegExpMatchArray) => m[1] },
+    // 模式2: "N、英文名 中文名" — 提取中文名部分
+    { regex: /^[一二三四五六七八九十百]+、\s*[A-Za-z\s]+\s+([\u4e00-\u9fa5]{2,4})\s*$/, extract: (m: RegExpMatchArray) => m[1] },
+    // 模式3: "N、纯英文名" — 提取英文名（至少两个单词，或一个单词）
+    { regex: /^[一二三四五六七八九十百]+、\s*([A-Za-z]+(?:\s+[A-Za-z]+)*)\s*$/, extract: (m: RegExpMatchArray) => m[1].trim() },
+  ];
+
+  let currentName: string | null = null;
+  let currentContent: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    let matchedName: string | null = null;
+
+    // 尝试匹配人名行
+    for (const pattern of namePatterns) {
+      const match = line.match(pattern.regex);
+      if (match) {
+        matchedName = pattern.extract(match);
+        break;
       }
     }
-    // 如果找不到该人的周报内容，标记为空字符串（表示未提交）
-    if (!reports[name]) {
-      reports[name] = '';
+
+    if (matchedName) {
+      // 保存前一个人的内容
+      if (currentName && currentContent.length > 0) {
+        const content = currentContent.join('\n');
+        if (content.length >= 10) {
+          reports[currentName] = content;
+        }
+      }
+      // 开始新的人
+      currentName = matchedName;
+      currentContent = [];
+    } else if (currentName) {
+      // 检查是否是下一个人名（数字编号开头）
+      if (/^\d+[\.、\s]/.test(line)) {
+        // 保存前一个人的内容
+        if (currentContent.length > 0) {
+          const content = currentContent.join('\n');
+          if (content.length >= 10) {
+            reports[currentName] = content;
+          }
+        }
+        currentName = null;
+        currentContent = [];
+      } else {
+        // 积累当前人的周报内容
+        currentContent.push(line);
+      }
     }
   }
+
+  // 保存最后一个人的内容
+  if (currentName && currentContent.length > 0) {
+    const content = currentContent.join('\n');
+    if (content.length >= 10) {
+      reports[currentName] = content;
+    }
+  }
+
+  console.log('[Extract] 从周报中提取到', Object.keys(reports).length, '人:', Object.keys(reports).join('、'));
   return reports;
 }
 
@@ -662,6 +711,11 @@ export default function ReportUploader() {
       // 检测周报中是否有已毕业/已离职/非活跃成员的内容
       const inactiveMembers = detectInactiveMembersInReport(fullText);
       console.log('[Parse] 非活跃成员检测:', inactiveMembers);
+      
+      // 提取周报内容（基于编号自动提取所有人，不依赖现有成员列表）
+      const personReports = extractPersonReports(fullText);
+      setParsedReports(personReports);
+      
       if (inactiveMembers.length > 0) {
         setInactiveMembersDetected(inactiveMembers);
         setParsedFullText(fullText);
@@ -689,8 +743,6 @@ export default function ReportUploader() {
         return;
       }
 
-      const personReports = extractPersonReports(fullText, getAllPersonsNames(allPersons));
-      setParsedReports(personReports);
       setPhase('review');
     } catch (e) {
       setError('周报文件解析失败: ' + (e instanceof Error ? e.message : String(e)));
@@ -1484,9 +1536,7 @@ export default function ReportUploader() {
                     return;
                   }
 
-                  // 没有新成员，直接进入 review
-                  const personReports = extractPersonReports(parsedFullText, getAllPersonsNames(allPersons));
-                  setParsedReports(personReports);
+                  // 没有新成员，直接进入 review（周报内容已经提取好了）
                   setPhase('review');
                 }}
               >
@@ -1594,9 +1644,7 @@ export default function ReportUploader() {
                 variant="outline"
                 className="text-xs"
                 onClick={() => {
-                  // 跳过新成员，继续解析
-                  const personReports = extractPersonReports(parsedFullText, getAllPersonsNames(allPersons));
-                  setParsedReports(personReports);
+                  // 跳过新成员，继续解析（周报内容已经提取好了）
                   setPhase('review');
                 }}
               >
@@ -1612,31 +1660,53 @@ export default function ReportUploader() {
 
   // ─── Phase: Review (parse complete, ready to analyze) ───
   if (phase === 'review') {
-    // 基于 parsedReports 实际解析结果，分类显示（使用动态人员数据）
+    // parsedReports 现在包含从周报中按编号自动提取的所有人名及其内容
+    const detectedNames = Object.keys(parsedReports); // 周报中实际检测到的所有人
+    const detectedSet = new Set(detectedNames);
+    
+    // 构建已知成员查找表
     const activePersonsList = allPersons.length > 0 ? allPersons : ACTIVE_PERSONS;
-    console.log('[Review] allPersons.length:', allPersons.length, 'ACTIVE_PERSONS.length:', ACTIVE_PERSONS.length);
-    console.log('[Review] allPersons 名单:', allPersons.map(p => p.name).join('、'));
-    const activeNeedSubmitPersons = activePersonsList.filter(p => p.status === 'active' || p.status === undefined);
-    const activeNeedSubmitNames = getAllPersonsNames(activeNeedSubmitPersons);
-    const activeResearcherNames = getActiveResearcherNames(activeNeedSubmitPersons);
-    const activeStudentNames = getActiveStudentNames(activeNeedSubmitPersons);
-    console.log('[Review] activeNeedSubmitNames:', activeNeedSubmitNames.length, activeNeedSubmitNames.join('、'));
-    console.log('[Review] activeStudentNames:', activeStudentNames.length, activeStudentNames.join('、'));
-    console.log('[Review] parsedReports keys:', Object.keys(parsedReports).join('、'));
-
-    const submittedNames = activeNeedSubmitNames.filter(name => {
-      const text = parsedReports[name];
-      return text && text.trim().length >= 10;
+    const knownNameMap = new Map(activePersonsList.map(p => [p.name, p]));
+    const knownNames = new Set(knownNameMap.keys());
+    
+    console.log('[Review] 周报检测到人:', detectedNames.length, detectedNames.join('、'));
+    console.log('[Review] 已知成员:', knownNames.size);
+    
+    // 分类
+    // 1. 已知活跃成员且已提交
+    const knownSubmitted = detectedNames.filter(n => knownNames.has(n) && (knownNameMap.get(n)?.status === 'active' || knownNameMap.get(n)?.status === undefined));
+    // 2. 已知但已毕业/离职（出现在周报中，但不应计入正常提交）
+    const knownInactive = detectedNames.filter(n => knownNames.has(n) && ['graduated','left','inactive'].includes(knownNameMap.get(n)?.status || ''));
+    // 3. 未知成员（周报中有但不在成员列表中）
+    const unknownSubmitted = detectedNames.filter(n => !knownNames.has(n));
+    // 4. 已知活跃但未提交（在 allPersons 中但不在 parsedReports 中）
+    const knownMissing = activePersonsList
+      .filter(p => (p.status === 'active' || p.status === undefined) && !detectedSet.has(p.name))
+      .map(p => p.name);
+    
+    // 活跃成员总数（用于深度分析费用计算）
+    const activeCount = activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length;
+    
+    // 按角色进一步分组
+    const knownSubmittedResearchers = knownSubmitted.filter(n => {
+      const r = knownNameMap.get(n)?.role;
+      return r && !['phd','undergraduate'].includes(r);
     });
-    const missingNames = activeNeedSubmitNames.filter(name => {
-      const text = parsedReports[name];
-      return !text || text.trim().length < 10;
+    const knownSubmittedStudents = knownSubmitted.filter(n => {
+      const r = knownNameMap.get(n)?.role;
+      return r && ['phd','undergraduate'].includes(r);
     });
-    const submittedResearchers = submittedNames.filter(n => activeResearcherNames.includes(n));
-    const missingResearchers = missingNames.filter(n => activeResearcherNames.includes(n));
-    const submittedStudents = submittedNames.filter(n => activeStudentNames.includes(n));
-    const missingStudents = missingNames.filter(n => activeStudentNames.includes(n));
-    const actualCount = submittedNames.length;
+    const knownMissingResearchers = knownMissing.filter(n => {
+      const r = knownNameMap.get(n)?.role;
+      return r && !['phd','undergraduate'].includes(r);
+    });
+    const knownMissingStudents = knownMissing.filter(n => {
+      const r = knownNameMap.get(n)?.role;
+      return r && ['phd','undergraduate'].includes(r);
+    });
+    
+    const actualCount = knownSubmitted.length; // 实际应分析的人数（活跃且已提交）
+    const totalDetected = detectedNames.length; // 周报中检测到的总人数
 
     return (
       <div className="space-y-6">
@@ -1647,63 +1717,92 @@ export default function ReportUploader() {
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
               <span className="font-semibold text-emerald-800">文件解析完成</span>
               <Badge className="bg-emerald-100 text-emerald-700 ml-2">
-                已提交 {actualCount} 人 / 未提交 {missingNames.length} 人
+                周报中检测到 {totalDetected} 人 / 应分析 {actualCount} 人 / 未提交 {knownMissing.length} 人
               </Badge>
             </div>
 
             <div className="space-y-3">
-              {/* Researchers - submitted */}
-              {submittedResearchers.length > 0 && (
+              {/* === 未知成员（周报中有但不在成员列表）=== */}
+              {unknownSubmitted.length > 0 && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                    <span className="text-xs font-medium text-amber-700">周报中检测到新成员（未入库）({unknownSubmitted.length}人)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {unknownSubmitted.map(name => (
+                      <Badge key={name} className="bg-amber-100 text-amber-700 text-[11px] px-2 py-0.5 border border-amber-300">{name}</Badge>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-amber-600 mt-1">这些人在周报中有内容，但不在成员列表中。如需添加，请重新上传周报或前往设置页面添加。</p>
+                </div>
+              )}
+
+              {/* === 已知成员 - 已提交 === */}
+              {knownSubmittedResearchers.length > 0 && (
                 <div>
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <Users className="w-3.5 h-3.5 text-cyan-600" />
-                    <span className="text-xs font-medium text-emerald-700">在职研究人员 - 已提交 ({submittedResearchers.length}人)</span>
+                    <span className="text-xs font-medium text-emerald-700">在职研究人员 - 已提交 ({knownSubmittedResearchers.length}人)</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {submittedResearchers.map(name => (
+                    {knownSubmittedResearchers.map(name => (
                       <Badge key={name} className="bg-emerald-100 text-emerald-700 text-[11px] px-2 py-0.5 border border-emerald-300">{name}</Badge>
                     ))}
                   </div>
                 </div>
               )}
-              {/* Researchers - missing */}
-              {missingResearchers.length > 0 && (
+              {knownSubmittedStudents.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <GraduationCap className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-xs font-medium text-emerald-700">学生 - 已提交 ({knownSubmittedStudents.length}人)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {knownSubmittedStudents.map(name => (
+                      <Badge key={name} className="bg-emerald-100 text-emerald-700 text-[11px] px-2 py-0.5 border border-emerald-300">{name}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* === 已知成员 - 未提交 === */}
+              {knownMissingResearchers.length > 0 && (
                 <div>
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <Users className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-xs font-medium text-slate-500">在职研究人员 - 未提交 ({missingResearchers.length}人)</span>
+                    <span className="text-xs font-medium text-slate-500">在职研究人员 - 未提交 ({knownMissingResearchers.length}人)</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {missingResearchers.map(name => (
+                    {knownMissingResearchers.map(name => (
+                      <Badge key={name} variant="outline" className="text-slate-400 text-[11px] px-2 py-0.5 border-dashed">{name}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {knownMissingStudents.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-xs font-medium text-slate-500">学生 - 未提交 ({knownMissingStudents.length}人)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {knownMissingStudents.map(name => (
                       <Badge key={name} variant="outline" className="text-slate-400 text-[11px] px-2 py-0.5 border-dashed">{name}</Badge>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Students - submitted */}
-              {submittedStudents.length > 0 && (
+              {/* === 已知但已毕业/离职（出现在周报中）=== */}
+              {knownInactive.length > 0 && (
                 <div>
                   <div className="flex items-center gap-1.5 mb-1.5">
-                    <GraduationCap className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="text-xs font-medium text-emerald-700">学生 - 已提交 ({submittedStudents.length}人)</span>
+                    <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-xs font-medium text-slate-500">已毕业/离职但周报中有内容 ({knownInactive.length}人)</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
-                    {submittedStudents.map(name => (
-                      <Badge key={name} className="bg-emerald-100 text-emerald-700 text-[11px] px-2 py-0.5 border border-emerald-300">{name}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {/* Students - missing */}
-              {missingStudents.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <GraduationCap className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-xs font-medium text-slate-500">学生 - 未提交 ({missingStudents.length}人)</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {missingStudents.map(name => (
+                    {knownInactive.map(name => (
                       <Badge key={name} variant="outline" className="text-slate-400 text-[11px] px-2 py-0.5 border-dashed">{name}</Badge>
                     ))}
                   </div>
@@ -1728,22 +1827,22 @@ export default function ReportUploader() {
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-lg font-bold text-slate-800">{(((actualCount * TOKENS_PER_PERSON) + (includeDeepAnalysis ? activeNeedSubmitPersons.length * estimateDeepAnalysisCost().tokens : 0)) / 1000).toFixed(0)}K</div>
+                <div className="text-lg font-bold text-slate-800">{(((actualCount * TOKENS_PER_PERSON) + (includeDeepAnalysis ? activeCount * estimateDeepAnalysisCost().tokens : 0)) / 1000).toFixed(0)}K</div>
                 <div className="text-[10px] text-slate-500">预计Token消耗</div>
               </div>
               <div>
-                <div className="text-lg font-bold text-slate-800">{((actualCount * COST_PER_PERSON) + (includeDeepAnalysis ? activeNeedSubmitPersons.length * estimateDeepAnalysisCost().cost : 0)).toFixed(2)}</div>
+                <div className="text-lg font-bold text-slate-800">{((actualCount * COST_PER_PERSON) + (includeDeepAnalysis ? activeCount * estimateDeepAnalysisCost().cost : 0)).toFixed(2)}</div>
                 <div className="text-[10px] text-slate-500">预计费用 (元)</div>
               </div>
               <div>
-                <div className="text-lg font-bold text-slate-800">~{Math.ceil((actualCount * 0.6) + (includeDeepAnalysis ? activeNeedSubmitPersons.length * 3 : 0))}</div>
+                <div className="text-lg font-bold text-slate-800">~{Math.ceil((actualCount * 0.6) + (includeDeepAnalysis ? activeCount * 3 : 0))}</div>
                 <div className="text-[10px] text-slate-500">预计耗时 (秒)</div>
               </div>
             </div>
             <div className="text-[10px] text-slate-400 mt-2">
-              仅对已提交{actualCount}人进行AI分析（未提交{missingNames.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(4)}元/人（Kimi官方: 输入¥6.50/百万 + 输出¥27.00/百万）。
+              仅对已提交{actualCount}人进行AI分析（未提交{knownMissing.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(4)}元/人（Kimi官方: 输入¥6.50/百万 + 输出¥27.00/百万）。
               {includeDeepAnalysis && (
-                <span className="text-cyan-600 ml-1">+ 深度评估{activeNeedSubmitPersons.length}人，~{estimateDeepAnalysisCost().tokens}tokens/人，约¥{estimateDeepAnalysisCost().cost.toFixed(4)}元/人。</span>
+                <span className="text-cyan-600 ml-1">+ 深度评估{activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length}人，~{estimateDeepAnalysisCost().tokens}tokens/人，约¥{estimateDeepAnalysisCost().cost.toFixed(4)}元/人。</span>
               )}
             </div>
 
@@ -1762,7 +1861,7 @@ export default function ReportUploader() {
                     同时对所有成员进行科研进展深度评估
                   </div>
                   <div className="text-[10px] text-slate-500 mt-0.5">
-                    勾选后，在分析完周报后，将对<strong>{activeNeedSubmitPersons.length}位活跃成员</strong>逐一进行科研进展深度评估（含研究热点分析、下一步建议、风险提示），额外消耗约<strong>{(activeNeedSubmitPersons.length * estimateDeepAnalysisCost().cost).toFixed(2)}元</strong>。
+                    勾选后，在分析完周报后，将对<strong>{activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length}位活跃成员</strong>逐一进行科研进展深度评估（含研究热点分析、下一步建议、风险提示），额外消耗约<strong>{(activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length * estimateDeepAnalysisCost().cost).toFixed(2)}元</strong>。
                   </div>
                 </div>
               </label>
@@ -1781,7 +1880,7 @@ export default function ReportUploader() {
             开始AI分析
             <ChevronRight className="w-5 h-5 ml-1" />
           </Button>
-          <p className="text-xs text-slate-400">将对已提交的{actualCount}位成员进行深度研判，未提交{missingNames.length}人将标注"本周未提交周报"</p>
+          <p className="text-xs text-slate-400">将对已提交的{actualCount}位成员进行深度研判，未提交{knownMissing.length}人将标注"本周未提交周报"</p>
         </div>
 
         <div className="flex justify-center">
