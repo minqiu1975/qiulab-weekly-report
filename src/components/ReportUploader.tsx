@@ -232,12 +232,14 @@ function detectNewMembersFromHtml(html: string, existingNames: string[]): string
     if (existingNamesSet.has(candidate)) continue;
 
     // 验证：第一个字应该是常见姓氏（或常见复姓）
-    if (commonSurnames.has(candidate)) {
-      // 单字姓
-    } else if (commonSurnames.has(candidate.slice(0, 2))) {
-      // 复姓（如欧阳）
+    const firstChar = candidate.charAt(0);
+    const firstTwoChars = candidate.slice(0, 2);
+    if (commonSurnames.has(firstChar)) {
+      // 单字姓（如岑、王、李）→ 通过
+    } else if (commonSurnames.has(firstTwoChars)) {
+      // 复姓（如欧阳）→ 通过
     } else {
-      console.log('[Detect] 跳过(罕见姓):', candidate, '姓:', candidate.charAt(0));
+      console.log('[Detect] 跳过(罕见姓):', candidate, '首字:', firstChar, '前两字:', firstTwoChars);
       continue;
     }
 
