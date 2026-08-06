@@ -798,7 +798,7 @@ export default function ReportUploader() {
       versionAlert = `⚠️ API连接异常：无法连接到 Kimi 服务。请检查网络连接或 API Key 配置后再试。`;
       actualVersion = '未连接';
     } else if (storedStatus === 'downgraded' || (userPref && userPref !== EXPECTED_VERSION)) {
-      versionAlert = `⚠️ 版本降级警报：当前配置为 ${userPref || '旧版本'}，而非最新版 ${EXPECTED_VERSION}。分析精度可能下降，建议更新 API 配置。`;
+      versionAlert = `⚠️ 版本降级警报：当前配置为 ${userPref || '旧版本'}，而非期望版本 ${EXPECTED_VERSION}。分析精度可能下降，建议更新 API 配置。`;
       actualVersion = userPref || 'unknown';
     }
 
@@ -864,7 +864,7 @@ export default function ReportUploader() {
     const estimatedCost = submittedCount * COST_PER_PERSON;
 
     const versionLine = actualVersion === EXPECTED_VERSION
-      ? `[${new Date().toLocaleTimeString()}] 模型: Kimi ${EXPECTED_VERSION} ✅`
+      ? `[${new Date().toLocaleTimeString()}] 模型: Kimi ${actualVersion} ✅`
       : `[${new Date().toLocaleTimeString()}] 模型: Kimi ${actualVersion} ⚠️ (期望: ${EXPECTED_VERSION})`;
 
     const logs: string[] = [

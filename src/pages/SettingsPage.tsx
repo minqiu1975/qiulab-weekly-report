@@ -418,6 +418,7 @@ const DEFAULT_MOONSHOT_URL = 'https://api.moonshot.cn/v1';
 function KimiApiPanel() {
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('qlab_moonshot_api_key') || '');
   const [apiUrl, setApiUrl] = useState(() => localStorage.getItem('qlab_moonshot_api_url') || DEFAULT_MOONSHOT_URL);
+  const [model, setModel] = useState(() => localStorage.getItem('qlab_kimi_model') || 'kimi-k2.6');
   const [showKey, setShowKey] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -438,6 +439,7 @@ function KimiApiPanel() {
       localStorage.removeItem('qlab_moonshot_api_url');
       setApiUrl(DEFAULT_MOONSHOT_URL);
     }
+    localStorage.setItem('qlab_kimi_model', model);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -445,8 +447,10 @@ function KimiApiPanel() {
   const handleClear = () => {
     setApiKey('');
     setApiUrl(DEFAULT_MOONSHOT_URL);
+    setModel('kimi-k2.6');
     localStorage.removeItem('qlab_moonshot_api_key');
     localStorage.removeItem('qlab_moonshot_api_url');
+    localStorage.removeItem('qlab_kimi_model');
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -493,7 +497,23 @@ function KimiApiPanel() {
             <Badge className={`flex items-center gap-1 ${isCustomUrl ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
               {apiUrl.includes('.ai') ? '国际站' : '中国站'}
             </Badge>
+            <Badge className={`flex items-center gap-1 ${model.includes('k3') ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-cyan-100 text-cyan-700 border-cyan-200'}`}>
+              {model.includes('k3') ? 'Kimi 3.0' : 'Kimi 2.6'}
+            </Badge>
           </div>
+        </div>
+
+        <div>
+          <label className="text-xs text-slate-600 mb-1 block">AI 模型</label>
+          <select
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+          >
+            <option value="kimi-k2.6">kimi-k2.6（默认，性价比高）</option>
+            <option value="kimi-k3">kimi-k3（最新，能力最强）</option>
+          </select>
+          <p className="text-[10px] text-slate-400 mt-1">kimi-k3 是最新版本，分析能力更强但费用略高；kimi-k2.6 是稳定版本，性价比更优。</p>
         </div>
 
         <div>

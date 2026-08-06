@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Cpu, AlertTriangle, CheckCircle2, XCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { getKimiModel, getModelDisplayName } from '../lib/kimiApi';
 
 type VersionStatus = 'checking' | 'latest' | 'downgraded' | 'offline' | 'error';
 
@@ -10,8 +11,6 @@ interface VersionInfo {
   message: string;
   lastChecked: string;
 }
-
-const EXPECTED_VERSION = 'k2.6';
 
 /** 模拟 API 版本检测（沙箱环境无法真实调用，但保留完整逻辑架构）
  *  生产环境中，将 mock 替换为真实 fetch 调用 */
@@ -28,12 +27,14 @@ async function detectKimiVersion(): Promise<VersionInfo> {
     // 沙箱环境：从 localStorage 读取用户配置的版本偏好
     const userPref = localStorage.getItem('kimi_model_preference');
     const storedStatus = localStorage.getItem('kimi_version_status');
+    const currentModel = getKimiModel();
+    const modelName = getModelDisplayName(currentModel);
 
     if (storedStatus === 'offline') {
       return {
         status: 'offline',
         detectedVersion: '未连接',
-        expectedVersion: EXPECTED_VERSION,
+        expectedVersion: modelName,
         message: '无法连接到 Kimi API 服务，请检查网络或 API Key 配置',
         lastChecked: new Date().toLocaleTimeString('zh-CN'),
       };
@@ -43,49 +44,47 @@ async function detectKimiVersion(): Promise<VersionInfo> {
       return {
         status: 'downgraded',
         detectedVersion: userPref || 'k1.5',
-        expectedVersion: EXPECTED_VERSION,
-        message: `⚠️ 版本降级警报：当前使用 ${userPref || 'k1.5'}，而非最新版 ${EXPECTED_VERSION}。分析精度可能下降！`,
+        expectedVersion: modelName,
+        message: `⚠️ 版本降级警报：当前使用 ${userPref || 'k1.5'}，而非配置的 ${modelName}。分析精度可能下降！`,
         lastChecked: new Date().toLocaleTimeString('zh-CN'),
       };
     }
 
-    // 默认：最新版
+    // 默认：正常
     return {
       status: 'latest',
-      detectedVersion: EXPECTED_VERSION,
-      expectedVersion: EXPECTED_VERSION,
-      message: `✅ 已连接到最新版 Kimi ${EXPECTED_VERSION}，分析精度最优`,
+      detectedVersion: modelName,
+      expectedVersion: modelName,
+      message: `✅ 已连接到 ${modelName}，分析精度最优`,
       lastChecked: new Date().toLocaleTimeString('zh-CN'),
     };
   } catch (err) {
     return {
       status: 'error',
       detectedVersion: 'unknown',
-      expectedVersion: EXPECTED_VERSION,
+      expectedVersion: getModelDisplayName(getKimiModel()),
       message: `版本检测出错: ${err instanceof Error ? err.message : String(err)}`,
       lastChecked: new Date().toLocaleTimeString('zh-CN'),
     };
   }
 }
 
-/** 检查当前版本是否为最新版 */
+/** 检查当前版本是否为最新版（与用户配置一致即可） */
 export function isLatestKimiVersion(version: string): boolean {
-  return version === EXPECTED_VERSION;
+  const currentModel = getKimiModel();
+  return version === getModelDisplayName(currentModel);
 }
 
-/** 获取期望的 Kimi 版本 */
+/** 获取期望的 Kimi 版本显示名 */
 export function getExpectedKimiVersion(): string {
-  return EXPECTED_VERSION;
+  return getModelDisplayName(getKimiModel());
 }
-
-export { EXPECTED_VERSION };
-export type { VersionInfo, VersionStatus };
 
 export default function KimiVersionDisplay() {
   const [info, setInfo] = useState<VersionInfo>({
     status: 'checking',
     detectedVersion: '-',
-    expectedVersion: EXPECTED_VERSION,
+    expectedVersion: getExpectedKimiVersion(),
     message: '正在检测 Kimi API 版本...',
     lastChecked: '-',
   });
@@ -122,7 +121,7 @@ export default function KimiVersionDisplay() {
         <span className={`w-2 h-2 rounded-full ${cfg.dot} ${info.status === 'checking' ? 'animate-pulse' : ''}`} />
         <Cpu className={`w-3 h-3 ${cfg.color}`} />
         <span className={cfg.color}>
-          {info.status === 'checking' ? '检测中...' : `Kimi ${info.detectedVersion}`}
+          {info.status === 'checking' ? '检测中...' : info.detectedVersion}
         </span>
         {info.status === 'downgraded' && <AlertTriangle className="w-3 h-3 text-red-500" />}
       </button>
@@ -152,7 +151,7 @@ export default function KimiVersionDisplay() {
 
           <div className="text-[10px] text-slate-400 space-y-0.5">
             <div className="flex justify-between">
-              <span>期望版本</span>
+              <span>配置模型</span>
               <span className="font-mono text-slate-600">{info.expectedVersion}</span>
             </div>
             <div className="flex justify-between">

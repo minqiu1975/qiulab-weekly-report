@@ -1,14 +1,18 @@
 /**
  * 共享的 Kimi API 调用模块
- * 所有 Kimi k2.6 API 调用必须走此模块，确保模型和端点统一
+ * 支持模型选择：kimi-k2.6 / kimi-k3
+ * 所有 Kimi API 调用必须走此模块，确保模型和端点统一
  */
 
 // 内置默认 API Key（实验室共享）- 用户可在设置页面覆盖
 const DEFAULT_API_KEY = 'sk-HjX9XXQNNHzrD1zlJRdD7zqY6HXFRpa4VsW6lSc2F742GHbg';
 const API_KEY_STORAGE_KEY = 'qlab_moonshot_api_key';
 const API_URL_STORAGE_KEY = 'qlab_moonshot_api_url';
+const MODEL_STORAGE_KEY = 'qlab_kimi_model';
 // 默认使用中国站 api.moonshot.cn（对应 platform.moonshot.cn 注册的 Key）
 const DEFAULT_BASE_URL = 'https://api.moonshot.cn/v1';
+// 默认模型
+const DEFAULT_MODEL = 'kimi-k2.6';
 
 export function getApiKey(): string {
   return localStorage.getItem(API_KEY_STORAGE_KEY) || DEFAULT_API_KEY;
@@ -16,6 +20,23 @@ export function getApiKey(): string {
 
 export function getBaseUrl(): string {
   return localStorage.getItem(API_URL_STORAGE_KEY) || DEFAULT_BASE_URL;
+}
+
+/** 获取当前选择的 Kimi 模型 */
+export function getKimiModel(): string {
+  return localStorage.getItem(MODEL_STORAGE_KEY) || DEFAULT_MODEL;
+}
+
+/** 设置 Kimi 模型 */
+export function setKimiModel(model: string): void {
+  localStorage.setItem(MODEL_STORAGE_KEY, model);
+}
+
+/** 获取模型显示名称 */
+export function getModelDisplayName(modelId: string): string {
+  if (modelId.includes('k3')) return 'Kimi 3.0';
+  if (modelId.includes('k2.6')) return 'Kimi 2.6';
+  return modelId;
 }
 
 export interface KimiApiOptions {
@@ -28,7 +49,7 @@ export interface KimiApiOptions {
 import { getDatePrefix } from './dateContext';
 
 /**
- * 调用 Kimi k2.6 API
+ * 调用 Kimi API（自动使用用户选择的模型：k2.6 或 k3）
  * 如果 API 不可用，直接抛出错误，绝不降级
  * 所有调用自动注入当前日期前缀，防止AI时间幻觉
  */
@@ -48,9 +69,10 @@ export async function callKimiApi(
 
   const apiKey = getApiKey();
   const baseUrl = getBaseUrl();
+  const model = getKimiModel(); // 使用用户选择的模型
 
   const body: Record<string, unknown> = {
-    model: 'kimi-k2.6',
+    model,
     messages: [
       { role: 'system', content: finalSystemPrompt },
       { role: 'user', content: userPrompt },
@@ -85,7 +107,7 @@ export async function callKimiApi(
       throw new Error(`API Key 无效 (${status})。当前端点: ${baseUrl}。中国站 Key 用 api.moonshot.cn，国际站用 api.moonshot.ai。可在「设置」页面修改。详情: ${detail}`);
     }
     if (status === 404) {
-      throw new Error(`模型不存在 (${status})。当前端点: ${baseUrl}。详情: ${detail}`);
+      throw new Error(`模型不存在 (${status})。当前模型: ${model}，端点: ${baseUrl}。详情: ${detail}`);
     }
     if (status >= 500) {
       throw new Error(`Kimi 服务器错误 (${status})。请稍后重试。详情: ${detail}`);
