@@ -184,7 +184,7 @@ export default function DeepAnalysisPanel({ person }: Props) {
       overallAdvice: analysis.overallAdvice,
     };
     saveDeepAnalysis(data);
-    setSavedInfo({ date: data.analysisDate, model: getModelDisplayName(currentModel) });
+    setSavedInfo({ date: data.analysisDate, model: getModelDisplayName() });
 
     if (cloudStorage.isCloudEnabled()) {
       cloudStorage.saveAllData(cloudStorage.loadFromLocal()).catch(() => {});
@@ -259,7 +259,7 @@ export default function DeepAnalysisPanel({ person }: Props) {
                 <div className="flex justify-between">
                   <span>API 版本</span>
                   <span className="font-medium text-emerald-600 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> {getModelDisplayName(getKimiModel())}
+                    <CheckCircle2 className="w-3 h-3" /> {getModelDisplayName()}
                   </span>
                 </div>
                 <div className="border-t border-slate-100 pt-1.5 mt-1.5">
@@ -325,7 +325,7 @@ export default function DeepAnalysisPanel({ person }: Props) {
         <Card className="border-cyan-200 bg-cyan-50/50">
           <CardContent className="py-12 text-center">
             <Loader2 className="w-8 h-8 text-cyan-600 animate-spin mx-auto mb-3" />
-            <p className="text-sm font-medium text-slate-700">{getModelDisplayName(getKimiModel())} 正在深度分析中...</p>
+            <p className="text-sm font-medium text-slate-700">{getModelDisplayName()} 正在深度分析中...</p>
             <p className="text-xs text-slate-500 mt-1">正在分析 {person.name} 的科研进展，结合最新研究热点生成建议</p>
             <div className="mt-4 max-w-xs mx-auto">
               <Progress value={45} className="h-1.5" />
@@ -363,7 +363,7 @@ export default function DeepAnalysisPanel({ person }: Props) {
             <div className="flex items-center gap-2 flex-wrap">
               <CheckCircle2 className="w-5 h-5 text-emerald-500" />
               <h3 className="text-sm font-semibold text-slate-800">深度分析完成</h3>
-              <Badge className="bg-cyan-100 text-cyan-700 text-xs">{savedInfo?.model || getModelDisplayName(getKimiModel())}</Badge>
+              <Badge className="bg-cyan-100 text-cyan-700 text-xs">{savedInfo?.model || getModelDisplayName()}</Badge>
               {savedInfo && (
                 <Badge className="bg-emerald-100 text-emerald-700 text-xs flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" />

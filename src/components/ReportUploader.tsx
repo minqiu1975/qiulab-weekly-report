@@ -806,20 +806,12 @@ export default function ReportUploader() {
 
   // Step 2: Start AI analysis after user clicks "开始分析"
   const startAnalysis = async () => {
-    // Check Kimi API version before starting
-    const userPref = localStorage.getItem('kimi_model_preference');
+    // Check Kimi API connection before starting (always uses k2.6)
     const storedStatus = localStorage.getItem('kimi_version_status');
-    const EXPECTED_VERSION = 'k2.6';
-
     let versionAlert: string | null = null;
-    let actualVersion = EXPECTED_VERSION;
 
     if (storedStatus === 'offline') {
       versionAlert = `⚠️ API连接异常：无法连接到 Kimi 服务。请检查网络连接或 API Key 配置后再试。`;
-      actualVersion = '未连接';
-    } else if (storedStatus === 'downgraded' || (userPref && userPref !== EXPECTED_VERSION)) {
-      versionAlert = `⚠️ 版本降级警报：当前配置为 ${userPref || '旧版本'}，而非期望版本 ${EXPECTED_VERSION}。分析精度可能下降，建议更新 API 配置。`;
-      actualVersion = userPref || 'unknown';
     }
 
     if (versionAlert) {
@@ -883,9 +875,7 @@ export default function ReportUploader() {
 
     const estimatedCost = submittedCount * COST_PER_PERSON;
 
-    const versionLine = actualVersion === EXPECTED_VERSION
-      ? `[${new Date().toLocaleTimeString()}] 模型: Kimi ${actualVersion} ✅`
-      : `[${new Date().toLocaleTimeString()}] 模型: Kimi ${actualVersion} ⚠️ (期望: ${EXPECTED_VERSION})`;
+    const versionLine = `[${new Date().toLocaleTimeString()}] 模型: Kimi 2.6 ✅`;
 
     const logs: string[] = [
       `[${new Date().toLocaleTimeString()}] 启动AI分析流程...`,

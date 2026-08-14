@@ -1,6 +1,6 @@
 /**
  * 共享的 Kimi API 调用模块
- * 支持模型选择：kimi-k2.6 / kimi-k3
+ * 使用模型：kimi-k2.6
  * 所有 Kimi API 调用必须走此模块，确保模型和端点统一
  */
 
@@ -8,10 +8,9 @@
 const DEFAULT_API_KEY = 'sk-HjX9XXQNNHzrD1zlJRdD7zqY6HXFRpa4VsW6lSc2F742GHbg';
 const API_KEY_STORAGE_KEY = 'qlab_moonshot_api_key';
 const API_URL_STORAGE_KEY = 'qlab_moonshot_api_url';
-const MODEL_STORAGE_KEY = 'qlab_kimi_model';
 // 默认使用中国站 api.moonshot.cn（对应 platform.moonshot.cn 注册的 Key）
 const DEFAULT_BASE_URL = 'https://api.moonshot.cn/v1';
-// 默认模型
+// 固定使用 Kimi 2.6
 const DEFAULT_MODEL = 'kimi-k2.6';
 
 export function getApiKey(): string {
@@ -22,21 +21,17 @@ export function getBaseUrl(): string {
   return localStorage.getItem(API_URL_STORAGE_KEY) || DEFAULT_BASE_URL;
 }
 
-/** 获取当前选择的 Kimi 模型 */
+/** 获取当前使用的 Kimi 模型（固定为 k2.6） */
 export function getKimiModel(): string {
-  return localStorage.getItem(MODEL_STORAGE_KEY) || DEFAULT_MODEL;
+  // 忽略 localStorage 中可能遗留的其他模型配置，始终使用 k2.6
+  localStorage.removeItem('qlab_kimi_model');
+  localStorage.removeItem('kimi_model_preference');
+  return DEFAULT_MODEL;
 }
 
-/** 设置 Kimi 模型 */
-export function setKimiModel(model: string): void {
-  localStorage.setItem(MODEL_STORAGE_KEY, model);
-}
-
-/** 获取模型显示名称 */
-export function getModelDisplayName(modelId: string): string {
-  if (modelId.includes('k3')) return 'Kimi 3.0';
-  if (modelId.includes('k2.6')) return 'Kimi 2.6';
-  return modelId;
+/** 获取模型显示名称（固定为 Kimi 2.6） */
+export function getModelDisplayName(): string {
+  return 'Kimi 2.6';
 }
 
 export interface KimiApiOptions {
