@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Cpu, CheckCircle2, RefreshCw, Wifi } from 'lucide-react';
+import { Cpu, BrainCircuit, CheckCircle2, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { getProvider, getProviderConfig, getModelDisplayName, type LLMProvider } from '../lib/llmApi';
 
 type VersionStatus = 'checking' | 'latest' | 'offline' | 'error';
 
@@ -9,23 +10,22 @@ interface VersionInfo {
   lastChecked: string;
 }
 
-/** 模拟 API 连接检测 */
-async function detectKimiVersion(): Promise<VersionInfo> {
+async function detectConnection(): Promise<VersionInfo> {
   try {
-    const storedStatus = localStorage.getItem('kimi_version_status');
+    const config = getProviderConfig();
+    const storedStatus = localStorage.getItem('llm_connection_status');
 
     if (storedStatus === 'offline') {
       return {
         status: 'offline',
-        message: '无法连接到 Kimi API 服务，请检查网络或 API Key 配置',
+        message: `无法连接到 ${config.displayName} API 服务，请检查网络或 API Key 配置`,
         lastChecked: new Date().toLocaleTimeString('zh-CN'),
       };
     }
 
-    // 固定 Kimi 2.6
     return {
       status: 'latest',
-      message: '✅ 已连接到 Kimi 2.6，分析精度最优',
+      message: `✅ 已连接到 ${config.displayName}，分析精度最优`,
       lastChecked: new Date().toLocaleTimeString('zh-CN'),
     };
   } catch (err) {
@@ -38,16 +38,19 @@ async function detectKimiVersion(): Promise<VersionInfo> {
 }
 
 export default function KimiVersionDisplay() {
+  const [provider, setProvider] = useState<LLMProvider>(getProvider);
   const [info, setInfo] = useState<VersionInfo>({
     status: 'checking',
-    message: '正在检测 Kimi API 连接...',
+    message: '正在检测 API 连接...',
     lastChecked: '-',
   });
   const [expanded, setExpanded] = useState(false);
 
   const runCheck = useCallback(async () => {
+    const current = getProvider();
+    setProvider(current);
     setInfo(prev => ({ ...prev, status: 'checking', message: '正在检测...' }));
-    const result = await detectKimiVersion();
+    const result = await detectConnection();
     setInfo(result);
   }, []);
 
@@ -55,14 +58,18 @@ export default function KimiVersionDisplay() {
     runCheck();
   }, [runCheck]);
 
-  const statusConfig: Record<VersionStatus, { color: string; bg: string; dot: string }> = {
-    checking:  { color: 'text-slate-400', bg: 'bg-slate-100', dot: 'bg-slate-400' },
-    latest:    { color: 'text-emerald-600', bg: 'bg-emerald-50', dot: 'bg-emerald-500' },
-    offline:   { color: 'text-gray-500', bg: 'bg-gray-100', dot: 'bg-gray-400' },
-    error:     { color: 'text-orange-600', bg: 'bg-orange-50', dot: 'bg-orange-500' },
+  const isKimi = provider === 'kimi';
+  const displayName = getModelDisplayName();
+
+  const statusConfig: Record<VersionStatus, { color: string; bg: string; dot: string; icon: typeof Cpu }> = {
+    checking:  { color: 'text-slate-400', bg: 'bg-slate-100', dot: 'bg-slate-400', icon: RefreshCw },
+    latest:    { color: 'text-emerald-600', bg: 'bg-emerald-50', dot: 'bg-emerald-500', icon: CheckCircle2 },
+    offline:   { color: 'text-gray-500', bg: 'bg-gray-100', dot: 'bg-gray-400', icon: WifiOff },
+    error:     { color: 'text-orange-600', bg: 'bg-orange-50', dot: 'bg-orange-500', icon: WifiOff },
   };
 
   const cfg = statusConfig[info.status];
+  const Icon = isKimi ? Cpu : BrainCircuit;
 
   return (
     <div className="relative">
@@ -72,9 +79,9 @@ export default function KimiVersionDisplay() {
         title={info.message}
       >
         <span className={`w-2 h-2 rounded-full ${cfg.dot} ${info.status === 'checking' ? 'animate-pulse' : ''}`} />
-        <Cpu className={`w-3 h-3 ${cfg.color}`} />
+        <Icon className={`w-3 h-3 ${cfg.color}`} />
         <span className={cfg.color}>
-          {info.status === 'checking' ? '检测中...' : 'Kimi 2.6'}
+          {info.status === 'checking' ? '检测中...' : displayName}
         </span>
       </button>
 
@@ -102,8 +109,12 @@ export default function KimiVersionDisplay() {
 
           <div className="text-[10px] text-slate-400 space-y-0.5">
             <div className="flex justify-between">
+              <span>当前 Provider</span>
+              <span className="font-mono text-slate-600">{isKimi ? 'Kimi (Moonshot)' : 'DeepSeek'}</span>
+            </div>
+            <div className="flex justify-between">
               <span>当前模型</span>
-              <span className="font-mono text-emerald-600">Kimi 2.6</span>
+              <span className="font-mono text-emerald-600">{displayName}</span>
             </div>
             <div className="flex justify-between">
               <span>检测时间</span>

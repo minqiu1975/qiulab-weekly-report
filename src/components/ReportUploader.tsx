@@ -32,7 +32,7 @@ import { saveDynamicTrends, saveDynamicHistory, addUploadedDate, addWeekLabel, a
 import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { cloudStorage } from '../services/cloudStorage';
 import { getTodayStr, formatTimeInfo } from '../lib/dateContext';
-import { callKimiApi } from '../lib/kimiApi';
+import { callKimiApi, getModelDisplayName } from '../lib/kimiApi';
 import { callKimiDeepAnalysis, estimateDeepAnalysisCost } from './DeepAnalysisPanel';
 import { saveDeepAnalysis } from '../lib/dynamicStorage';
 import type { WeekTrend } from '../data/mockTrends';
@@ -875,7 +875,8 @@ export default function ReportUploader() {
 
     const estimatedCost = submittedCount * COST_PER_PERSON;
 
-    const versionLine = `[${new Date().toLocaleTimeString()}] 模型: Kimi 2.6 ✅`;
+    const modelName = getModelDisplayName();
+    const versionLine = `[${new Date().toLocaleTimeString()}] 模型: ${modelName} ✅`;
 
     const logs: string[] = [
       `[${new Date().toLocaleTimeString()}] 启动AI分析流程...`,
