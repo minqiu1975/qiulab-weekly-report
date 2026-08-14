@@ -87,15 +87,31 @@ function mergeWithLocalStorage(staticPersons: Person[]): Person[] {
         return person;
       });
 
-    if (newMembers.length > 0) {
-      console.log('[usePersons] 添加新成员到列表:', newMembers.map((m) => m.name));
-      merged.push(...newMembers);
-    } else {
-      console.log('[usePersons] 无新成员需要添加');
+    // 3. 自动去重：按 name + role + subRole 组合键去重，保留最新的（后出现的）
+    const dedupMap = new Map<string, Person>();
+    for (const person of merged) {
+      const key = `${person.name}|${person.role}|${person.subRole || ''}`;
+      dedupMap.set(key, person); // 后出现的覆盖先出现的
+    }
+    for (const person of newMembers) {
+      const key = `${person.name}|${person.role}|${person.subRole || ''}`;
+      if (!dedupMap.has(key)) {
+        dedupMap.set(key, person);
+      } else {
+        console.log('[usePersons] ⚠️ 发现重复成员，跳过:', person.name, person.id);
+      }
     }
 
-    console.log('[usePersons] 最终合并结果:', merged.length, '人, 名单:', merged.map(p => p.name).join('、'));
-    return merged;
+    const deduped = Array.from(dedupMap.values());
+
+    if (newMembers.length > 0) {
+      console.log('[usePersons] 添加新成员到列表:', newMembers.map((m) => m.name));
+    }
+    if (deduped.length < merged.length + newMembers.length) {
+      console.log('[usePersons] 去重后移除', merged.length + newMembers.length - deduped.length, '个重复项');
+    }
+    console.log('[usePersons] 最终合并结果:', deduped.length, '人, 名单:', deduped.map(p => p.name).join('、'));
+    return deduped;
   } catch {
     return staticPersons;
   }

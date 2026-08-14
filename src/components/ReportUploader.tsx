@@ -540,14 +540,14 @@ function loadCurrentMembers(): { id: string; name: string; role: string }[] {
   return ACTIVE_PERSONS.map(p => ({ id: p.id, name: p.name, role: p.role }));
 }
 
-/** 保存新成员到 localStorage */
+/** 保存新成员到 localStorage（自动检测同名重复，有则更新而非新建） */
 function saveNewMember(
   name: string,
   role: string,
   roleLabel: string,
   subRole: string,
   researchDirection: string
-): { id: string; name: string } | null {
+): { id: string; name: string; isExisting: boolean } | null {
   try {
     const STORAGE_KEY = 'qlab_persons_v5';
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -556,6 +556,24 @@ function saveNewMember(
       try { members = JSON.parse(raw); } catch { /* ignore */ }
     }
     if (!Array.isArray(members)) members = [];
+
+    // 🔍 检查是否已存在同名成员（按名字 + 角色 + 年级 匹配）
+    const existingIndex = members.findIndex((m: any) =>
+      m.name === name && m.role === role && m.subRole === subRole
+    );
+    if (existingIndex >= 0) {
+      console.log('[saveNewMember] 同名成员已存在，跳过创建:', name, members[existingIndex].id);
+      return { id: members[existingIndex].id, name, isExisting: true };
+    }
+
+    // 同时检查静态数据中是否已存在（避免把静态成员又存一遍）
+    const staticMatch = ACTIVE_PERSONS.find((p) =>
+      p.name === name && p.role === role && p.subRole === subRole
+    );
+    if (staticMatch) {
+      console.log('[saveNewMember] 静态数据中已存在同名成员，跳过:', name, staticMatch.id);
+      return { id: staticMatch.id, name, isExisting: true };
+    }
 
     // 生成ID
     const prefix = role === 'phd' ? 'd' : role === 'undergraduate' ? 'x' : 'p';
@@ -603,7 +621,7 @@ function saveNewMember(
       }, 100);
     }
 
-    return { id: newId, name };
+    return { id: newId, name, isExisting: false };
   } catch (e) {
     console.error('[ReportUploader] saveNewMember error:', e);
     return null;

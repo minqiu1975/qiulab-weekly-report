@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import {
   Settings, Users, Pencil, Save, X, GraduationCap, FlaskConical, BookOpen, UserCog, CheckCircle2, Archive,
   Cloud, CloudOff, Upload, Download, Database, RefreshCw, CheckCircle, AlertTriangle, ExternalLink,
-  Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap
+  Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap, Trash2
 } from 'lucide-react';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { useCloudStorage, cloudStorage, BaiduPanProvider, BAIDU_PAN_BUILTIN, SUPABASE_BUILTIN } from '../services/cloudStorage';
@@ -1025,6 +1025,15 @@ export default function SettingsPage() {
     notifyPersonsUpdated();
   };
 
+  const handleDeleteMember = (m: TeamMember) => {
+    if (!window.confirm(`确定要删除成员「${m.name}」吗？\n\n此操作不可恢复。`)) return;
+    const updated = members.filter(member => member.id !== m.id);
+    setMembers(updated);
+    saveMembers(updated);
+    setSaved(true);
+    notifyPersonsUpdated();
+  };
+
   const getStatusBadge = (status: string) => {
     const { label, color } = normalizeStatusForDisplay(status);
     return <Badge className={color}>{label}</Badge>;
@@ -1504,9 +1513,14 @@ export default function SettingsPage() {
                                   )}
                                 </TableCell>
                                 <TableCell>
-                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-cyan-600" onClick={() => startEdit(m)}>
-                                    <Pencil className="w-3.5 h-3.5" />
-                                  </Button>
+                                  <div className="flex gap-1">
+                                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-cyan-600" onClick={() => startEdit(m)}>
+                                      <Pencil className="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-red-600" onClick={() => handleDeleteMember(m)}>
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
+                                  </div>
                                 </TableCell>
                               </>
                             )}
@@ -1602,7 +1616,10 @@ export default function SettingsPage() {
                                 {m.role === 'phd' && m.graduationDate ? <span className="text-emerald-500">{m.graduationDate}</span> : (m.role === 'postdoc' || m.role === 'visitor') && m.exitDate ? <span className="text-amber-500">{m.exitDate}</span> : (m.role === 'researcher' || m.role === 'associate_researcher' || m.role === 'assistant_researcher') && m.contractEndDate ? <span className="text-blue-400">{m.contractEndDate}</span> : <span className="text-slate-300">-</span>}
                               </TableCell>
                               <TableCell>
-                                <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-cyan-600" onClick={() => startEdit(m)}><Pencil className="w-3.5 h-3.5" /></Button>
+                                <div className="flex gap-1">
+                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-cyan-600" onClick={() => startEdit(m)}><Pencil className="w-3.5 h-3.5" /></Button>
+                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-slate-400 hover:text-red-600" onClick={() => handleDeleteMember(m)}><Trash2 className="w-3.5 h-3.5" /></Button>
+                                </div>
                               </TableCell>
                             </>
                           )}
