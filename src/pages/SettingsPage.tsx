@@ -413,7 +413,6 @@ function CloudSyncPanel() {
 // ==================== Kimi API Key 配置面板 ====================
 
 // 内置默认 Key（与 DeepAnalysisPanel.tsx 保持一致）
-const DEFAULT_MOONSHOT_KEY = 'sk-HjX9XXQNNHzrD1zlJRdD7zqY6HXFRpa4VsW6lSc2F742GHbg';
 const DEFAULT_MOONSHOT_URL = 'https://api.moonshot.cn/v1';
 
 function LLMConfigPanel() {
@@ -430,8 +429,7 @@ function LLMConfigPanel() {
   const [showKey, setShowKey] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // 是否使用了用户自定义的 Key（非默认）
-  const isCustomKimiKey = !!kimiApiKey && kimiApiKey !== DEFAULT_MOONSHOT_KEY;
+  const hasKimiKey = !!kimiApiKey;
   const isCustomKimiUrl = !!kimiApiUrl && kimiApiUrl !== DEFAULT_MOONSHOT_URL;
   const hasDsKey = !!dsApiKey;
   const isKimi = currentProvider === 'kimi';
@@ -483,7 +481,7 @@ function LLMConfigPanel() {
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-3">
         <div className="text-xs text-slate-500 leading-relaxed">
-          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi 2.6 内置实验室共享 Key，开箱即用；DeepSeek 4 需要自行配置 API Key。
+          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi 2.6 和 DeepSeek 4 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
         </div>
 
         {/* Provider 选择 */}
@@ -501,7 +499,7 @@ function LLMConfigPanel() {
               <Cpu className={`w-4 h-4 ${isKimi ? 'text-cyan-600' : 'text-slate-400'}`} />
               <div className="text-left">
                 <div className="font-medium">Kimi 2.6</div>
-                <div className="text-[10px] opacity-70">内置 Key，开箱即用</div>
+                <div className="text-[10px] opacity-70">需配置个人 API Key</div>
               </div>
               {isKimi && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
             </button>
@@ -542,13 +540,13 @@ function LLMConfigPanel() {
             <div className="flex items-center justify-between p-2 rounded bg-slate-50">
               <span className="text-xs text-slate-600">Kimi 状态</span>
               <div className="flex gap-1">
-                {isCustomKimiKey ? (
+                {hasKimiKey ? (
                   <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 flex items-center gap-1">
-                    <CheckCircle className="w-3 h-3" />自定义 Key
+                    <CheckCircle className="w-3 h-3" />已配置 Key
                   </Badge>
                 ) : (
-                  <Badge className="bg-blue-100 text-blue-700 border-blue-200 flex items-center gap-1">
-                    <CheckCircle className="w-3 h-3" />内置 Key
+                  <Badge className="bg-red-100 text-red-700 border-red-200 flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />未配置 Key
                   </Badge>
                 )}
                 <Badge className={`flex items-center gap-1 ${isCustomKimiUrl ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
@@ -579,7 +577,7 @@ function LLMConfigPanel() {
                   type={showKey ? 'text' : 'password'}
                   value={kimiApiKey}
                   onChange={(e) => setKimiApiKey(e.target.value)}
-                  placeholder="留空则使用内置默认 Key"
+                  placeholder="sk-... 从 platform.moonshot.cn 获取"
                   className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
                 />
                 <button

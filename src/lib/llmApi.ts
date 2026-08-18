@@ -20,9 +20,8 @@ export interface ProviderConfig {
 }
 
 // ============================================================
-// Kimi 默认配置
+// Kimi 默认配置（不再内置共享 Key，用户需自行配置）
 // ============================================================
-const KIMI_DEFAULT_API_KEY = 'sk-HjX9XXQNNHzrD1zlJRdD7zqY6HXFRpa4VsW6lSc2F742GHbg';
 const KIMI_API_KEY_KEY = 'qlab_moonshot_api_key';
 const KIMI_URL_KEY = 'qlab_moonshot_api_url';
 const KIMI_DEFAULT_URL = 'https://api.moonshot.cn/v1';
@@ -68,7 +67,7 @@ export function getProviderConfig(): ProviderConfig {
     provider: 'kimi',
     displayName: 'Kimi 2.6',
     modelId: KIMI_MODEL,
-    apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || KIMI_DEFAULT_API_KEY,
+    apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
     baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
   };
 }
@@ -143,6 +142,14 @@ export async function callLLMApi(
     systemPrompt = '你是一个专业的科研顾问助手。',
     maxTokens = 4000,
   } = options;
+
+  // 前置检查：API Key 是否已配置
+  if (!config.apiKey) {
+    const providerName = config.provider === 'kimi' ? 'Kimi' : 'DeepSeek';
+    throw new Error(
+      `${providerName} API Key 未配置。请在「设置」→「AI 模型配置」中填写您的 API Key 后再试。`
+    );
+  }
 
   // 自动注入当前日期前缀
   const datePrefix = getDatePrefix();
