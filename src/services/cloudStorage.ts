@@ -78,6 +78,7 @@ export interface SupabaseConfig extends ProviderConfig {
   type: 'supabase';
   url?: string;       // 可选，为空时使用内置配置
   anonKey?: string;   // 可选，为空时使用内置配置
+  rlsSecret?: string; // 可选 RLS 共享密钥，用于纯前端 RLS 策略验证
 }
 
 export interface RestApiConfig extends ProviderConfig {
@@ -111,6 +112,9 @@ export const BAIDU_PAN_BUILTIN = {
 export const SUPABASE_BUILTIN = {
   url: 'https://avwunqxtcidgdwwfhnlk.supabase.co',
   anonKey: 'sb_publishable_vORN-snY_J6cxlHM7Clqzg_Zb5vddYf',
+  // RLS 共享密钥：在 Supabase Dashboard 的 qlab_data 表策略中引用
+  // 用于纯前端应用的 RLS 策略验证（替代用户认证）
+  rlsSecret: 'qlab-rls-2026-secure-key',
 } as const;
 
 // ==================== Provider 接口 ====================
@@ -163,17 +167,22 @@ export function lsSet(key: string, value: unknown): void {
 class SupabaseProvider implements CloudProvider {
   private url: string;
   private key: string;
+  private rlsSecret: string;
   private table = 'qlab_data';
 
   constructor(config?: SupabaseConfig) {
     this.url = (config?.url || SUPABASE_BUILTIN.url).replace(/\/$/, '');
     this.key = config?.anonKey || SUPABASE_BUILTIN.anonKey;
+    this.rlsSecret = config?.rlsSecret || SUPABASE_BUILTIN.rlsSecret;
   }
 
   private async request(method: string, path: string, body?: unknown): Promise<unknown> {
     const headers: Record<string, string> = {
       apikey: this.key,
       Authorization: `Bearer ${this.key}`,
+      // RLS 共享密钥：纯前端应用通过自定义 Header 验证身份
+      // 对应 Supabase Dashboard 中 qlab_data 表的 RLS 策略条件
+      'X-QiuLab-Secret': this.rlsSecret,
     };
     // GET/HEAD 请求不需要 Content-Type 和 Prefer
     if (method !== 'GET' && method !== 'HEAD') {
