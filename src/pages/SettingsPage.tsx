@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import {
   Settings, Users, Pencil, Save, X, GraduationCap, FlaskConical, BookOpen, UserCog, CheckCircle2, Archive,
   Cloud, CloudOff, Upload, Download, Database, RefreshCw, CheckCircle, AlertTriangle, ExternalLink,
-  Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap, Trash2
+  Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap, Trash2, Coins
 } from 'lucide-react';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { useCloudStorage, cloudStorage, BaiduPanProvider, BAIDU_PAN_BUILTIN, SUPABASE_BUILTIN } from '../services/cloudStorage';
@@ -577,6 +577,18 @@ function LLMConfigPanel() {
                 <li><strong>api.moonshot.cn</strong>（默认）— 对应中国大陆站 platform.moonshot.cn 注册的 Key</li>
                 <li><strong>api.moonshot.ai</strong> — 对应国际站 platform.moonshot.ai 注册的 Key</li>
                 <li>两个端点的 Key 不互通，用错会报 401 Invalid Authentication</li>
+              </ul>
+            </div>
+
+            <div className="p-2 rounded bg-cyan-50 border border-cyan-200 text-cyan-800 text-xs leading-relaxed">
+              <div className="font-semibold mb-1 flex items-center gap-1.5">
+                <Coins className="w-3.5 h-3.5" />
+                定价说明
+              </div>
+              <ul className="list-disc list-outside ml-3.5 space-y-1">
+                <li><strong>Kimi-K2.6</strong>: 缓存命中 ¥1.10/M · 输入 ¥6.50/M · 输出 ¥27.00/M</li>
+                <li><strong>Kimi-K3</strong>: 缓存命中 ¥2.00/M · 输入 ¥20.00/M · 输出 ¥100.00/M</li>
+                <li>K3 价格显著高于 K2.6，请根据分析精度需求选择</li>
               </ul>
             </div>
 

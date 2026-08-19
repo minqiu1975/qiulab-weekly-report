@@ -141,11 +141,12 @@ export function setDeepSeekBaseUrl(url: string): void {
 }
 
 // ============================================================
-// 模型定价（人民币/百万 tokens，输入缓存未命中 / 输出）
+// 模型定价（人民币/百万 tokens）
 // ============================================================
 export interface ModelPricing {
-  inputPrice: number;   // ¥/百万 tokens (cache miss)
-  outputPrice: number;  // ¥/百万 tokens
+  inputPrice: number;    // ¥/百万 tokens (缓存未命中)
+  cacheHitPrice: number; // ¥/百万 tokens (缓存命中)
+  outputPrice: number;   // ¥/百万 tokens
   name: string;
 }
 
@@ -153,15 +154,17 @@ export function getModelPricing(): ModelPricing {
   const provider = getProvider();
   switch (provider) {
     case 'kimi30':
-      return { inputPrice: 6.50, outputPrice: 27.00, name: 'Kimi-K3' };
+      // Kimi-K3: 缓存命中 ¥2.00/M, 输入 ¥20.00/M, 输出 ¥100.00/M
+      return { inputPrice: 20.00, cacheHitPrice: 2.00, outputPrice: 100.00, name: 'Kimi-K3' };
     case 'deepseek-flash':
       // 闲时价格（高峰为 2 倍）
-      return { inputPrice: 1.50, outputPrice: 4.50, name: 'DeepSeek-V4-Flash' };
+      return { inputPrice: 1.50, cacheHitPrice: 0.50, outputPrice: 4.50, name: 'DeepSeek-V4-Flash' };
     case 'deepseek-pro':
-      return { inputPrice: 4.50, outputPrice: 13.50, name: 'DeepSeek-V4-Pro' };
+      return { inputPrice: 4.50, cacheHitPrice: 0.50, outputPrice: 13.50, name: 'DeepSeek-V4-Pro' };
     case 'kimi26':
     default:
-      return { inputPrice: 6.50, outputPrice: 27.00, name: 'Kimi-K2.6' };
+      // Kimi-K2.6: 缓存命中 ¥1.10/M, 输入 ¥6.50/M, 输出 ¥27.00/M
+      return { inputPrice: 6.50, cacheHitPrice: 1.10, outputPrice: 27.00, name: 'Kimi-K2.6' };
   }
 }
 // ============================================================

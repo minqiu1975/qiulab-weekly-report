@@ -54,10 +54,21 @@ function getActiveResearcherNames(persons: typeof ACTIVE_PERSONS) { return perso
 function getActiveStudentNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['phd', 'undergraduate', 'visitor'].includes(p.role)).map(p => p.name); }
 
 // Cost estimation helper: returns per-person cost based on current model
+// For batch analysis, system prompt (~300 tokens) is cached after first call,
+// so subsequent calls benefit from cache-hit pricing.
 function getWeeklyAnalysisCost(): number {
   const pricing = getModelPricing();
-  // 周报分析: ~400 tokens 输入 + ~70 tokens 输出 = ~470 tokens/人
-  return (400 / 1_000_000) * pricing.inputPrice + (70 / 1_000_000) * pricing.outputPrice;
+  // 周报分析 per person (blended rate for batch):
+  // - System prompt ~300t: 1st @ inputPrice, rest @ cacheHitPrice
+  // - Person report ~100t: always @ inputPrice (unique each time)
+  // - Output ~70t: always @ outputPrice
+  const systemPromptTokens = 300;
+  const reportTokens = 100;
+  const outputTokens = 70;
+  // Blended: assume system prompt is cached for most calls in a batch
+  const blendedInputCost = ((systemPromptTokens * pricing.cacheHitPrice + reportTokens * pricing.inputPrice) / 1_000_000);
+  const outputCost = (outputTokens / 1_000_000) * pricing.outputPrice;
+  return blendedInputCost + outputCost;
 }
 
 // Legacy constant for backward compat in non-UI code
@@ -1910,7 +1921,7 @@ export default function ReportUploader() {
               </div>
             </div>
             <div className="text-[10px] text-slate-400 mt-2">
-              仅对已提交{actualCount}人进行AI分析（未提交{knownMissing.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{getWeeklyAnalysisCost().toFixed(4)}元/人（{getModelPricing().name}: 输入¥{getModelPricing().inputPrice}/百万 + 输出¥{getModelPricing().outputPrice}/百万）。
+              仅对已提交{actualCount}人进行AI分析（未提交{knownMissing.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{getWeeklyAnalysisCost().toFixed(4)}元/人（{getModelPricing().name}: 缓存命中¥{getModelPricing().cacheHitPrice}/百万 · 输入¥{getModelPricing().inputPrice}/百万 · 输出¥{getModelPricing().outputPrice}/百万）。
               {includeDeepAnalysis && (
                 <span className="text-cyan-600 ml-1">+ 深度评估{activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length}人，~{estimateDeepAnalysisCost().tokens}tokens/人，约¥{estimateDeepAnalysisCost().cost.toFixed(4)}元/人。</span>
               )}
@@ -2120,15 +2131,14 @@ export default function ReportUploader() {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-600">输入Token ({(analysisProgress.completed * 400 / 1000).toFixed(1)}K @ ¥{getModelPricing().inputPrice}/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 400 * getModelPricing().inputPrice / 1_000_000).toFixed(4)} 元</span>
+                <span className="text-slate-600">输入Token (已缓存系统提示 + 个人周报)</span>
+                <span className="font-medium">{totalCost.toFixed(4)} 元</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-600">输出Token ({(analysisProgress.completed * 70 / 1000).toFixed(1)}K @ ¥{getModelPricing().outputPrice}/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 70 * getModelPricing().outputPrice / 1_000_000).toFixed(4)} 元</span>
+              <div className="text-[10px] text-slate-400 -mt-1">
+                定价: 缓存命中 ¥{getModelPricing().cacheHitPrice}/M · 输入(未缓存) ¥{getModelPricing().inputPrice}/M · 输出 ¥{getModelPricing().outputPrice}/M
               </div>
               <div className="flex justify-between py-1 font-semibold text-slate-800">
-                <span>合计</span>
+                <span>合计 ({analysisProgress.completed} 人)</span>
                 <span className="text-amber-700">{totalCost.toFixed(3)} 元</span>
               </div>
             </div>
