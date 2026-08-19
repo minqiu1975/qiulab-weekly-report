@@ -131,8 +131,12 @@ export function buildDeepAnalysisPrompt(person: Person): string {
  */
 /** 导出：预估单个人深度分析费用 */
 export function estimateDeepAnalysisCost(): { tokens: number; cost: number } {
-  const inputTokens = 200;
-  const outputTokens = 510;
+  // 深度分析实际消耗（基于真实账单校准）：
+  // - 输入 ~3000 tokens（系统提示 + 人物简历 + 历史周报 + 论文列表 + 项目摘要）
+  // - 输出 ~1500 tokens（进度评价 + 热点分析 + 建议 + 风险评估 + 总结）
+  // 用 K3 时约 ¥0.21/人，全体 15 人约 ¥3.15（与账单经验一致）
+  const inputTokens = 3000;
+  const outputTokens = 1500;
   const totalTokens = inputTokens + outputTokens;
   const pricing = getModelPricing();
   const inputCost = (inputTokens / 1_000_000) * pricing.inputPrice;
