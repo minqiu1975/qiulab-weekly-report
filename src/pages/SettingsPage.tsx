@@ -418,7 +418,7 @@ const DEFAULT_MOONSHOT_URL = 'https://api.moonshot.cn/v1';
 function LLMConfigPanel() {
   const currentProvider = getProvider();
 
-  // Kimi state
+  // Kimi state (shared between k2.6 and k3.0)
   const [kimiApiKey, setKimiApiKey] = useState(() => localStorage.getItem('qlab_moonshot_api_key') || '');
   const [kimiApiUrl, setKimiApiUrl] = useState(() => localStorage.getItem('qlab_moonshot_api_url') || DEFAULT_MOONSHOT_URL);
 
@@ -432,7 +432,10 @@ function LLMConfigPanel() {
   const hasKimiKey = !!kimiApiKey;
   const isCustomKimiUrl = !!kimiApiUrl && kimiApiUrl !== DEFAULT_MOONSHOT_URL;
   const hasDsKey = !!dsApiKey;
-  const isKimi = currentProvider === 'kimi';
+  const isKimi26 = currentProvider === 'kimi26';
+  const isKimi30 = currentProvider === 'kimi30';
+  const isDeepSeek = currentProvider === 'deepseek';
+  const isKimi = isKimi26 || isKimi30;
 
   const handleSave = () => {
     // Save Kimi config
@@ -481,43 +484,59 @@ function LLMConfigPanel() {
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-3">
         <div className="text-xs text-slate-500 leading-relaxed">
-          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi 2.6 和 DeepSeek 4 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
+          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi 2.6 / 3.0 和 DeepSeek 4 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
         </div>
 
         {/* Provider 选择 */}
         <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 space-y-2">
           <label className="text-xs font-medium text-slate-700">选择 AI 模型</label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <button
-              onClick={() => { setProvider('kimi'); setSaved(false); }}
+              onClick={() => { setProvider('kimi26'); setSaved(false); }}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
-                isKimi
+                isKimi26
                   ? 'border-cyan-300 bg-cyan-50 text-cyan-800'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Cpu className={`w-4 h-4 ${isKimi ? 'text-cyan-600' : 'text-slate-400'}`} />
+              <Cpu className={`w-4 h-4 ${isKimi26 ? 'text-cyan-600' : 'text-slate-400'}`} />
               <div className="text-left">
                 <div className="font-medium">Kimi 2.6</div>
-                <div className="text-[10px] opacity-70">需配置个人 API Key</div>
+                <div className="text-[10px] opacity-70">需配置 API Key</div>
               </div>
-              {isKimi && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
+              {isKimi26 && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
+            </button>
+
+            <button
+              onClick={() => { setProvider('kimi30'); setSaved(false); }}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
+                isKimi30
+                  ? 'border-teal-300 bg-teal-50 text-teal-800'
+                  : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+              }`}
+            >
+              <Cpu className={`w-4 h-4 ${isKimi30 ? 'text-teal-600' : 'text-slate-400'}`} />
+              <div className="text-left">
+                <div className="font-medium">Kimi 3.0</div>
+                <div className="text-[10px] opacity-70">需配置 API Key</div>
+              </div>
+              {isKimi30 && <CheckCircle className="w-4 h-4 text-teal-600 ml-auto" />}
             </button>
 
             <button
               onClick={() => { setProvider('deepseek'); setSaved(false); }}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
-                !isKimi
+                isDeepSeek
                   ? 'border-indigo-300 bg-indigo-50 text-indigo-800'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Zap className={`w-4 h-4 ${!isKimi ? 'text-indigo-600' : 'text-slate-400'}`} />
+              <Zap className={`w-4 h-4 ${isDeepSeek ? 'text-indigo-600' : 'text-slate-400'}`} />
               <div className="text-left">
                 <div className="font-medium">DeepSeek 4</div>
-                <div className="text-[10px] opacity-70">需配置个人 API Key</div>
+                <div className="text-[10px] opacity-70">需配置 API Key</div>
               </div>
-              {!isKimi && <CheckCircle className="w-4 h-4 text-indigo-600 ml-auto" />}
+              {isDeepSeek && <CheckCircle className="w-4 h-4 text-indigo-600 ml-auto" />}
             </button>
           </div>
         </div>
@@ -552,8 +571,8 @@ function LLMConfigPanel() {
                 <Badge className={`flex items-center gap-1 ${isCustomKimiUrl ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                   {kimiApiUrl.includes('.ai') ? '国际站' : '中国站'}
                 </Badge>
-                <Badge className="bg-cyan-100 text-cyan-700 border-cyan-200 flex items-center gap-1">
-                  <Cpu className="w-3 h-3" /> Kimi 2.6
+                <Badge className={`flex items-center gap-1 ${isKimi30 ? 'bg-teal-100 text-teal-700 border-teal-200' : 'bg-cyan-100 text-cyan-700 border-cyan-200'}`}>
+                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi 3.0' : 'Kimi 2.6'}
                 </Badge>
               </div>
             </div>
@@ -593,7 +612,7 @@ function LLMConfigPanel() {
         )}
 
         {/* DeepSeek 配置 */}
-        {!isKimi && (
+        {isDeepSeek && (
           <div className="space-y-3">
             <div className="p-2 rounded bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs leading-relaxed">
               <div className="font-semibold mb-1 flex items-center gap-1.5">
@@ -661,7 +680,11 @@ function LLMConfigPanel() {
         )}
 
         <div className="flex gap-2">
-          <Button size="sm" className={`text-xs flex-1 ${isKimi ? 'bg-cyan-600 hover:bg-cyan-700' : 'bg-indigo-600 hover:bg-indigo-700'}`} onClick={handleSave}>
+          <Button size="sm" className={`text-xs flex-1 ${
+            isDeepSeek ? 'bg-indigo-600 hover:bg-indigo-700' : 
+            isKimi30 ? 'bg-teal-600 hover:bg-teal-700' : 
+            'bg-cyan-600 hover:bg-cyan-700'
+          }`} onClick={handleSave}>
             <CheckCircle className="w-3 h-3 mr-1" />
             保存配置
           </Button>
@@ -672,7 +695,11 @@ function LLMConfigPanel() {
         </div>
 
         {saved && (
-          <div className={`p-2 rounded border text-xs flex items-center gap-1.5 ${isKimi ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-indigo-50 border-indigo-200 text-indigo-700'}`}>
+          <div className={`p-2 rounded border text-xs flex items-center gap-1.5 ${
+            isDeepSeek ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 
+            isKimi30 ? 'bg-teal-50 border-teal-200 text-teal-700' : 
+            'bg-emerald-50 border-emerald-200 text-emerald-700'
+          }`}>
             <CheckCircle className="w-3 h-3" />
             配置已保存
           </div>

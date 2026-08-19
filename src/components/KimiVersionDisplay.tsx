@@ -58,7 +58,8 @@ export default function KimiVersionDisplay() {
     runCheck();
   }, [runCheck]);
 
-  const isKimi = provider === 'kimi';
+  const isKimi30 = provider === 'kimi30';
+  const isDeepSeek = provider === 'deepseek';
   const displayName = getModelDisplayName();
 
   const statusConfig: Record<VersionStatus, { color: string; bg: string; dot: string; icon: typeof Cpu }> = {
@@ -69,7 +70,7 @@ export default function KimiVersionDisplay() {
   };
 
   const cfg = statusConfig[info.status];
-  const Icon = isKimi ? Cpu : BrainCircuit;
+  const Icon = isDeepSeek ? BrainCircuit : Cpu;
 
   return (
     <div className="relative">
@@ -110,7 +111,9 @@ export default function KimiVersionDisplay() {
           <div className="text-[10px] text-slate-400 space-y-0.5">
             <div className="flex justify-between">
               <span>当前 Provider</span>
-              <span className="font-mono text-slate-600">{isKimi ? 'Kimi (Moonshot)' : 'DeepSeek'}</span>
+              <span className="font-mono text-slate-600">
+                {isDeepSeek ? 'DeepSeek' : isKimi30 ? 'Kimi 3.0' : 'Kimi 2.6'}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>当前模型</span>

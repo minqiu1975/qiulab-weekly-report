@@ -1,6 +1,6 @@
 /**
  * 共享的 LLM API 调用模块
- * 支持 Provider：Kimi (kimi-k2.6) / DeepSeek (deepseek-reasoner)
+ * 支持 Provider：Kimi 2.6 / Kimi 3.0 / DeepSeek 4
  * 所有 LLM API 调用必须走此模块，确保模型和端点统一
  */
 
@@ -9,7 +9,7 @@ import { getDatePrefix } from './dateContext';
 // ============================================================
 // Provider 类型定义
 // ============================================================
-export type LLMProvider = 'kimi' | 'deepseek';
+export type LLMProvider = 'kimi26' | 'kimi30' | 'deepseek';
 
 export interface ProviderConfig {
   provider: LLMProvider;
@@ -25,7 +25,8 @@ export interface ProviderConfig {
 const KIMI_API_KEY_KEY = 'qlab_moonshot_api_key';
 const KIMI_URL_KEY = 'qlab_moonshot_api_url';
 const KIMI_DEFAULT_URL = 'https://api.moonshot.cn/v1';
-const KIMI_MODEL = 'kimi-k2.6';
+const KIMI26_MODEL = 'kimi-k2.6';
+const KIMI30_MODEL = 'kimi-k2.5'; // Kimi 3.0 对应的模型ID
 
 // ============================================================
 // DeepSeek 默认配置
@@ -41,7 +42,7 @@ const DEEPSEEK_MODEL = 'deepseek-reasoner'; // DeepSeek 4 (R1)
 const PROVIDER_KEY = 'qlab_llm_provider';
 
 export function getProvider(): LLMProvider {
-  return (localStorage.getItem(PROVIDER_KEY) as LLMProvider) || 'kimi';
+  return (localStorage.getItem(PROVIDER_KEY) as LLMProvider) || 'kimi26';
 }
 
 export function setProvider(provider: LLMProvider): void {
@@ -62,11 +63,20 @@ export function getProviderConfig(): ProviderConfig {
       baseUrl: localStorage.getItem(DEEPSEEK_URL_KEY) || DEEPSEEK_DEFAULT_URL,
     };
   }
-  // 默认 Kimi
+  if (provider === 'kimi30') {
+    return {
+      provider: 'kimi30',
+      displayName: 'Kimi 3.0',
+      modelId: KIMI30_MODEL,
+      apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
+      baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
+    };
+  }
+  // 默认 Kimi 2.6
   return {
-    provider: 'kimi',
+    provider: 'kimi26',
     displayName: 'Kimi 2.6',
-    modelId: KIMI_MODEL,
+    modelId: KIMI26_MODEL,
     apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
     baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
   };
@@ -89,7 +99,8 @@ export function getBaseUrl(): string {
 }
 
 export function getKimiModel(): string {
-  return KIMI_MODEL;
+  const provider = getProvider();
+  return provider === 'kimi30' ? KIMI30_MODEL : KIMI26_MODEL;
 }
 
 // ============================================================
@@ -145,7 +156,7 @@ export async function callLLMApi(
 
   // 前置检查：API Key 是否已配置
   if (!config.apiKey) {
-    const providerName = config.provider === 'kimi' ? 'Kimi' : 'DeepSeek';
+    const providerName = config.provider === 'deepseek' ? 'DeepSeek' : 'Kimi';
     throw new Error(
       `${providerName} API Key 未配置。请在「设置」→「AI 模型配置」中填写您的 API Key 后再试。`
     );
