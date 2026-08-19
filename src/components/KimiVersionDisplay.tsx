@@ -112,7 +112,7 @@ export default function KimiVersionDisplay() {
             <div className="flex justify-between">
               <span>当前 Provider</span>
               <span className="font-mono text-slate-600">
-                {isDeepSeek ? 'DeepSeek' : isKimi30 ? 'Kimi 3.0' : 'Kimi 2.6'}
+                {isDeepSeek ? 'DeepSeek' : isKimi30 ? 'Kimi-K3' : 'Kimi-K2.6'}
               </span>
             </div>
             <div className="flex justify-between">

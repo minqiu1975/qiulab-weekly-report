@@ -490,7 +490,7 @@ function LLMConfigPanel() {
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-3">
         <div className="text-xs text-slate-500 leading-relaxed">
-          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi 2.6 / 3.0 和 DeepSeek 4 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
+          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi-K2.6 / Kimi-K3 和 DeepSeek 4 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
         </div>
 
         {/* Provider 选择 */}
@@ -507,7 +507,7 @@ function LLMConfigPanel() {
             >
               <Cpu className={`w-4 h-4 ${isKimi26 ? 'text-cyan-600' : 'text-slate-400'}`} />
               <div className="text-left">
-                <div className="font-medium">Kimi 2.6</div>
+                <div className="font-medium">Kimi-K2.6</div>
                 <div className="text-[10px] opacity-70">需配置 API Key</div>
               </div>
               {isKimi26 && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
@@ -523,7 +523,7 @@ function LLMConfigPanel() {
             >
               <Cpu className={`w-4 h-4 ${isKimi30 ? 'text-teal-600' : 'text-slate-400'}`} />
               <div className="text-left">
-                <div className="font-medium">Kimi 3.0</div>
+                <div className="font-medium">Kimi-K3</div>
                 <div className="text-[10px] opacity-70">需配置 API Key</div>
               </div>
               {isKimi30 && <CheckCircle className="w-4 h-4 text-teal-600 ml-auto" />}
@@ -578,7 +578,7 @@ function LLMConfigPanel() {
                   {kimiApiUrl.includes('.ai') ? '国际站' : '中国站'}
                 </Badge>
                 <Badge className={`flex items-center gap-1 ${isKimi30 ? 'bg-teal-100 text-teal-700 border-teal-200' : 'bg-cyan-100 text-cyan-700 border-cyan-200'}`}>
-                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'kimi-k3' : 'kimi-k2.6'}
+                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi-K3' : 'Kimi-K2.6'}
                 </Badge>
               </div>
             </div>

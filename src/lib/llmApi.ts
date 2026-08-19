@@ -1,6 +1,6 @@
 /**
  * 共享的 LLM API 调用模块
- * 支持 Provider：Kimi 2.6 / Kimi 3.0 / DeepSeek 4
+ * 支持 Provider：Kimi-K2.6 / Kimi-K3 / DeepSeek 4
  * 所有 LLM API 调用必须走此模块，确保模型和端点统一
  */
 
@@ -66,7 +66,7 @@ export function getProviderConfig(): ProviderConfig {
   if (provider === 'kimi30') {
     return {
       provider: 'kimi30',
-      displayName: 'Kimi 3.0',
+      displayName: 'Kimi-K3',
       modelId: KIMI30_MODEL,
       apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
       baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
@@ -75,14 +75,14 @@ export function getProviderConfig(): ProviderConfig {
   // 默认 Kimi 2.6
   return {
     provider: 'kimi26',
-    displayName: 'Kimi 2.6',
+    displayName: 'Kimi-K2.6',
     modelId: KIMI26_MODEL,
     apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
     baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
   };
 }
 
-/** 获取当前模型显示名称（如 "Kimi 2.6" 或 "DeepSeek 4"） */
+/** 获取当前模型显示名称（如 "Kimi-K2.6" 或 "DeepSeek 4"） */
 export function getModelDisplayName(): string {
   return getProviderConfig().displayName;
 }
