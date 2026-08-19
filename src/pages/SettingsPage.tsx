@@ -17,7 +17,7 @@ import type { BaiduPanConfig } from '../services/cloudStorage';
 import { logout, changePassword } from '../components/AuthGuard';
 import { DEFAULT_SETTINGS_MEMBERS } from '../data/mockPersons';
 import type { TeamMember } from '../data/mockPersons';
-import { getProvider, setProvider, getDeepSeekApiKey, setDeepSeekApiKey, getDeepSeekBaseUrl, setDeepSeekBaseUrl } from '../lib/llmApi';
+import { getProvider, setProvider, getDeepSeekApiKey, setDeepSeekApiKey, getDeepSeekBaseUrl, setDeepSeekBaseUrl, type LLMProvider } from '../lib/llmApi';
 
 // 必须与 cloudStorage.ts 中的 LS_KEYS.PERSONS 保持一致
 const STORAGE_KEY = 'qlab_persons_v5';
@@ -416,7 +416,7 @@ function CloudSyncPanel() {
 const DEFAULT_MOONSHOT_URL = 'https://api.moonshot.cn/v1';
 
 function LLMConfigPanel() {
-  const currentProvider = getProvider();
+  const [provider, setProviderState] = useState<LLMProvider>(getProvider);
 
   // Kimi state (shared between k2.6 and k3.0)
   const [kimiApiKey, setKimiApiKey] = useState(() => localStorage.getItem('qlab_moonshot_api_key') || '');
@@ -432,10 +432,16 @@ function LLMConfigPanel() {
   const hasKimiKey = !!kimiApiKey;
   const isCustomKimiUrl = !!kimiApiUrl && kimiApiUrl !== DEFAULT_MOONSHOT_URL;
   const hasDsKey = !!dsApiKey;
-  const isKimi26 = currentProvider === 'kimi26';
-  const isKimi30 = currentProvider === 'kimi30';
-  const isDeepSeek = currentProvider === 'deepseek';
+  const isKimi26 = provider === 'kimi26';
+  const isKimi30 = provider === 'kimi30';
+  const isDeepSeek = provider === 'deepseek';
   const isKimi = isKimi26 || isKimi30;
+
+  const switchProvider = (p: LLMProvider) => {
+    setProvider(p);          // 保存到 localStorage
+    setProviderState(p);     // 触发 React 重新渲染
+    setSaved(false);
+  };
 
   const handleSave = () => {
     // Save Kimi config
@@ -492,7 +498,7 @@ function LLMConfigPanel() {
           <label className="text-xs font-medium text-slate-700">选择 AI 模型</label>
           <div className="grid grid-cols-3 gap-2">
             <button
-              onClick={() => { setProvider('kimi26'); setSaved(false); }}
+              onClick={() => switchProvider('kimi26')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
                 isKimi26
                   ? 'border-cyan-300 bg-cyan-50 text-cyan-800'
@@ -508,7 +514,7 @@ function LLMConfigPanel() {
             </button>
 
             <button
-              onClick={() => { setProvider('kimi30'); setSaved(false); }}
+              onClick={() => switchProvider('kimi30')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
                 isKimi30
                   ? 'border-teal-300 bg-teal-50 text-teal-800'
@@ -524,7 +530,7 @@ function LLMConfigPanel() {
             </button>
 
             <button
-              onClick={() => { setProvider('deepseek'); setSaved(false); }}
+              onClick={() => switchProvider('deepseek')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
                 isDeepSeek
                   ? 'border-indigo-300 bg-indigo-50 text-indigo-800'
