@@ -26,7 +26,7 @@ const KIMI_API_KEY_KEY = 'qlab_moonshot_api_key';
 const KIMI_URL_KEY = 'qlab_moonshot_api_url';
 const KIMI_DEFAULT_URL = 'https://api.moonshot.cn/v1';
 const KIMI26_MODEL = 'kimi-k2.6';
-const KIMI30_MODEL = 'kimi-k2.5'; // Kimi 3.0 对应的模型ID
+const KIMI30_MODEL = 'kimi-k3'; // Kimi 3.0
 
 // ============================================================
 // DeepSeek 默认配置

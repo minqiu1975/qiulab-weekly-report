@@ -578,7 +578,7 @@ function LLMConfigPanel() {
                   {kimiApiUrl.includes('.ai') ? '国际站' : '中国站'}
                 </Badge>
                 <Badge className={`flex items-center gap-1 ${isKimi30 ? 'bg-teal-100 text-teal-700 border-teal-200' : 'bg-cyan-100 text-cyan-700 border-cyan-200'}`}>
-                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi 3.0' : 'Kimi 2.6'}
+                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'kimi-k3' : 'kimi-k2.6'}
                 </Badge>
               </div>
             </div>
