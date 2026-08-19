@@ -9,6 +9,7 @@ export {
   getProvider,
   setProvider,
   getModelDisplayName,
+  getModelPricing,
   getApiKey,
   getBaseUrl,
   getKimiModel,

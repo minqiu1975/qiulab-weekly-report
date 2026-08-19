@@ -1,6 +1,6 @@
 /**
  * 共享的 LLM API 调用模块
- * 支持 Provider：Kimi-K2.6 / Kimi-K3 / DeepSeek 4
+ * 支持 Provider：Kimi-K2.6 / Kimi-K3 / DeepSeek-V4-Flash / DeepSeek-V4-Pro
  * 所有 LLM API 调用必须走此模块，确保模型和端点统一
  */
 
@@ -9,7 +9,7 @@ import { getDatePrefix } from './dateContext';
 // ============================================================
 // Provider 类型定义
 // ============================================================
-export type LLMProvider = 'kimi26' | 'kimi30' | 'deepseek';
+export type LLMProvider = 'kimi26' | 'kimi30' | 'deepseek-flash' | 'deepseek-pro';
 
 export interface ProviderConfig {
   provider: LLMProvider;
@@ -34,7 +34,8 @@ const KIMI30_MODEL = 'kimi-k3'; // Kimi 3.0
 const DEEPSEEK_API_KEY_KEY = 'qlab_deepseek_api_key';
 const DEEPSEEK_URL_KEY = 'qlab_deepseek_api_url';
 const DEEPSEEK_DEFAULT_URL = 'https://api.deepseek.com/v1';
-const DEEPSEEK_MODEL = 'deepseek-reasoner'; // DeepSeek 4 (R1)
+const DEEPSEEK_FLASH_MODEL = 'deepseek-v4-flash';   // DeepSeek-V4-Flash-0731
+const DEEPSEEK_PRO_MODEL = 'deepseek-v4-pro';       // DeepSeek-V4-Pro-0813
 
 // ============================================================
 // Provider 选择（全局）
@@ -54,11 +55,20 @@ export function setProvider(provider: LLMProvider): void {
 // ============================================================
 export function getProviderConfig(): ProviderConfig {
   const provider = getProvider();
-  if (provider === 'deepseek') {
+  if (provider === 'deepseek-pro') {
     return {
-      provider: 'deepseek',
-      displayName: 'DeepSeek 4',
-      modelId: DEEPSEEK_MODEL,
+      provider: 'deepseek-pro',
+      displayName: 'DeepSeek-V4-Pro',
+      modelId: DEEPSEEK_PRO_MODEL,
+      apiKey: localStorage.getItem(DEEPSEEK_API_KEY_KEY) || '',
+      baseUrl: localStorage.getItem(DEEPSEEK_URL_KEY) || DEEPSEEK_DEFAULT_URL,
+    };
+  }
+  if (provider === 'deepseek-flash') {
+    return {
+      provider: 'deepseek-flash',
+      displayName: 'DeepSeek-V4-Flash',
+      modelId: DEEPSEEK_FLASH_MODEL,
       apiKey: localStorage.getItem(DEEPSEEK_API_KEY_KEY) || '',
       baseUrl: localStorage.getItem(DEEPSEEK_URL_KEY) || DEEPSEEK_DEFAULT_URL,
     };
@@ -82,7 +92,7 @@ export function getProviderConfig(): ProviderConfig {
   };
 }
 
-/** 获取当前模型显示名称（如 "Kimi-K2.6" 或 "DeepSeek 4"） */
+/** 获取当前模型显示名称（如 "Kimi-K2.6" 或 "DeepSeek-V4-Flash"） */
 export function getModelDisplayName(): string {
   return getProviderConfig().displayName;
 }
@@ -131,6 +141,30 @@ export function setDeepSeekBaseUrl(url: string): void {
 }
 
 // ============================================================
+// 模型定价（人民币/百万 tokens，输入缓存未命中 / 输出）
+// ============================================================
+export interface ModelPricing {
+  inputPrice: number;   // ¥/百万 tokens (cache miss)
+  outputPrice: number;  // ¥/百万 tokens
+  name: string;
+}
+
+export function getModelPricing(): ModelPricing {
+  const provider = getProvider();
+  switch (provider) {
+    case 'kimi30':
+      return { inputPrice: 6.50, outputPrice: 27.00, name: 'Kimi-K3' };
+    case 'deepseek-flash':
+      // 闲时价格（高峰为 2 倍）
+      return { inputPrice: 1.50, outputPrice: 4.50, name: 'DeepSeek-V4-Flash' };
+    case 'deepseek-pro':
+      return { inputPrice: 4.50, outputPrice: 13.50, name: 'DeepSeek-V4-Pro' };
+    case 'kimi26':
+    default:
+      return { inputPrice: 6.50, outputPrice: 27.00, name: 'Kimi-K2.6' };
+  }
+}
+// ============================================================
 // API 调用接口
 // ============================================================
 export interface LLMApiOptions {
@@ -156,7 +190,7 @@ export async function callLLMApi(
 
   // 前置检查：API Key 是否已配置
   if (!config.apiKey) {
-    const providerName = config.provider === 'deepseek' ? 'DeepSeek' : 'Kimi';
+    const providerName = config.provider.startsWith('deepseek') ? 'DeepSeek' : 'Kimi';
     throw new Error(
       `${providerName} API Key 未配置。请在「设置」→「AI 模型配置」中填写您的 API Key 后再试。`
     );
@@ -166,7 +200,7 @@ export async function callLLMApi(
   const datePrefix = getDatePrefix();
   const finalSystemPrompt = `${datePrefix}\n\n${systemPrompt}`;
 
-  if (config.provider === 'deepseek') {
+  if (config.provider.startsWith('deepseek')) {
     return _callDeepSeekApi(config, userPrompt, finalSystemPrompt, maxTokens);
   }
   return _callKimiApiInternal(config, userPrompt, finalSystemPrompt, maxTokens, options.enableThinking);

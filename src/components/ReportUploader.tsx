@@ -32,7 +32,7 @@ import { saveDynamicTrends, saveDynamicHistory, addUploadedDate, addWeekLabel, a
 import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { cloudStorage } from '../services/cloudStorage';
 import { getTodayStr, formatTimeInfo } from '../lib/dateContext';
-import { callKimiApi, getModelDisplayName } from '../lib/kimiApi';
+import { callKimiApi, getModelDisplayName, getModelPricing } from '../lib/kimiApi';
 import { callKimiDeepAnalysis, estimateDeepAnalysisCost } from './DeepAnalysisPanel';
 import { saveDeepAnalysis } from '../lib/dynamicStorage';
 import type { WeekTrend } from '../data/mockTrends';
@@ -53,15 +53,15 @@ interface AnalysisProgress {
 function getActiveResearcherNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['researcher', 'associate_researcher', 'assistant_researcher', 'postdoc'].includes(p.role)).map(p => p.name); }
 function getActiveStudentNames(persons: typeof ACTIVE_PERSONS) { return persons.filter(p => ['phd', 'undergraduate', 'visitor'].includes(p.role)).map(p => p.name); }
 
-// Cost estimation: Kimi k2.6（周报批量分析）
-// 官方定价 (platform.kimi.com)：
-// - 输入(缓存未命中): ¥6.50/百万tokens
-// - 输入(缓存命中): ¥1.10/百万tokens
-// - 输出: ¥27.00/百万tokens
-// 实际消耗：~400 tokens 输入（含周报全文）+ ~70 tokens 输出 = ~470 tokens/人
+// Cost estimation helper: returns per-person cost based on current model
+function getWeeklyAnalysisCost(): number {
+  const pricing = getModelPricing();
+  // 周报分析: ~400 tokens 输入 + ~70 tokens 输出 = ~470 tokens/人
+  return (400 / 1_000_000) * pricing.inputPrice + (70 / 1_000_000) * pricing.outputPrice;
+}
+
+// Legacy constant for backward compat in non-UI code
 const TOKENS_PER_PERSON = 470;
-// 保守预估按缓存未命中计算
-const COST_PER_PERSON = (400 / 1_000_000) * 6.50 + (70 / 1_000_000) * 27.00; // ≈ 0.0045元/人
 
 /**
  * Parse date from filename.
@@ -891,7 +891,7 @@ export default function ReportUploader() {
     const personItems = submittedItems;
     const submittedCount = personItems.length;
 
-    const estimatedCost = submittedCount * COST_PER_PERSON;
+    const estimatedCost = submittedCount * getWeeklyAnalysisCost();
 
     const modelName = getModelDisplayName();
     const versionLine = `[${new Date().toLocaleTimeString()}] 模型: ${modelName} ✅`;
@@ -1893,7 +1893,7 @@ export default function ReportUploader() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-3">
               <Coins className="w-4 h-4 text-amber-600" />
-              <span className="text-sm font-semibold text-amber-800">Kimi API 费用预估</span>
+              <span className="text-sm font-semibold text-amber-800">{getModelPricing().name} API 费用预估</span>
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
@@ -1901,7 +1901,7 @@ export default function ReportUploader() {
                 <div className="text-[10px] text-slate-500">预计Token消耗</div>
               </div>
               <div>
-                <div className="text-lg font-bold text-slate-800">{((actualCount * COST_PER_PERSON) + (includeDeepAnalysis ? activeCount * estimateDeepAnalysisCost().cost : 0)).toFixed(2)}</div>
+                <div className="text-lg font-bold text-slate-800">{((actualCount * getWeeklyAnalysisCost()) + (includeDeepAnalysis ? activeCount * estimateDeepAnalysisCost().cost : 0)).toFixed(2)}</div>
                 <div className="text-[10px] text-slate-500">预计费用 (元)</div>
               </div>
               <div>
@@ -1910,7 +1910,7 @@ export default function ReportUploader() {
               </div>
             </div>
             <div className="text-[10px] text-slate-400 mt-2">
-              仅对已提交{actualCount}人进行AI分析（未提交{knownMissing.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{COST_PER_PERSON.toFixed(4)}元/人（Kimi官方: 输入¥6.50/百万 + 输出¥27.00/百万）。
+              仅对已提交{actualCount}人进行AI分析（未提交{knownMissing.length}人跳过），~{TOKENS_PER_PERSON} tokens/人，约¥{getWeeklyAnalysisCost().toFixed(4)}元/人（{getModelPricing().name}: 输入¥{getModelPricing().inputPrice}/百万 + 输出¥{getModelPricing().outputPrice}/百万）。
               {includeDeepAnalysis && (
                 <span className="text-cyan-600 ml-1">+ 深度评估{activePersonsList.filter(p => p.status === 'active' || p.status === undefined).length}人，~{estimateDeepAnalysisCost().tokens}tokens/人，约¥{estimateDeepAnalysisCost().cost.toFixed(4)}元/人。</span>
               )}
@@ -2007,11 +2007,11 @@ export default function ReportUploader() {
                 <div className="text-[10px] text-slate-400">已用Tokens</div>
               </div>
               <div className="bg-slate-50 rounded-lg p-2 text-center">
-                <div className="text-sm font-bold text-slate-700">{(analysisProgress.completed * COST_PER_PERSON).toFixed(2)}</div>
+                <div className="text-sm font-bold text-slate-700">{(analysisProgress.completed * getWeeklyAnalysisCost()).toFixed(2)}</div>
                 <div className="text-[10px] text-slate-400">已花费 (元)</div>
               </div>
               <div className="bg-slate-50 rounded-lg p-2 text-center">
-                <div className="text-sm font-bold text-slate-700">{((analysisProgress.total - analysisProgress.completed) * COST_PER_PERSON).toFixed(2)}</div>
+                <div className="text-sm font-bold text-slate-700">{((analysisProgress.total - analysisProgress.completed) * getWeeklyAnalysisCost()).toFixed(2)}</div>
                 <div className="text-[10px] text-slate-400">剩余预估 (元)</div>
               </div>
             </div>
@@ -2037,7 +2037,7 @@ export default function ReportUploader() {
 
   // ─── Phase: Done ───
   if (phase === 'done') {
-    const totalCost = analysisProgress.completed * COST_PER_PERSON;
+    const totalCost = analysisProgress.completed * getWeeklyAnalysisCost();
     return (
       <div className="space-y-6">
         <Card className="border-emerald-200 bg-emerald-50/50">
@@ -2116,16 +2116,16 @@ export default function ReportUploader() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-3">
               <Coins className="w-4 h-4 text-amber-600" />
-              <span className="text-sm font-semibold text-slate-700">Kimi API 费用明细</span>
+              <span className="text-sm font-semibold text-slate-700">{getModelPricing().name} API 费用明细</span>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-600">输入Token ({(analysisProgress.completed * 400 / 1000).toFixed(1)}K @ $0.95/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 400 * 6.50 / 1_000_000).toFixed(4)} 元</span>
+                <span className="text-slate-600">输入Token ({(analysisProgress.completed * 400 / 1000).toFixed(1)}K @ ¥{getModelPricing().inputPrice}/M)</span>
+                <span className="font-medium">{(analysisProgress.completed * 400 * getModelPricing().inputPrice / 1_000_000).toFixed(4)} 元</span>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100">
-                <span className="text-slate-600">输出Token ({(analysisProgress.completed * 70 / 1000).toFixed(1)}K @ $4.00/M)</span>
-                <span className="font-medium">{(analysisProgress.completed * 70 * 27.00 / 1_000_000).toFixed(4)} 元</span>
+                <span className="text-slate-600">输出Token ({(analysisProgress.completed * 70 / 1000).toFixed(1)}K @ ¥{getModelPricing().outputPrice}/M)</span>
+                <span className="font-medium">{(analysisProgress.completed * 70 * getModelPricing().outputPrice / 1_000_000).toFixed(4)} 元</span>
               </div>
               <div className="flex justify-between py-1 font-semibold text-slate-800">
                 <span>合计</span>

@@ -434,7 +434,9 @@ function LLMConfigPanel() {
   const hasDsKey = !!dsApiKey;
   const isKimi26 = provider === 'kimi26';
   const isKimi30 = provider === 'kimi30';
-  const isDeepSeek = provider === 'deepseek';
+  const isDeepSeekFlash = provider === 'deepseek-flash';
+  const isDeepSeekPro = provider === 'deepseek-pro';
+  const isDeepSeek = isDeepSeekFlash || isDeepSeekPro;
   const isKimi = isKimi26 || isKimi30;
 
   const switchProvider = (p: LLMProvider) => {
@@ -490,13 +492,13 @@ function LLMConfigPanel() {
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-3">
         <div className="text-xs text-slate-500 leading-relaxed">
-          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi-K2.6 / Kimi-K3 和 DeepSeek 4 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
+          选择用于周报分析、深度评估和科研协作分析的 AI 模型。Kimi-K2.6 / Kimi-K3 和 DeepSeek-V4-Flash / DeepSeek-V4-Pro 均需要自行配置 API Key，Key 仅保存在浏览器本地，不会上传到服务器。
         </div>
 
         {/* Provider 选择 */}
         <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/50 space-y-2">
           <label className="text-xs font-medium text-slate-700">选择 AI 模型</label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => switchProvider('kimi26')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
@@ -530,19 +532,35 @@ function LLMConfigPanel() {
             </button>
 
             <button
-              onClick={() => switchProvider('deepseek')}
+              onClick={() => switchProvider('deepseek-flash')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
-                isDeepSeek
+                isDeepSeekFlash
                   ? 'border-indigo-300 bg-indigo-50 text-indigo-800'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Zap className={`w-4 h-4 ${isDeepSeek ? 'text-indigo-600' : 'text-slate-400'}`} />
+              <Zap className={`w-4 h-4 ${isDeepSeekFlash ? 'text-indigo-600' : 'text-slate-400'}`} />
               <div className="text-left">
-                <div className="font-medium">DeepSeek 4</div>
-                <div className="text-[10px] opacity-70">需配置 API Key</div>
+                <div className="font-medium">DeepSeek-V4-Flash</div>
+                <div className="text-[10px] opacity-70">速度快·价格低</div>
               </div>
-              {isDeepSeek && <CheckCircle className="w-4 h-4 text-indigo-600 ml-auto" />}
+              {isDeepSeekFlash && <CheckCircle className="w-4 h-4 text-indigo-600 ml-auto" />}
+            </button>
+
+            <button
+              onClick={() => switchProvider('deepseek-pro')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
+                isDeepSeekPro
+                  ? 'border-violet-300 bg-violet-50 text-violet-800'
+                  : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+              }`}
+            >
+              <Zap className={`w-4 h-4 ${isDeepSeekPro ? 'text-violet-600' : 'text-slate-400'}`} />
+              <div className="text-left">
+                <div className="font-medium">DeepSeek-V4-Pro</div>
+                <div className="text-[10px] opacity-70">能力强·价格较高</div>
+              </div>
+              {isDeepSeekPro && <CheckCircle className="w-4 h-4 text-violet-600 ml-auto" />}
             </button>
           </div>
         </div>
@@ -628,7 +646,9 @@ function LLMConfigPanel() {
               <ul className="list-disc list-outside ml-3.5 space-y-1">
                 <li>需要自行在 <a href="https://platform.deepseek.com/" target="_blank" rel="noreferrer" className="underline">platform.deepseek.com</a> 注册并获取 API Key</li>
                 <li>默认使用官方端点 <strong>api.deepseek.com</strong>，通常无需修改</li>
-                <li>使用 <strong>deepseek-reasoner</strong> 模型（DeepSeek-R1，能力最强）</li>
+                <li>当前选择: <strong>{isDeepSeekPro ? 'deepseek-v4-pro（能力最强）' : 'deepseek-v4-flash（速度快·价格低）'}</strong></li>
+                <li>闲时价格（非高峰）: Flash 输入 ¥1.5/M·输出 ¥4.5/M ｜ Pro 输入 ¥4.5/M·输出 ¥13.5/M</li>
+                <li>高峰时段（北京时间 9:00-12:00, 14:00-18:00）价格为闲时的 2 倍</li>
               </ul>
             </div>
 
@@ -644,8 +664,8 @@ function LLMConfigPanel() {
                     <AlertTriangle className="w-3 h-3" />未配置 Key
                   </Badge>
                 )}
-                <Badge className="bg-indigo-100 text-indigo-700 border-indigo-200 flex items-center gap-1">
-                  <Zap className="w-3 h-3" /> DeepSeek 4
+                <Badge className={`flex items-center gap-1 ${isDeepSeekPro ? 'bg-violet-100 text-violet-700 border-violet-200' : 'bg-indigo-100 text-indigo-700 border-indigo-200'}`}>
+                  <Zap className="w-3 h-3" /> {isDeepSeekPro ? 'V4-Pro' : 'V4-Flash'}
                 </Badge>
               </div>
             </div>
@@ -687,7 +707,8 @@ function LLMConfigPanel() {
 
         <div className="flex gap-2">
           <Button size="sm" className={`text-xs flex-1 ${
-            isDeepSeek ? 'bg-indigo-600 hover:bg-indigo-700' : 
+            isDeepSeekPro ? 'bg-violet-600 hover:bg-violet-700' : 
+            isDeepSeekFlash ? 'bg-indigo-600 hover:bg-indigo-700' : 
             isKimi30 ? 'bg-teal-600 hover:bg-teal-700' : 
             'bg-cyan-600 hover:bg-cyan-700'
           }`} onClick={handleSave}>
@@ -702,7 +723,8 @@ function LLMConfigPanel() {
 
         {saved && (
           <div className={`p-2 rounded border text-xs flex items-center gap-1.5 ${
-            isDeepSeek ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 
+            isDeepSeekPro ? 'bg-violet-50 border-violet-200 text-violet-700' : 
+            isDeepSeekFlash ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 
             isKimi30 ? 'bg-teal-50 border-teal-200 text-teal-700' : 
             'bg-emerald-50 border-emerald-200 text-emerald-700'
           }`}>

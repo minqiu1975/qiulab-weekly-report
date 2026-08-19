@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Person } from '../types';
-import { callKimiApi, getKimiModel, getModelDisplayName } from '../lib/kimiApi';
+import { callKimiApi, getKimiModel, getModelDisplayName, getModelPricing } from '../lib/kimiApi';
 import { saveDeepAnalysis, getDeepAnalysis } from '../lib/dynamicStorage';
 import type { DeepAnalysisData } from '../services/cloudStorage';
 import { cloudStorage } from '../services/cloudStorage';
@@ -134,10 +134,9 @@ export function estimateDeepAnalysisCost(): { tokens: number; cost: number } {
   const inputTokens = 200;
   const outputTokens = 510;
   const totalTokens = inputTokens + outputTokens;
-  // 官方定价 ¥6.50/百万 = ¥0.0065/千
-  const inputCost = (inputTokens / 1_000_000) * 6.50;
-  // 官方定价 ¥27.00/百万 = ¥0.027/千
-  const outputCost = (outputTokens / 1_000_000) * 27.00;
+  const pricing = getModelPricing();
+  const inputCost = (inputTokens / 1_000_000) * pricing.inputPrice;
+  const outputCost = (outputTokens / 1_000_000) * pricing.outputPrice;
   const totalCost = inputCost + outputCost;
   return { tokens: totalTokens, cost: totalCost };
 }
