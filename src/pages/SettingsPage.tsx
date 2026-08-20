@@ -12,7 +12,7 @@ import {
   Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap, Trash2, Coins
 } from 'lucide-react';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
-import { useCloudStorage, cloudStorage, BaiduPanProvider, BAIDU_PAN_BUILTIN, SUPABASE_BUILTIN } from '../services/cloudStorage';
+import { useCloudStorage, cloudStorage, BaiduPanProvider, BAIDU_PAN_BUILTIN } from '../services/cloudStorage';
 import type { BaiduPanConfig } from '../services/cloudStorage';
 import { logout, changePassword } from '../components/AuthGuard';
 import { DEFAULT_SETTINGS_MEMBERS } from '../data/mockPersons';
@@ -92,7 +92,7 @@ function CloudSyncPanel() {
   const bdAppName = BAIDU_PAN_BUILTIN.appName;
   const [bdAuthorized] = useState(() => BaiduPanProvider.parseTokenFromUrl() !== null);
 
-  const [providerTab, setProviderTab] = useState<ProviderTab>('supabase'); // Supabase 为默认推荐
+  const [providerTab, setProviderTab] = useState<ProviderTab>('baidu_pan'); // 百度网盘为默认推荐
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [showForm, setShowForm] = useState(false);
 
@@ -247,6 +247,12 @@ function CloudSyncPanel() {
                 {/* Provider 类型选择 */}
                 <div className="flex bg-slate-100 rounded-lg p-0.5">
                   <button
+                    onClick={() => { setProviderTab('baidu_pan'); setTestResult(null); }}
+                    className={`flex-1 text-xs py-1.5 rounded-md transition-all ${providerTab === 'baidu_pan' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
+                  >
+                    百度网盘
+                  </button>
+                  <button
                     onClick={() => { setProviderTab('supabase'); setTestResult(null); }}
                     className={`flex-1 text-xs py-1.5 rounded-md transition-all ${providerTab === 'supabase' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
                   >
@@ -256,58 +262,29 @@ function CloudSyncPanel() {
                     onClick={() => { setProviderTab('rest_api'); setTestResult(null); }}
                     className={`flex-1 text-xs py-1.5 rounded-md transition-all ${providerTab === 'rest_api' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
                   >
-                    通用 REST API
-                  </button>
-                  <button
-                    onClick={() => { setProviderTab('baidu_pan'); setTestResult(null); }}
-                    className={`flex-1 text-xs py-1.5 rounded-md transition-all ${providerTab === 'baidu_pan' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
-                  >
-                    百度网盘
+                    通用 REST
                   </button>
                 </div>
 
                 {providerTab === 'supabase' ? (
                   <>
-                    <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs leading-relaxed">
+                    <div className="p-2 rounded bg-slate-50 border border-slate-200 text-slate-700 text-xs leading-relaxed">
                       <div className="font-semibold mb-1.5 flex items-center gap-1.5">
-                        <CheckCircle className="w-3.5 h-3.5" />
-                        Supabase 配置步骤（推荐）
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                        Supabase 同步（已停用默认配置）
                       </div>
+                      <p className="mb-2">此前内置的 Supabase 项目已停止自动启用。如需继续使用，请自行创建 Supabase 项目并输入配置。</p>
                       <ol className="list-decimal list-outside ml-3.5 space-y-1">
                         <li>访问 <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="underline font-medium inline-flex items-center gap-0.5">Supabase 官网 <ExternalLink className="w-2.5 h-2.5" /></a>，用邮箱注册/登录</li>
-                        <li>点击「New project」，选择 Organization，输入项目名称（如 <code className="bg-emerald-100 px-1 rounded">qlab-sync</code>），设置密码，创建项目</li>
-                        <li>等待项目初始化完成（约1-2分钟）</li>
-                        <li>进入左侧菜单 <strong>Database → Tables</strong>，点击「Create new table」</li>
-                        <li>表名填 <code className="bg-emerald-100 px-1 rounded">qlab_data</code>，勾选 <strong>Enable Row Level Security (RLS)</strong></li>
-                        <li>添加以下字段（id 已默认创建）：
-                          <ul className="list-disc ml-4 mt-0.5 space-y-0.5 text-emerald-700">
-                            <li><code className="bg-emerald-100 px-1">data</code> 类型 jsonb</li>
-                            <li><code className="bg-emerald-100 px-1">created_at</code> 类型 timestamptz 默认 now()</li>
-                            <li><code className="bg-emerald-100 px-1">updated_at</code> 类型 timestamptz 默认 now()</li>
-                          </ul>
-                        </li>
-                        <li>点击左侧 <strong>Project Settings → API</strong>，复制「Project URL」和「anon public」填入下方</li>
+                        <li>点击「New project」，创建项目（如 <code className="bg-slate-100 px-1 rounded">qlab-sync</code>）</li>
+                        <li>进入 <strong>Database → Tables</strong>，创建表 <code className="bg-slate-100 px-1 rounded">qlab_data</code></li>
+                        <li>添加字段：data (jsonb)、created_at、updated_at</li>
+                        <li>进入 <strong>Project Settings → API</strong>，复制 URL 和 anon Key 填入下方</li>
                       </ol>
                     </div>
 
-                    <div className="p-2 rounded bg-slate-50 border border-slate-200">
-                      <div className="font-medium text-xs text-slate-700 mb-1.5">已内置配置（qlab-sync 项目）</div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-slate-600">Project URL</span>
-                        <code className="text-xs text-slate-500 bg-white px-2 py-0.5 rounded border">{SUPABASE_BUILTIN.url}</code>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-slate-600">API Key</span>
-                        <code className="text-xs text-slate-500 bg-white px-2 py-0.5 rounded border">{SUPABASE_BUILTIN.anonKey.slice(0, 12)}...{SUPABASE_BUILTIN.anonKey.slice(-4)}</code>
-                      </div>
-                    </div>
-
-                    <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs">
-                      <strong>高级：</strong>如需连接其他 Supabase 项目，可在下方手动输入配置。
-                    </div>
-
                     <details className="text-xs">
-                      <summary className="cursor-pointer text-slate-600 hover:text-slate-800 py-1">手动配置其他 Supabase 项目</summary>
+                      <summary className="cursor-pointer text-slate-600 hover:text-slate-800 py-1">手动配置 Supabase 项目</summary>
                       <div className="space-y-2 mt-2 pt-2 border-t border-slate-200">
                         <div>
                           <label className="text-xs text-slate-600 mb-1 block">Project URL</label>
@@ -322,25 +299,34 @@ function CloudSyncPanel() {
                   </>
                 ) : providerTab === 'baidu_pan' ? (
                   <>
-                    <div className="p-2 rounded bg-blue-50 border border-blue-200 text-blue-700 text-xs leading-relaxed">
-                      <div className="font-medium mb-1">百度网盘同步（已内置配置）</div>
-                      <p className="mb-1">应用 <code className="bg-blue-100 px-1 rounded">qlabwid</code> 已配置，直接点击"前往授权"即可。</p>
-                      <p className="text-amber-600">首次使用需在百度后台配置回调地址，Token 30天过期后需重新授权。</p>
+                    <div className="p-2 rounded bg-blue-50 border border-blue-200 text-blue-800 text-xs leading-relaxed">
+                      <div className="font-semibold mb-1.5 flex items-center gap-1.5">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        百度网盘同步（推荐）
+                      </div>
+                      <p className="mb-2">数据以 JSON 文件形式存储在您的百度网盘 <code className="bg-blue-100 px-1 rounded">/apps/qlabwid/qlab-data.json</code>，仅本应用可访问该目录。</p>
+                      <ul className="list-disc list-outside ml-3.5 space-y-1">
+                        <li>免费，无需额外注册数据库服务</li>
+                        <li>数据完全由您掌控，存储在个人网盘</li>
+                        <li>支持跨设备同步，换电脑后登录同一百度账号即可恢复数据</li>
+                        <li>Token 30 天过期，届时需要重新点击授权</li>
+                      </ul>
                     </div>
 
                     <div className="flex items-center justify-between p-2 rounded bg-slate-50 border border-slate-200">
-                      <span className="text-xs text-slate-600">AppKey</span>
-                      <code className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{bdAppKey.slice(0, 8)}...{bdAppKey.slice(-4)}</code>
-                    </div>
-                    <div className="flex items-center justify-between p-2 rounded bg-slate-50 border border-slate-200">
-                      <span className="text-xs text-slate-600">应用名称</span>
-                      <code className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{bdAppName}</code>
+                      <span className="text-xs text-slate-600">应用</span>
+                      <code className="text-xs text-slate-500 bg-white px-2 py-0.5 rounded border">{bdAppName}</code>
                     </div>
 
-                    {bdAuthorized && (
+                    {bdAuthorized ? (
                       <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-1.5">
                         <CheckCircle className="w-3 h-3" />
-                        已获取授权，点击启用同步即可
+                        已检测到授权回调，点击「启用同步」即可
+                      </div>
+                    ) : (
+                      <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs leading-relaxed">
+                        <div className="font-medium mb-1">首次使用需要授权</div>
+                        <p>点击「前往授权」会跳转至百度登录页面，登录后自动返回本页面。请确保百度账号与当前网盘（{typeof window !== 'undefined' ? 'Qiu-Lab' : '当前账号'}）一致。</p>
                       </div>
                     )}
                   </>

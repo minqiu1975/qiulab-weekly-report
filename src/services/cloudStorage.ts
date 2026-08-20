@@ -517,16 +517,9 @@ class CloudStorageService {
     const config = this.getProviderConfig();
     if (config) {
       this.provider = this.createProvider(config);
-    } else if (SUPABASE_BUILTIN.url && SUPABASE_BUILTIN.anonKey) {
-      // 新浏览器自动使用内置 Supabase 配置
-      const builtinConfig: SupabaseConfig = {
-        type: 'supabase',
-        name: 'Supabase',
-        url: SUPABASE_BUILTIN.url,
-        anonKey: SUPABASE_BUILTIN.anonKey,
-      };
-      this.provider = new SupabaseProvider(builtinConfig);
     }
+    // 注意：不再自动启用任何云端 Provider
+    // 用户需要手动在设置中选择并配置
   }
 
   private createProvider(config: ProviderConfigs): CloudProvider {
