@@ -12,8 +12,8 @@ import {
   Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap, Trash2, Coins
 } from 'lucide-react';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
-import { useCloudStorage, cloudStorage, BaiduPanProvider, BAIDU_PAN_BUILTIN } from '../services/cloudStorage';
-import type { BaiduPanConfig } from '../services/cloudStorage';
+import { useCloudStorage, cloudStorage } from '../services/cloudStorage';
+import type { GistConfig } from '../services/cloudStorage';
 import { logout, changePassword } from '../components/AuthGuard';
 import { DEFAULT_SETTINGS_MEMBERS } from '../data/mockPersons';
 import type { TeamMember } from '../data/mockPersons';
@@ -68,12 +68,12 @@ function normalizeStatusForDisplay(status: string): { label: string; color: stri
 
 // ==================== 云端同步面板 ====================
 
-type ProviderTab = 'supabase' | 'rest_api' | 'baidu_pan';
+type ProviderTab = 'supabase' | 'rest_api' | 'gist';
 
 function CloudSyncPanel() {
   const {
     isCloudEnabled, isSyncing, lastSyncTime,
-    syncNow, enableCloud, enableBaiduPan, disableCloud, testConnection,
+    syncNow, enableCloud, enableGist, disableCloud, testConnection,
     forceUploadLocal,
   } = useCloudStorage();
 
@@ -87,17 +87,15 @@ function CloudSyncPanel() {
   const [apiGetPath, setApiGetPath] = useState('/qlab/data');
   const [apiSavePath, setApiSavePath] = useState('/qlab/data');
 
-  // 百度网盘配置 - 使用内置常量，无需用户手动输入
-  const bdAppKey = BAIDU_PAN_BUILTIN.appKey;
-  const bdAppName = BAIDU_PAN_BUILTIN.appName;
-  const [bdAuthorized] = useState(() => BaiduPanProvider.parseTokenFromUrl() !== null);
-  const [bdToken, setBdToken] = useState('');
-  const [bdAuthMode, setBdAuthMode] = useState<'oauth' | 'manual'>('oauth');
-  const [bdError, setBdError] = useState<string | null>(null);
+  // Gist state
+  const [gistToken, setGistToken] = useState('');
+  const [gistId, setGistId] = useState('');
+  const [gistPublic, setGistPublic] = useState(false);
 
-  const [providerTab, setProviderTab] = useState<ProviderTab>('baidu_pan'); // 百度网盘为默认推荐
+  const [providerTab, setProviderTab] = useState<ProviderTab>('gist'); // Gist 为默认推荐
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [gistError, setGistError] = useState<string | null>(null);
 
   const handleTest = async () => {
     setTestResult(null);
@@ -106,27 +104,9 @@ function CloudSyncPanel() {
         setTestResult({ ok: false, message: '请输入 Supabase URL 和 API Key' });
         return;
       }
-    } else if (providerTab === 'baidu_pan') {
-      if (bdAuthMode === 'manual') {
-        if (!bdToken.trim()) {
-          setTestResult({ ok: false, message: '请先输入 Access Token' });
-          return;
-        }
-        // 手动输入模式下：直接用输入的 token 创建临时 Provider 测试
-        //（不依赖全局 cloudStorage，因为用户还没点击启用同步）
-        const tempProvider = new BaiduPanProvider({
-          type: 'baidu_pan',
-          name: '百度网盘',
-          appKey: bdAppKey,
-          appName: bdAppName,
-          accessToken: bdToken.trim(),
-        });
-        const res = await tempProvider.testConnection();
-        setTestResult(res);
-        return;
-      }
-      if (bdAuthMode === 'oauth' && !bdAppKey) {
-        setTestResult({ ok: false, message: '百度网盘配置错误' });
+    } else if (providerTab === 'gist') {
+      if (!gistToken.trim()) {
+        setTestResult({ ok: false, message: '请先输入 GitHub Personal Access Token' });
         return;
       }
     } else {
@@ -140,54 +120,23 @@ function CloudSyncPanel() {
   };
 
   const handleEnable = async () => {
-    setBdError(null);
+    setGistError(null);
     if (providerTab === 'supabase') {
       // 如果有手动输入的配置则使用手动配置，否则使用内置配置
       enableCloud(sbUrl || undefined, sbKey || undefined);
-    } else if (providerTab === 'baidu_pan') {
-      if (!bdAppKey) return;
-      if (bdAuthMode === 'manual') {
-        // 手动输入 Token 模式
-        if (!bdToken.trim()) {
-          setBdError('请输入 Access Token');
-          return;
-        }
-        const config: BaiduPanConfig = {
-          type: 'baidu_pan',
-          name: '百度网盘',
-          appKey: bdAppKey,
-          appName: bdAppName,
-          accessToken: bdToken.trim(),
-          tokenExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30天后过期
-        };
-        enableBaiduPan(config);
+    } else if (providerTab === 'gist') {
+      if (!gistToken.trim()) {
+        setGistError('请输入 GitHub Personal Access Token');
         return;
       }
-      // 检查是否已授权
-      const token = BaiduPanProvider.parseTokenFromUrl();
-      if (token) {
-        // 从URL获取了授权token
-        const config: BaiduPanConfig = {
-          type: 'baidu_pan',
-          name: '百度网盘',
-          appKey: bdAppKey,
-          appName: bdAppName,
-          accessToken: token.accessToken,
-          tokenExpiry: new Date(Date.now() + token.expiresIn * 1000).toISOString(),
-        };
-        // 保存配置并启用
-        enableBaiduPan(config);
-        BaiduPanProvider.cleanUrl();
-      } else {
-        // 跳转到百度授权页面
-        const provider = new BaiduPanProvider({
-          type: 'baidu_pan',
-          name: '百度网盘',
-          appKey: bdAppKey,
-          appName: bdAppName,
-        });
-        window.location.href = provider.getAuthorizeUrl(window.location.href.split('#')[0]);
-      }
+      const config: GistConfig = {
+        type: 'gist',
+        name: 'QiuLab Weekly Report Data',
+        token: gistToken.trim(),
+        gistId: gistId.trim() || undefined,
+        public: gistPublic,
+      };
+      enableGist(config);
     }
   };
 
@@ -286,10 +235,10 @@ function CloudSyncPanel() {
                 {/* Provider 类型选择 */}
                 <div className="flex bg-slate-100 rounded-lg p-0.5">
                   <button
-                    onClick={() => { setProviderTab('baidu_pan'); setTestResult(null); }}
-                    className={`flex-1 text-xs py-1.5 rounded-md transition-all ${providerTab === 'baidu_pan' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
+                    onClick={() => { setProviderTab('gist'); setTestResult(null); }}
+                    className={`flex-1 text-xs py-1.5 rounded-md transition-all ${providerTab === 'gist' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
                   >
-                    百度网盘
+                    GitHub Gist
                   </button>
                   <button
                     onClick={() => { setProviderTab('supabase'); setTestResult(null); }}
@@ -336,91 +285,61 @@ function CloudSyncPanel() {
                       </div>
                     </details>
                   </>
-                ) : providerTab === 'baidu_pan' ? (
+                ) : providerTab === 'gist' ? (
                   <>
                     <div className="p-2 rounded bg-blue-50 border border-blue-200 text-blue-800 text-xs leading-relaxed">
                       <div className="font-semibold mb-1.5 flex items-center gap-1.5">
                         <CheckCircle className="w-3.5 h-3.5" />
-                        百度网盘同步（推荐）
+                        GitHub Gist 同步（推荐）
                       </div>
-                      <p className="mb-2">数据以 JSON 文件形式存储在您的百度网盘 <code className="bg-blue-100 px-1 rounded">/apps/qlabwid/qlab-data.json</code>，仅本应用可访问该目录。</p>
+                      <p className="mb-2">数据以 JSON 文件形式存储在您的 GitHub Gist 中，免费、跨平台、支持浏览器直接访问（CORS）。</p>
                       <ul className="list-disc list-outside ml-3.5 space-y-1">
-                        <li>免费，无需额外注册数据库服务</li>
-                        <li>数据完全由您掌控，存储在个人网盘</li>
-                        <li>支持跨设备同步，换电脑后登录同一百度账号即可恢复数据</li>
-                        <li>Token 30 天过期，届时需要重新点击授权</li>
+                        <li>免费，无需额外服务器</li>
+                        <li>数据完全由您掌控，存储在 GitHub Gist</li>
+                        <li>支持跨设备同步，换电脑后输入同一 Token 即可恢复数据</li>
+                        <li>Token 永久有效（classic token 不会过期）</li>
                       </ul>
                     </div>
 
-                    <div className="flex items-center justify-between p-2 rounded bg-slate-50 border border-slate-200">
-                      <span className="text-xs text-slate-600">应用</span>
-                      <code className="text-xs text-slate-500 bg-white px-2 py-0.5 rounded border">{bdAppName}</code>
+                    <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs leading-relaxed">
+                      <div className="font-semibold mb-1">如何获取 GitHub Token</div>
+                      <ol className="list-decimal list-outside ml-3.5 space-y-1">
+                        <li>访问 <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer" className="underline font-medium inline-flex items-center gap-0.5">GitHub Settings → Tokens <ExternalLink className="w-2.5 h-2.5" /></a></li>
+                        <li>点击 <strong>Generate new token (classic)</strong></li>
+                        <li>勾选 <strong>gist</strong> scope（创建 Gist 需要此权限）</li>
+                        <li>生成后复制 Token 粘贴到下方</li>
+                      </ol>
                     </div>
 
-                    {/* 授权模式切换 */}
-                    <div className="flex bg-slate-100 rounded-lg p-0.5">
-                      <button
-                        onClick={() => { setBdAuthMode('oauth'); setBdError(null); }}
-                        className={`flex-1 text-xs py-1.5 rounded-md transition-all ${bdAuthMode === 'oauth' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
-                      >
-                        跳转授权
-                      </button>
-                      <button
-                        onClick={() => { setBdAuthMode('manual'); setBdError(null); }}
-                        className={`flex-1 text-xs py-1.5 rounded-md transition-all ${bdAuthMode === 'manual' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
-                      >
-                        手动输入 Token
-                      </button>
+                    <div>
+                      <label className="text-xs text-slate-600 mb-1 block">GitHub Personal Access Token</label>
+                      <Input type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value={gistToken} onChange={(e) => setGistToken(e.target.value)} className="text-xs h-8" />
                     </div>
 
-                    {bdAuthMode === 'oauth' ? (
-                      <>
-                        {bdAuthorized ? (
-                          <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-1.5">
-                            <CheckCircle className="w-3 h-3" />
-                            已检测到授权回调，点击「启用同步」即可
-                          </div>
-                        ) : (
-                          <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs leading-relaxed">
-                            <div className="font-medium mb-1">首次使用需要授权</div>
-                            <p>点击「前往授权」会跳转至百度登录页面，登录后自动返回本页面。请确保百度账号与当前网盘一致。</p>
-                            <div className="mt-1.5 p-1.5 bg-white/50 rounded text-amber-800">
-                              <strong>若报错 referer_mismatch：</strong>需要在百度开放平台 → 应用管理 → qlabwid → 安全设置中，添加授权回调地址：
-                              <code className="block mt-1 bg-amber-100 px-1 py-0.5 rounded break-all text-[10px]">
-                                {typeof window !== 'undefined' ? window.location.href.split('#')[0] : 'https://your-domain.github.io/qiulab-weekly-report/'}
-                              </code>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <div className="p-2 rounded bg-blue-50 border border-blue-200 text-blue-700 text-xs leading-relaxed">
-                          <div className="font-medium mb-1">手动输入 Access Token</div>
-                          <p>如果跳转授权失败，可以通过以下方式获取 Token：</p>
-                          <ol className="list-decimal list-outside ml-3.5 space-y-0.5 mt-1">
-                            <li>访问 <a href="https://openapi.baidu.com/oauth/2.0/authorize?client_id=dnuMdkQeUNEqfJAR732aLVZkK1SXrkia&response_type=token&redirect_uri=oob&scope=basic%20netdisk&display=page" target="_blank" rel="noreferrer" className="underline">百度授权页面</a>（oob 模式）</li>
-                            <li>登录百度账号并授权</li>
-                            <li>授权页面会显示 access_token，复制后粘贴到下方</li>
-                          </ol>
-                        </div>
+                    <details className="text-xs">
+                      <summary className="cursor-pointer text-slate-600 hover:text-slate-800 py-1">高级选项（可选）</summary>
+                      <div className="space-y-2 mt-2 pt-2 border-t border-slate-200">
                         <div>
-                          <label className="text-xs text-slate-600 mb-1 block">Access Token</label>
-                          <Input
-                            type="password"
-                            placeholder="粘贴 access_token 到此处..."
-                            value={bdToken}
-                            onChange={(e) => setBdToken(e.target.value)}
-                            className="text-xs h-8"
+                          <label className="text-xs text-slate-600 mb-1 block">已有 Gist ID（可选，首次留空自动创建）</label>
+                          <Input placeholder="abc123def456..." value={gistId} onChange={(e) => setGistId(e.target.value)} className="text-xs h-8" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="gist-public"
+                            checked={gistPublic}
+                            onChange={(e) => setGistPublic(e.target.checked)}
+                            className="w-3.5 h-3.5 rounded border-slate-300"
                           />
+                          <label htmlFor="gist-public" className="text-xs text-slate-600">公开 Gist（数据对互联网可见，不推荐）</label>
                         </div>
                       </div>
-                    )}
+                    </details>
 
-                    {bdError && (
+                    {gistError && (
                       <div className="p-2 rounded bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-1.5">
                         <AlertTriangle className="w-3 h-3" />
-                        {bdError}
+                        {gistError}
                       </div>
                     )}
                   </>
@@ -465,7 +384,7 @@ function CloudSyncPanel() {
                   </Button>
                   <Button size="sm" className="text-xs flex-1 bg-cyan-600 hover:bg-cyan-700" onClick={handleEnable}>
                     <Cloud className="w-3 h-3 mr-1" />
-                    {providerTab === 'baidu_pan' && bdAuthMode === 'oauth' && !bdAuthorized ? '前往授权' : '启用同步'}
+                    {providerTab === 'gist' ? '启用同步' : '启用同步'}
                   </Button>
                 </div>
 

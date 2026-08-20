@@ -13,7 +13,7 @@ import type { Person } from '../types';
 
 // ==================== 类型定义 ====================
 
-export type CloudProviderType = 'supabase' | 'rest_api' | 'baidu_pan';
+export type CloudProviderType = 'supabase' | 'rest_api' | 'gist';
 
 /** 深度分析结果数据 */
 export interface DeepAnalysisData {
@@ -89,24 +89,18 @@ export interface RestApiConfig extends ProviderConfig {
   saveEndpoint?: string; // 保存数据端点，默认 /qlab/data
 }
 
-/** 百度网盘配置 - 使用OAuth2简化模式 */
-export interface BaiduPanConfig extends ProviderConfig {
-  type: 'baidu_pan';
-  appKey: string;        // 百度开放平台 AppKey
-  appName: string;       // 应用名称（用于构建写入路径）
-  accessToken?: string;  // OAuth2 授权后获得的 access_token
-  tokenExpiry?: string;  // token 过期时间 ISO 字符串
+/** GitHub Gist 配置 - 使用 Personal Access Token */
+export interface GistConfig extends ProviderConfig {
+  type: 'gist';
+  name: string;
+  token: string;
+  gistId?: string;
+  public?: boolean;
 }
 
-export type ProviderConfigs = SupabaseConfig | RestApiConfig | BaiduPanConfig;
+export type ProviderConfigs = SupabaseConfig | RestApiConfig | GistConfig;
 
 // ==================== 内置配置 ====================
-
-/** 内置百度网盘应用配置 - 用户已创建 qlabwid 应用 */
-export const BAIDU_PAN_BUILTIN = {
-  appKey: 'dnuMdkQeUNEqfJAR732aLVZkK1SXrkia',
-  appName: 'qlabwid',
-} as const;
 
 /** 内置 Supabase 配置 - qlab-sync 项目 */
 export const SUPABASE_BUILTIN = {
@@ -327,235 +321,116 @@ class RestApiProvider implements CloudProvider {
   }
 }
 
-// ==================== 百度网盘 Provider ====================
-/**
- * 百度网盘数据同步 Provider
- *
- * 使用 OAuth2 简化模式（Implicit Grant），适合纯前端应用。
- * 数据以单个 JSON 文件形式存储在百度网盘的 /apps/{appName}/ 目录下。
- *
- * 限制说明：
- * - access_token 有效期30天，过期后需重新授权
- * - 文件只能写入 /apps/{appName}/ 目录下
- * - 需要用户自行注册百度开发者账号并创建应用
- */
-export class BaiduPanProvider implements CloudProvider {
-  private appKey: string;
-  private appName: string;
-  private accessToken: string;
-  private filePath: string;
+// ==================== GitHub Gist Provider ====================
 
-  constructor(config: BaiduPanConfig) {
-    this.appKey = config.appKey;
-    this.appName = config.appName || 'qlab';
-    this.accessToken = config.accessToken || '';
-    this.filePath = `/apps/${this.appName}/qlab-data.json`;
+class GistProvider implements CloudProvider {
+  private token: string;
+  private gistId: string | null;
+  private filename: string;
+  private description: string;
+  private isPublic: boolean;
+  private readonly GIST_API = 'https://api.github.com/gists';
+
+  constructor(config: GistConfig) {
+    this.token = config.token;
+    this.gistId = config.gistId || null;
+    this.filename = 'qlab-data.json';
+    this.description = config.name || 'QiuLab Weekly Report Data';
+    this.isPublic = config.public ?? false;
   }
 
-  /** 检查 token 是否有效 */
-  isTokenValid(): boolean {
-    if (!this.accessToken) return false;
-    const stored = this.loadTokenFromStorage();
-    if (!stored) return false;
-    // 提前1天视为过期
-    const expiry = new Date(stored.tokenExpiry);
-    expiry.setDate(expiry.getDate() - 1);
-    return new Date() < expiry;
-  }
-
-  /** 获取 OAuth2 授权 URL（简化模式） */
-  getAuthorizeUrl(redirectUri: string): string {
-    // 确保 redirectUri 使用 HTTPS（GitHub Pages 要求）
-    const secureUri = redirectUri.replace(/^http:/, 'https:');
-    const params = new URLSearchParams({
-      response_type: 'token',
-      client_id: this.appKey,
-      redirect_uri: secureUri,
-      scope: 'basic netdisk',
-      display: 'page',
+  private async api(method: string, path: string, body?: object): Promise<any> {
+    const url = path.startsWith('http') ? path : `${this.GIST_API}${path}`;
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Authorization': `token ${this.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'qiulab-weekly-report',
+      },
+      body: body ? JSON.stringify(body) : undefined,
     });
-    return `https://openapi.baidu.com/oauth/2.0/authorize?${params.toString()}`;
-  }
-
-  /** 从 URL hash 中解析 access_token（授权回调后调用） */
-  static parseTokenFromUrl(): { accessToken: string; expiresIn: number } | null {
-    const hash = window.location.hash;
-    if (!hash || hash.length < 2) return null;
-    const params = new URLSearchParams(hash.substring(1));
-    const accessToken = params.get('access_token');
-    const expiresIn = params.get('expires_in');
-    if (!accessToken) return null;
-    return {
-      accessToken,
-      expiresIn: expiresIn ? parseInt(expiresIn, 10) : 2592000,
-    };
-  }
-
-  /** 清除 URL 中的 token 信息 */
-  static cleanUrl(): void {
-    if (window.history && window.history.replaceState) {
-      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      const msg = err.message || err.error || `HTTP ${res.status}`;
+      throw new Error(msg);
     }
+    return res.json();
   }
 
-  /** 保存 token 到 localStorage */
-  saveTokenToStorage(accessToken: string, expiresIn: number): void {
-    const expiry = new Date(Date.now() + expiresIn * 1000).toISOString();
-    localStorage.setItem('qlab_baidu_token', JSON.stringify({
-      accessToken,
-      tokenExpiry: expiry,
-      appKey: this.appKey,
-      appName: this.appName,
-    }));
-  }
-
-  /** 从 localStorage 加载 token */
-  loadTokenFromStorage(): { accessToken: string; tokenExpiry: string; appKey: string; appName: string } | null {
+  async testConnection(): Promise<{ ok: boolean; message: string }> {
     try {
-      const raw = localStorage.getItem('qlab_baidu_token');
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (data.appKey === this.appKey) {
-        this.accessToken = data.accessToken;
-        return data;
+      // 验证 token 有效性（获取当前用户）
+      const user = await this.api('GET', 'https://api.github.com/user');
+      const rateInfo = user.rate
+        ? `剩余 ${user.rate.remaining} / ${user.rate.limit} 次请求`
+        : '';
+
+      if (this.gistId) {
+        // 验证 Gist 存在且可访问
+        const gist = await this.api('GET', `/${this.gistId}`);
+        const file = gist.files?.[this.filename];
+        if (!file) {
+          return { ok: true, message: `连接成功（用户 ${user.login}），但 Gist 中无 ${this.filename} 文件，将自动创建` };
+        }
+        return { ok: true, message: `连接成功！用户 ${user.login}，${rateInfo}` };
       }
-    } catch { /* ignore */ }
-    return null;
-  }
-
-  /** 清除存储的 token */
-  clearToken(): void {
-    localStorage.removeItem('qlab_baidu_token');
-    this.accessToken = '';
-  }
-
-  private async apiRequest(method: string, params: Record<string, string>): Promise<Response> {
-    const url = new URL('https://d.pcs.baidu.com/rest/2.0/pcs/file');
-    url.searchParams.set('method', method);
-    url.searchParams.set('access_token', this.accessToken);
-    url.searchParams.set('path', this.filePath);
-    for (const [k, v] of Object.entries(params)) {
-      url.searchParams.set(k, v);
-    }
-    // 添加 15 秒超时，避免 fetch 永远挂起
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-    try {
-      return await fetch(url.toString(), { signal: controller.signal });
-    } finally {
-      clearTimeout(timeout);
+      return { ok: true, message: `连接成功！用户 ${user.login}，将自动创建新 Gist，${rateInfo}` };
+    } catch (e: any) {
+      if (e.message?.includes('401') || e.message?.includes('Bad credentials')) {
+        return { ok: false, message: 'GitHub Token 无效或已过期，请重新生成' };
+      }
+      return { ok: false, message: e.message || '连接失败' };
     }
   }
 
   async getAllData(): Promise<AppData | null> {
-    // 先尝试从存储加载 token
-    if (!this.accessToken) {
-      const stored = this.loadTokenFromStorage();
-      if (!stored) return null;
-    }
+    if (!this.gistId) return null;
     try {
-      const res = await this.apiRequest('download', {});
-      if (!res.ok) {
-        if (res.status === 404) return null;
-        throw new Error(`下载失败: HTTP ${res.status}`);
-      }
+      const gist = await this.api('GET', `/${this.gistId}`);
+      const file = gist.files?.[this.filename];
+      if (!file) return null;
+      const rawUrl = file.raw_url;
+      const res = await fetch(rawUrl, {
+        headers: { 'User-Agent': 'qiulab-weekly-report' },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json() as AppData;
     } catch (e) {
-      console.error('[BaiduPan] getAllData error:', e);
-      return null;
-    }
-  }
-
-  async saveAllData(data: AppData): Promise<void> {
-    if (!this.accessToken) throw new Error('未授权，请先完成百度网盘授权');
-    try {
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-      const formData = new FormData();
-      formData.append('file', blob, 'qlab-data.json');
-
-      const url = new URL('https://d.pcs.baidu.com/rest/2.0/pcs/file');
-      url.searchParams.set('method', 'upload');
-      url.searchParams.set('access_token', this.accessToken);
-      url.searchParams.set('path', this.filePath);
-      url.searchParams.set('ondup', 'overwrite');
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 30000); // 30秒上传超时
-
-      const res = await fetch(url.toString(), {
-        method: 'POST',
-        body: formData,
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
-
-      if (!res.ok) {
-        throw new Error(`上传失败: HTTP ${res.status}`);
-      }
-    } catch (e) {
-      console.error('[BaiduPan] saveAllData error:', e);
+      console.error('[Gist] getAllData error:', e);
       throw e;
     }
   }
 
-  async testConnection(): Promise<{ ok: boolean; message: string }> {
-    if (!this.accessToken) {
-      return { ok: false, message: '未授权，请先在上方输入 Access Token 并点击「启用同步」' };
+  async saveAllData(data: AppData): Promise<void> {
+    const content = JSON.stringify(data);
+    const files: Record<string, { content: string }> = {
+      [this.filename]: { content },
+    };
+
+    if (!this.gistId) {
+      // 创建新 Gist
+      const gist = await this.api('POST', '', {
+        description: this.description,
+        public: this.isPublic,
+        files,
+      });
+      this.gistId = gist.id;
+      // 保存 Gist ID 到配置
+      const saved = lsGet<ProviderConfigs | null>(LS_KEYS.PROVIDER_CONFIG, null);
+      if (saved && saved.type === 'gist') {
+        (saved as GistConfig).gistId = this.gistId!;
+        lsSet(LS_KEYS.PROVIDER_CONFIG, saved);
+      }
+      return;
     }
-    try {
-      // 使用 AbortController 防止请求永远挂起（百度 API 可能因 CORS 或网络问题无响应）
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
 
-      // 尝试通过 tokeninfo API 验证 token（支持 CORS 的可能性更高）
-      const res = await fetch(
-        `https://openapi.baidu.com/rest/2.0/oauth/2.0/tokeninfo?access_token=${this.accessToken}`,
-        { signal: controller.signal }
-      );
-      clearTimeout(timeout);
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.error_code) {
-          if (data.error_code === 111 || data.error === 'invalid_token') {
-            this.clearToken();
-            return { ok: false, message: 'Access Token 已过期或无效，请重新获取' };
-          }
-          return { ok: false, message: `Token 验证失败: ${data.error_description || data.error_msg || '未知错误'}` };
-        }
-        const daysLeft = data.expires_in ? Math.floor(data.expires_in / 86400) : '未知';
-        return { ok: true, message: `百度网盘连接成功，Token 剩余有效期 ${daysLeft} 天` };
-      }
-
-      // 如果 tokeninfo 不可用，回退到 xpan API（可能因 CORS 失败）
-      const controller2 = new AbortController();
-      const timeout2 = setTimeout(() => controller2.abort(), 10000);
-      try {
-        const res2 = await fetch(
-          `https://pan.baidu.com/rest/2.0/xpan/nas?method=uinfo&access_token=${this.accessToken}`,
-          { signal: controller2.signal }
-        );
-        clearTimeout(timeout2);
-        if (res2.ok) {
-          return { ok: true, message: '百度网盘连接成功' };
-        }
-        const err = await res2.json().catch(() => ({}));
-        if (err.error_code === 111 || err.error === 'invalid_token') {
-          this.clearToken();
-          return { ok: false, message: 'Access Token 已过期或无效，请重新获取' };
-        }
-        return { ok: false, message: `连接失败: ${err.error_msg || err.error_description || 'HTTP ' + res2.status}` };
-      } catch {
-        clearTimeout(timeout2);
-        // 如果两个 API 都失败，很可能是 CORS 或网络问题
-        return { ok: false, message: '无法连接百度网盘 API（可能被浏览器安全策略阻止）。请尝试直接点击「启用同步」上传数据，或检查网络连接。' };
-      }
-    } catch (e) {
-      if (e instanceof Error && e.name === 'AbortError') {
-        return { ok: false, message: '连接超时（10秒），请检查网络或 Token 是否有效' };
-      }
-      return { ok: false, message: `连接失败: ${e instanceof Error ? e.message : '网络错误'}` };
-    }
+    // 更新现有 Gist
+    await this.api('PATCH', `/${this.gistId}`, {
+      description: this.description,
+      files,
+    });
   }
 }
 
@@ -581,8 +456,8 @@ class CloudStorageService {
         return new SupabaseProvider(config);
       case 'rest_api':
         return new RestApiProvider(config);
-      case 'baidu_pan':
-        return new BaiduPanProvider(config);
+      case 'gist':
+        return new GistProvider(config);
       default:
         throw new Error(`Unknown provider type: ${(config as ProviderConfigs).type}`);
     }
@@ -966,7 +841,7 @@ export function useCloudStorage() {
     syncNow();
   }, [syncNow]);
 
-  const enableBaiduPan = useCallback((config: BaiduPanConfig) => {
+  const enableGist = useCallback((config: GistConfig) => {
     cloudStorage.setProviderConfig(config);
     setIsCloudEnabled(true);
     syncNow();
@@ -998,7 +873,7 @@ export function useCloudStorage() {
     syncNow,
     enableCloud,
     enableProvider,
-    enableBaiduPan,
+    enableGist,
     disableCloud,
     forceUploadLocal,
     testConnection: () => cloudStorage.testConnection(),
