@@ -107,8 +107,12 @@ function CloudSyncPanel() {
         return;
       }
     } else if (providerTab === 'baidu_pan') {
-      if (!bdAppKey) {
-        setTestResult({ ok: false, message: '请输入百度 App Key' });
+      if (bdAuthMode === 'manual' && !bdToken.trim()) {
+        setTestResult({ ok: false, message: '请先输入 Access Token' });
+        return;
+      }
+      if (bdAuthMode === 'oauth' && !bdAppKey) {
+        setTestResult({ ok: false, message: '百度网盘配置错误' });
         return;
       }
     } else {

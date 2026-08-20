@@ -437,7 +437,14 @@ export class BaiduPanProvider implements CloudProvider {
     for (const [k, v] of Object.entries(params)) {
       url.searchParams.set(k, v);
     }
-    return fetch(url.toString());
+    // 添加 15 秒超时，避免 fetch 永远挂起
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      return await fetch(url.toString(), { signal: controller.signal });
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 
   async getAllData(): Promise<AppData | null> {
@@ -472,10 +479,15 @@ export class BaiduPanProvider implements CloudProvider {
       url.searchParams.set('path', this.filePath);
       url.searchParams.set('ondup', 'overwrite');
 
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000); // 30秒上传超时
+
       const res = await fetch(url.toString(), {
         method: 'POST',
         body: formData,
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
 
       if (!res.ok) {
         throw new Error(`上传失败: HTTP ${res.status}`);
@@ -488,22 +500,61 @@ export class BaiduPanProvider implements CloudProvider {
 
   async testConnection(): Promise<{ ok: boolean; message: string }> {
     if (!this.accessToken) {
-      return { ok: false, message: '未授权，请点击"前往授权"按钮' };
+      return { ok: false, message: '未授权，请先在上方输入 Access Token 并点击「启用同步」' };
     }
     try {
-      // 尝试获取用户信息来验证 token
-      const res = await fetch(`https://pan.baidu.com/rest/2.0/xpan/nas?method=uinfo&access_token=${this.accessToken}`);
+      // 使用 AbortController 防止请求永远挂起（百度 API 可能因 CORS 或网络问题无响应）
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+
+      // 尝试通过 tokeninfo API 验证 token（支持 CORS 的可能性更高）
+      const res = await fetch(
+        `https://openapi.baidu.com/rest/2.0/oauth/2.0/tokeninfo?access_token=${this.accessToken}`,
+        { signal: controller.signal }
+      );
+      clearTimeout(timeout);
+
       if (res.ok) {
-        return { ok: true, message: '百度网盘连接成功' };
+        const data = await res.json();
+        if (data.error_code) {
+          if (data.error_code === 111 || data.error === 'invalid_token') {
+            this.clearToken();
+            return { ok: false, message: 'Access Token 已过期或无效，请重新获取' };
+          }
+          return { ok: false, message: `Token 验证失败: ${data.error_description || data.error_msg || '未知错误'}` };
+        }
+        const daysLeft = data.expires_in ? Math.floor(data.expires_in / 86400) : '未知';
+        return { ok: true, message: `百度网盘连接成功，Token 剩余有效期 ${daysLeft} 天` };
       }
-      const err = await res.json();
-      if (err.error_code === 111) {
-        this.clearToken();
-        return { ok: false, message: 'Access Token 已过期，请重新授权' };
+
+      // 如果 tokeninfo 不可用，回退到 xpan API（可能因 CORS 失败）
+      const controller2 = new AbortController();
+      const timeout2 = setTimeout(() => controller2.abort(), 10000);
+      try {
+        const res2 = await fetch(
+          `https://pan.baidu.com/rest/2.0/xpan/nas?method=uinfo&access_token=${this.accessToken}`,
+          { signal: controller2.signal }
+        );
+        clearTimeout(timeout2);
+        if (res2.ok) {
+          return { ok: true, message: '百度网盘连接成功' };
+        }
+        const err = await res2.json().catch(() => ({}));
+        if (err.error_code === 111 || err.error === 'invalid_token') {
+          this.clearToken();
+          return { ok: false, message: 'Access Token 已过期或无效，请重新获取' };
+        }
+        return { ok: false, message: `连接失败: ${err.error_msg || err.error_description || 'HTTP ' + res2.status}` };
+      } catch {
+        clearTimeout(timeout2);
+        // 如果两个 API 都失败，很可能是 CORS 或网络问题
+        return { ok: false, message: '无法连接百度网盘 API（可能被浏览器安全策略阻止）。请尝试直接点击「启用同步」上传数据，或检查网络连接。' };
       }
-      return { ok: false, message: `连接失败: ${err.error_msg || '未知错误'}` };
     } catch (e) {
-      return { ok: false, message: e instanceof Error ? e.message : '连接失败' };
+      if (e instanceof Error && e.name === 'AbortError') {
+        return { ok: false, message: '连接超时（10秒），请检查网络或 Token 是否有效' };
+      }
+      return { ok: false, message: `连接失败: ${e instanceof Error ? e.message : '网络错误'}` };
     }
   }
 }
