@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import logoImg from '../assets/logo.jpg';
 import KimiVersionDisplay from './KimiVersionDisplay';
+import CloudSyncDisplay from './CloudSyncDisplay';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -62,8 +63,9 @@ export default function Navbar() {
                 </NavLink>
               );
             })}
-            <div className="ml-2 pl-2 border-l border-slate-600">
+            <div className="ml-2 pl-2 border-l border-slate-600 flex items-center gap-2">
               <KimiVersionDisplay />
+              <CloudSyncDisplay />
             </div>
           </div>
 
