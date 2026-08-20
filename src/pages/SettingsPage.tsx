@@ -447,7 +447,7 @@ function CloudSyncPanel() {
                   </Button>
                   <Button size="sm" className="text-xs flex-1 bg-cyan-600 hover:bg-cyan-700" onClick={handleEnable}>
                     <Cloud className="w-3 h-3 mr-1" />
-                    {providerTab === 'baidu_pan' && !bdAuthorized ? '前往授权' : '启用同步'}
+                    {providerTab === 'baidu_pan' && bdAuthMode === 'oauth' && !bdAuthorized ? '前往授权' : '启用同步'}
                   </Button>
                 </div>
 
