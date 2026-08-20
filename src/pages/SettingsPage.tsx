@@ -107,8 +107,22 @@ function CloudSyncPanel() {
         return;
       }
     } else if (providerTab === 'baidu_pan') {
-      if (bdAuthMode === 'manual' && !bdToken.trim()) {
-        setTestResult({ ok: false, message: '请先输入 Access Token' });
+      if (bdAuthMode === 'manual') {
+        if (!bdToken.trim()) {
+          setTestResult({ ok: false, message: '请先输入 Access Token' });
+          return;
+        }
+        // 手动输入模式下：直接用输入的 token 创建临时 Provider 测试
+        //（不依赖全局 cloudStorage，因为用户还没点击启用同步）
+        const tempProvider = new BaiduPanProvider({
+          type: 'baidu_pan',
+          name: '百度网盘',
+          appKey: bdAppKey,
+          appName: bdAppName,
+          accessToken: bdToken.trim(),
+        });
+        const res = await tempProvider.testConnection();
+        setTestResult(res);
         return;
       }
       if (bdAuthMode === 'oauth' && !bdAppKey) {
