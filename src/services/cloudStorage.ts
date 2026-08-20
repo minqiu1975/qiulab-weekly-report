@@ -365,10 +365,12 @@ export class BaiduPanProvider implements CloudProvider {
 
   /** 获取 OAuth2 授权 URL（简化模式） */
   getAuthorizeUrl(redirectUri: string): string {
+    // 确保 redirectUri 使用 HTTPS（GitHub Pages 要求）
+    const secureUri = redirectUri.replace(/^http:/, 'https:');
     const params = new URLSearchParams({
       response_type: 'token',
       client_id: this.appKey,
-      redirect_uri: redirectUri,
+      redirect_uri: secureUri,
       scope: 'basic netdisk',
       display: 'page',
     });

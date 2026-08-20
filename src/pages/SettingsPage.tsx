@@ -91,6 +91,9 @@ function CloudSyncPanel() {
   const bdAppKey = BAIDU_PAN_BUILTIN.appKey;
   const bdAppName = BAIDU_PAN_BUILTIN.appName;
   const [bdAuthorized] = useState(() => BaiduPanProvider.parseTokenFromUrl() !== null);
+  const [bdToken, setBdToken] = useState('');
+  const [bdAuthMode, setBdAuthMode] = useState<'oauth' | 'manual'>('oauth');
+  const [bdError, setBdError] = useState<string | null>(null);
 
   const [providerTab, setProviderTab] = useState<ProviderTab>('baidu_pan'); // 百度网盘为默认推荐
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
@@ -119,11 +122,29 @@ function CloudSyncPanel() {
   };
 
   const handleEnable = async () => {
+    setBdError(null);
     if (providerTab === 'supabase') {
       // 如果有手动输入的配置则使用手动配置，否则使用内置配置
       enableCloud(sbUrl || undefined, sbKey || undefined);
     } else if (providerTab === 'baidu_pan') {
       if (!bdAppKey) return;
+      if (bdAuthMode === 'manual') {
+        // 手动输入 Token 模式
+        if (!bdToken.trim()) {
+          setBdError('请输入 Access Token');
+          return;
+        }
+        const config: BaiduPanConfig = {
+          type: 'baidu_pan',
+          name: '百度网盘',
+          appKey: bdAppKey,
+          appName: bdAppName,
+          accessToken: bdToken.trim(),
+          tokenExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30天后过期
+        };
+        enableBaiduPan(config);
+        return;
+      }
       // 检查是否已授权
       const token = BaiduPanProvider.parseTokenFromUrl();
       if (token) {
@@ -318,15 +339,70 @@ function CloudSyncPanel() {
                       <code className="text-xs text-slate-500 bg-white px-2 py-0.5 rounded border">{bdAppName}</code>
                     </div>
 
-                    {bdAuthorized ? (
-                      <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-1.5">
-                        <CheckCircle className="w-3 h-3" />
-                        已检测到授权回调，点击「启用同步」即可
-                      </div>
+                    {/* 授权模式切换 */}
+                    <div className="flex bg-slate-100 rounded-lg p-0.5">
+                      <button
+                        onClick={() => { setBdAuthMode('oauth'); setBdError(null); }}
+                        className={`flex-1 text-xs py-1.5 rounded-md transition-all ${bdAuthMode === 'oauth' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
+                      >
+                        跳转授权
+                      </button>
+                      <button
+                        onClick={() => { setBdAuthMode('manual'); setBdError(null); }}
+                        className={`flex-1 text-xs py-1.5 rounded-md transition-all ${bdAuthMode === 'manual' ? 'bg-white shadow-sm text-slate-800 font-medium' : 'text-slate-500'}`}
+                      >
+                        手动输入 Token
+                      </button>
+                    </div>
+
+                    {bdAuthMode === 'oauth' ? (
+                      <>
+                        {bdAuthorized ? (
+                          <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-1.5">
+                            <CheckCircle className="w-3 h-3" />
+                            已检测到授权回调，点击「启用同步」即可
+                          </div>
+                        ) : (
+                          <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs leading-relaxed">
+                            <div className="font-medium mb-1">首次使用需要授权</div>
+                            <p>点击「前往授权」会跳转至百度登录页面，登录后自动返回本页面。请确保百度账号与当前网盘一致。</p>
+                            <div className="mt-1.5 p-1.5 bg-white/50 rounded text-amber-800">
+                              <strong>若报错 referer_mismatch：</strong>需要在百度开放平台 → 应用管理 → qlabwid → 安全设置中，添加授权回调地址：
+                              <code className="block mt-1 bg-amber-100 px-1 py-0.5 rounded break-all text-[10px]">
+                                {typeof window !== 'undefined' ? window.location.href.split('#')[0] : 'https://your-domain.github.io/qiulab-weekly-report/'}
+                              </code>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     ) : (
-                      <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs leading-relaxed">
-                        <div className="font-medium mb-1">首次使用需要授权</div>
-                        <p>点击「前往授权」会跳转至百度登录页面，登录后自动返回本页面。请确保百度账号与当前网盘（{typeof window !== 'undefined' ? 'Qiu-Lab' : '当前账号'}）一致。</p>
+                      <div className="space-y-2">
+                        <div className="p-2 rounded bg-blue-50 border border-blue-200 text-blue-700 text-xs leading-relaxed">
+                          <div className="font-medium mb-1">手动输入 Access Token</div>
+                          <p>如果跳转授权失败，可以通过以下方式获取 Token：</p>
+                          <ol className="list-decimal list-outside ml-3.5 space-y-0.5 mt-1">
+                            <li>访问 <a href="https://openapi.baidu.com/oauth/2.0/authorize?client_id=dnuMdkQeUNEqfJAR732aLVZkK1SXrkia&response_type=token&redirect_uri=oob&scope=basic%20netdisk&display=page" target="_blank" rel="noreferrer" className="underline">百度授权页面</a>（oob 模式）</li>
+                            <li>登录百度账号并授权</li>
+                            <li>授权页面会显示 access_token，复制后粘贴到下方</li>
+                          </ol>
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-600 mb-1 block">Access Token</label>
+                          <Input
+                            type="password"
+                            placeholder="粘贴 access_token 到此处..."
+                            value={bdToken}
+                            onChange={(e) => setBdToken(e.target.value)}
+                            className="text-xs h-8"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {bdError && (
+                      <div className="p-2 rounded bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-1.5">
+                        <AlertTriangle className="w-3 h-3" />
+                        {bdError}
                       </div>
                     )}
                   </>
