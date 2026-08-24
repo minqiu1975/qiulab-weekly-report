@@ -326,9 +326,41 @@ class RestApiProvider implements CloudProvider {
 // GitHub Gist 候选数据结构
 export interface GistCandidate {
   id: string;
-  lastModified: string;
+  lastUploadDate: string;      // 最新周报实际日期（最可靠指标）
   personCount: number;
   uploadCount: number;
+  lastModified: string;        // Gist 文件更新时间
+}
+
+/**
+ * 计算 Gist 数据的新鲜度分数。
+ *
+ * 策略（按优先级）：
+ * 1. 最新周报日期 — 直接比较 uploads[].date 的最大值
+ * 2. 人员数量 — 新数据通常人员更多（访问学生加入等）
+ * 3. 上传记录数 — 更多上传意味着更完整的历史
+ * 4. 最后修改时间 — 仅作为兜底
+ */
+function getLatestUploadDate(uploads: UploadRecord[]): string {
+  if (!uploads || uploads.length === 0) return '1970-01-01';
+  return uploads
+    .map(u => u.weekDate || u.uploadDate || '1970-01-01')
+    .sort((a, b) => b.localeCompare(a))[0];
+}
+
+function compareFreshness(a: GistCandidate, b: GistCandidate): number {
+  // 1. 最新周报日期（决定性指标）
+  const dateCompare = b.lastUploadDate.localeCompare(a.lastUploadDate);
+  if (dateCompare !== 0) return dateCompare;
+
+  // 2. 人员数量（辅助指标）
+  if (b.personCount !== a.personCount) return b.personCount - a.personCount;
+
+  // 3. 上传记录数（辅助指标）
+  if (b.uploadCount !== a.uploadCount) return b.uploadCount - a.uploadCount;
+
+  // 4. 最后修改时间（兜底）
+  return b.lastModified.localeCompare(a.lastModified);
 }
 
 class GistProvider implements CloudProvider {
@@ -368,18 +400,16 @@ class GistProvider implements CloudProvider {
   }
 
   /**
-   * 跨设备同步核心方法。
+   * 跨设备同步核心方法：打开即同步
    *
-   * 功能：
-   * 1. 如果当前没有 gistId，自动查找用户名下已有的、包含 qlab-data.json 的 Gist
-   * 2. 如果当前有 gistId 但 force=true，重新扫描所有 Gist 并返回所有候选供用户选择
-   * 3. 如果扫描到多个 Gist 都有数据，按 lastModified 排序推荐最新的
+   * 自动判断并切换到数据真正最新的 Gist：
+   * 1. 扫描用户名下所有包含 qlab-data.json 的 Gist
+   * 2. 读取每个 Gist 的实际内容
+   * 3. 按「最新周报日期 → 人员数 → 上传数 → 修改时间」排序
+   * 4. 自动切换到数据最新的那个（无需用户手动选择）
    *
-   * 返回值：{ switched, gistId, message, candidates }
-   *   - switched: 是否发生了 Gist 切换
-   *   - gistId: 最终选定的 Gist ID
-   *   - message: 人类可读的操作结果描述
-   *   - candidates: 所有候选 Gist 的详细信息（用于 UI 展示让用户选择）
+   * 这意味着：不管你在哪台电脑、哪个地点推送的数据，
+   * 打开网站就会自动汇聚到最新的那份数据。
    */
   async resolveGistId(force = false): Promise<{
     switched: boolean;
@@ -387,17 +417,22 @@ class GistProvider implements CloudProvider {
     message: string;
     candidates: GistCandidate[];
   }> {
-    // 非 force 模式：先检查本地配置
-    if (!force && this.gistId) {
-      return { switched: false, gistId: this.gistId, message: '使用当前 Gist', candidates: [] };
+    // 1. 先尝试从本地配置恢复 gistId（同一浏览器快速路径）
+    const raw = localStorage.getItem(LS_KEYS.PROVIDER_CONFIG);
+    const localGistId = raw ? (JSON.parse(raw) as GistConfig).gistId : undefined;
+
+    if (!force) {
+      if (this.gistId) {
+        return { switched: false, gistId: this.gistId, message: '使用当前 Gist', candidates: [] };
+      }
+      if (localGistId) {
+        this.gistId = localGistId;
+        return { switched: false, gistId: localGistId, message: '从本地配置恢复 Gist', candidates: [] };
+      }
     }
 
     try {
-      // 1. 先读取本地配置中的 gistId（作为候选之一）
-      const raw = localStorage.getItem(LS_KEYS.PROVIDER_CONFIG);
-      const localGistId = raw ? (JSON.parse(raw) as GistConfig).gistId : undefined;
-
-      // 2. 调用 GitHub API 列出用户的所有 Gist（公开 + 私有）
+      // 2. 调用 GitHub API 列出用户的所有 Gist
       const gists: Array<{ id: string; description: string; files: Record<string, { raw_url?: string }> }> =
         await this.api('GET', '?per_page=100');
 
@@ -407,7 +442,7 @@ class GistProvider implements CloudProvider {
         return { switched: false, gistId: null, message: '未找到任何包含数据的 Gist，将创建新 Gist', candidates: [] };
       }
 
-      // 4. 读取每个候选 Gist 的数据
+      // 4. 读取每个候选 Gist 的完整数据，计算新鲜度
       const candidateDetails: GistCandidate[] = [];
 
       for (const gist of candidates) {
@@ -417,11 +452,14 @@ class GistProvider implements CloudProvider {
           const res = await fetch(rawUrl, { headers: { 'User-Agent': 'qiulab-weekly-report' } });
           if (!res.ok) continue;
           const data = await res.json() as AppData;
+          const uploads = data.uploads || [];
+          const persons = data.persons || [];
           candidateDetails.push({
             id: gist.id,
+            lastUploadDate: getLatestUploadDate(uploads),
+            personCount: persons.length,
+            uploadCount: uploads.length,
             lastModified: data.lastModified || data.lastSync || '1970-01-01T00:00:00Z',
-            personCount: (data.persons || []).length,
-            uploadCount: (data.uploads || []).length,
           });
         } catch (e) {
           console.warn(`[Gist] 读取候选 Gist ${gist.id} 失败:`, e);
@@ -432,23 +470,23 @@ class GistProvider implements CloudProvider {
         return { switched: false, gistId: null, message: '找到 Gist 但无法读取数据，将创建新 Gist', candidates: [] };
       }
 
-      // 5. 按 lastModified 降序排列，选最新的作为推荐
-      candidateDetails.sort((a, b) => b.lastModified.localeCompare(a.lastModified));
+      // 5. 按内容新鲜度排序，选数据最新的
+      candidateDetails.sort(compareFreshness);
       const best = candidateDetails[0];
       const currentId = this.gistId || localGistId;
 
       // 6. 如果最佳 Gist 就是当前正在使用的，无需切换
       if (currentId && best.id === currentId) {
-        this.gistId = best.id; // 确保内存中已设置
+        this.gistId = best.id;
         return {
           switched: false,
           gistId: best.id,
-          message: `当前 Gist 已是最新数据（${best.personCount} 人，${best.uploadCount} 条记录，更新于 ${new Date(best.lastModified).toLocaleString('zh-CN')}）`,
+          message: `当前 Gist 已是最新数据（最新周报 ${best.lastUploadDate}，${best.personCount} 人，${best.uploadCount} 条上传）`,
           candidates: candidateDetails,
         };
       }
 
-      // 7. 切换到有最新数据的 Gist
+      // 7. 自动切换到数据最新的 Gist
       this.gistId = best.id;
 
       // 8. 将新的 gistId 写回本地配置
@@ -461,10 +499,11 @@ class GistProvider implements CloudProvider {
       }
 
       const previousId = currentId ? `${currentId.slice(0, 8)}...` : '无';
+      console.log(`[Gist] 自动切换 Gist：从 ${previousId} → ${best.id.slice(0, 8)}...`);
       return {
         switched: true,
         gistId: best.id,
-        message: `已自动切换 Gist：从 ${previousId} → ${best.id.slice(0, 8)}...（${best.personCount} 人，${best.uploadCount} 条记录，更新于 ${new Date(best.lastModified).toLocaleString('zh-CN')}）`,
+        message: `已自动切换到最新数据 Gist：${best.id.slice(0, 8)}...（最新周报 ${best.lastUploadDate}，${best.personCount} 人，${best.uploadCount} 条上传）`,
         candidates: candidateDetails,
       };
     } catch (e) {
@@ -667,11 +706,12 @@ class CloudStorageService {
    */
   async forceResolveGistId(): Promise<{
     ok: boolean;
+    switched: boolean;
     message: string;
     candidates: GistCandidate[];
   }> {
     if (!(this.provider instanceof GistProvider)) {
-      return { ok: false, message: '当前不是 Gist 同步模式', candidates: [] };
+      return { ok: false, switched: false, message: '当前不是 Gist 同步模式', candidates: [] };
     }
     try {
       const result = await this.provider.resolveGistId(true);
@@ -680,18 +720,21 @@ class CloudStorageService {
         await this.loadAllData();
         return {
           ok: true,
+          switched: true,
           message: result.message + '（已自动重新加载最新数据）',
           candidates: result.candidates,
         };
       }
       return {
         ok: true,
+        switched: false,
         message: result.message,
         candidates: result.candidates,
       };
     } catch (e) {
       return {
         ok: false,
+        switched: false,
         message: `切换失败: ${e instanceof Error ? e.message : '未知错误'}`,
         candidates: [],
       };
@@ -1036,8 +1079,17 @@ export function useCloudStorage() {
     if (!cloudStorage.isCloudEnabled()) return;
     setIsSyncing(true);
     try {
-      const data = cloudStorage.loadFromLocal();
-      await cloudStorage.saveAllData(data);
+      // Gist 跨设备同步核心：先强制扫描所有候选 Gist，自动切换到数据最新的
+      const config = cloudStorage.getProviderConfig();
+      if (config?.type === 'gist') {
+        const result = await cloudStorage.forceResolveGistId();
+        if (result.switched) {
+          console.log('[CloudSync] 定时同步：已自动切换到最新 Gist:', result.message);
+        }
+      }
+
+      // 从云端拉取最新数据并合并到本地
+      await cloudStorage.loadAllData();
       setLastSyncTime(new Date().toLocaleTimeString('zh-CN'));
       setCurrentGistId(cloudStorage.getCurrentGistId());
     } catch (e) {

@@ -88,6 +88,22 @@ function useCloudSync() {
           return;
         }
 
+        // Gist 跨设备同步核心：强制扫描所有候选 Gist，自动切换到数据最新的那个
+        // 这样不管在哪台电脑打开，都会自动拿到最新数据
+        if (config?.type === 'gist') {
+          console.log('[CloudSync] Gist 模式：正在扫描所有候选 Gist...');
+          try {
+            const result = await cloudStorage.forceResolveGistId();
+            if (result.switched) {
+              console.log('[CloudSync] 已自动切换到最新数据 Gist:', result.message);
+            } else {
+              console.log('[CloudSync] Gist 无需切换:', result.message);
+            }
+          } catch (e) {
+            console.warn('[CloudSync] Gist 扫描失败:', e);
+          }
+        }
+
         console.log('[CloudSync] 开始首次加载云端同步...');
         await cloudStorage.loadAllData();
         console.log('[CloudSync] 首次加载云端同步完成');
