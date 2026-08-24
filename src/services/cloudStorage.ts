@@ -359,6 +359,59 @@ class GistProvider implements CloudProvider {
     return res.json();
   }
 
+  /**
+   * 跨设备核心：如果当前没有 gistId，尝试通过 GitHub API
+   * 查找用户名下已存在的、包含 qlab-data.json 的 Gist。
+   * 这样换电脑后只需输入同一 Token，无需手动填写 Gist ID。
+   */
+  private async resolveGistId(): Promise<string | null> {
+    if (this.gistId) return this.gistId;
+
+    try {
+      // 1. 优先从本地配置读取（同一浏览器刷新页面时）
+      const raw = localStorage.getItem(LS_KEYS.PROVIDER_CONFIG);
+      if (raw) {
+        const config = JSON.parse(raw) as GistConfig;
+        if (config.type === 'gist' && config.gistId) {
+          this.gistId = config.gistId;
+          console.log('[Gist] 从本地配置恢复 gistId:', this.gistId);
+          return this.gistId;
+        }
+      }
+
+      // 2. 调用 GitHub API 查找已有的 Gist
+      // 列出用户的 Gists（公开 + 私有，每页最多 100 个）
+      const gists: Array<{ id: string; description: string; files: Record<string, unknown> }> =
+        await this.api('GET', '?per_page=100');
+
+      // 匹配策略：文件名完全匹配 qlab-data.json，或描述包含 "QiuLab"
+      const match = gists.find(g =>
+        g.files[this.filename] !== undefined ||
+        (g.description && g.description.toLowerCase().includes('qiulab'))
+      );
+
+      if (match) {
+        this.gistId = match.id;
+        // 将找到的 gistId 写回本地配置，避免下次再查
+        if (raw) {
+          const config = JSON.parse(raw) as GistConfig;
+          if (config.type === 'gist') {
+            config.gistId = match.id;
+            lsSet(LS_KEYS.PROVIDER_CONFIG, config);
+            console.log('[Gist] 自动发现已有 Gist，已保存 gistId:', match.id);
+          }
+        }
+        return this.gistId;
+      }
+
+      console.log('[Gist] 未找到已有 Gist，将创建新 Gist');
+      return null;
+    } catch (e) {
+      console.warn('[Gist] 查找已有 Gist 失败:', e);
+      return null;
+    }
+  }
+
   async testConnection(): Promise<{ ok: boolean; message: string }> {
     try {
       // 验证 token 有效性（获取当前用户）
@@ -366,6 +419,9 @@ class GistProvider implements CloudProvider {
       const rateInfo = user.rate
         ? `剩余 ${user.rate.remaining} / ${user.rate.limit} 次请求`
         : '';
+
+      // 先尝试解析/查找 gistId
+      await this.resolveGistId();
 
       if (this.gistId) {
         // 验证 Gist 存在且可访问
@@ -386,7 +442,10 @@ class GistProvider implements CloudProvider {
   }
 
   async getAllData(): Promise<AppData | null> {
+    // 跨设备同步核心：先解析 gistId（可能从另一台电脑的 Gist 自动发现）
+    await this.resolveGistId();
     if (!this.gistId) return null;
+
     try {
       const gist = await this.api('GET', `/${this.gistId}`);
       const file = gist.files?.[this.filename];
@@ -409,6 +468,9 @@ class GistProvider implements CloudProvider {
       [this.filename]: { content },
     };
 
+    // 跨设备同步核心：先尝试查找已有 Gist，避免重复创建
+    await this.resolveGistId();
+
     if (!this.gistId) {
       // 创建新 Gist
       const gist = await this.api('POST', '', {
@@ -423,6 +485,7 @@ class GistProvider implements CloudProvider {
         (saved as GistConfig).gistId = this.gistId!;
         lsSet(LS_KEYS.PROVIDER_CONFIG, saved);
       }
+      console.log('[Gist] 创建新 Gist:', this.gistId);
       return;
     }
 
@@ -431,6 +494,7 @@ class GistProvider implements CloudProvider {
       description: this.description,
       files,
     });
+    console.log('[Gist] 更新 Gist:', this.gistId);
   }
 }
 
