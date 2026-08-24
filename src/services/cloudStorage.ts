@@ -360,56 +360,112 @@ class GistProvider implements CloudProvider {
   }
 
   /**
-   * 跨设备核心：如果当前没有 gistId，尝试通过 GitHub API
-   * 查找用户名下已存在的、包含 qlab-data.json 的 Gist。
-   * 这样换电脑后只需输入同一 Token，无需手动填写 Gist ID。
+   * 跨设备同步核心方法。
+   * 
+   * 功能：
+   * 1. 如果当前没有 gistId，自动查找用户名下已有的、包含 qlab-data.json 的 Gist
+   * 2. 如果当前有 gistId 但 force=true，重新扫描所有 Gist 并选择数据最新的那个
+   * 3. 如果扫描到多个 Gist 都有数据，比较 lastModified 时间戳，始终选择最新的
+   * 
+   * 返回值：{ switched: boolean, gistId: string | null, message: string }
+   *   - switched: 是否发生了 Gist 切换（换到另一个 Gist）
+   *   - gistId: 最终选定的 Gist ID
+   *   - message: 人类可读的操作结果描述
    */
-  private async resolveGistId(): Promise<string | null> {
-    if (this.gistId) return this.gistId;
+  async resolveGistId(force = false): Promise<{ switched: boolean; gistId: string | null; message: string }> {
+    // 非 force 模式：先检查本地配置
+    if (!force && this.gistId) {
+      return { switched: false, gistId: this.gistId, message: '使用当前 Gist' };
+    }
 
     try {
-      // 1. 优先从本地配置读取（同一浏览器刷新页面时）
+      // 1. 先读取本地配置中的 gistId（作为候选之一）
       const raw = localStorage.getItem(LS_KEYS.PROVIDER_CONFIG);
-      if (raw) {
-        const config = JSON.parse(raw) as GistConfig;
-        if (config.type === 'gist' && config.gistId) {
-          this.gistId = config.gistId;
-          console.log('[Gist] 从本地配置恢复 gistId:', this.gistId);
-          return this.gistId;
-        }
-      }
+      const localGistId = raw ? (JSON.parse(raw) as GistConfig).gistId : undefined;
 
-      // 2. 调用 GitHub API 查找已有的 Gist
-      // 列出用户的 Gists（公开 + 私有，每页最多 100 个）
-      const gists: Array<{ id: string; description: string; files: Record<string, unknown> }> =
+      // 2. 调用 GitHub API 列出用户的所有 Gist（公开 + 私有）
+      const gists: Array<{ id: string; description: string; files: Record<string, { raw_url?: string }> }> =
         await this.api('GET', '?per_page=100');
 
-      // 匹配策略：文件名完全匹配 qlab-data.json，或描述包含 "QiuLab"
-      const match = gists.find(g =>
-        g.files[this.filename] !== undefined ||
-        (g.description && g.description.toLowerCase().includes('qiulab'))
-      );
-
-      if (match) {
-        this.gistId = match.id;
-        // 将找到的 gistId 写回本地配置，避免下次再查
-        if (raw) {
-          const config = JSON.parse(raw) as GistConfig;
-          if (config.type === 'gist') {
-            config.gistId = match.id;
-            lsSet(LS_KEYS.PROVIDER_CONFIG, config);
-            console.log('[Gist] 自动发现已有 Gist，已保存 gistId:', match.id);
-          }
-        }
-        return this.gistId;
+      // 3. 筛选出包含 qlab-data.json 的 Gist
+      const candidates = gists.filter(g => g.files[this.filename] !== undefined);
+      if (candidates.length === 0) {
+        return { switched: false, gistId: null, message: '未找到任何包含数据的 Gist，将创建新 Gist' };
       }
 
-      console.log('[Gist] 未找到已有 Gist，将创建新 Gist');
-      return null;
+      // 4. 读取每个候选 Gist 的数据，比较 lastModified
+      interface GistCandidate {
+        id: string;
+        lastModified: string;
+        personCount: number;
+        uploadCount: number;
+      }
+      const candidateDetails: GistCandidate[] = [];
+
+      for (const gist of candidates) {
+        try {
+          const rawUrl = gist.files[this.filename]?.raw_url;
+          if (!rawUrl) continue;
+          const res = await fetch(rawUrl, { headers: { 'User-Agent': 'qiulab-weekly-report' } });
+          if (!res.ok) continue;
+          const data = await res.json() as AppData;
+          candidateDetails.push({
+            id: gist.id,
+            lastModified: data.lastModified || data.lastSync || '1970-01-01T00:00:00Z',
+            personCount: (data.persons || []).length,
+            uploadCount: (data.uploads || []).length,
+          });
+        } catch (e) {
+          console.warn(`[Gist] 读取候选 Gist ${gist.id} 失败:`, e);
+        }
+      }
+
+      if (candidateDetails.length === 0) {
+        return { switched: false, gistId: null, message: '找到 Gist 但无法读取数据，将创建新 Gist' };
+      }
+
+      // 5. 按 lastModified 降序排列，选最新的
+      candidateDetails.sort((a, b) => b.lastModified.localeCompare(a.lastModified));
+      const best = candidateDetails[0];
+      const currentId = this.gistId || localGistId;
+
+      // 6. 如果最佳 Gist 就是当前正在使用的，无需切换
+      if (currentId && best.id === currentId) {
+        this.gistId = best.id; // 确保内存中已设置
+        return {
+          switched: false,
+          gistId: best.id,
+          message: `当前 Gist 已是最新数据（${best.personCount} 人，${best.uploadCount} 条记录，更新于 ${new Date(best.lastModified).toLocaleString('zh-CN')})`,
+        };
+      }
+
+      // 7. 切换到有最新数据的 Gist
+      this.gistId = best.id;
+
+      // 8. 将新的 gistId 写回本地配置
+      if (raw) {
+        const config = JSON.parse(raw) as GistConfig;
+        if (config.type === 'gist') {
+          config.gistId = best.id;
+          lsSet(LS_KEYS.PROVIDER_CONFIG, config);
+        }
+      }
+
+      const previousId = currentId ? `${currentId.slice(0, 8)}...` : '无';
+      return {
+        switched: true,
+        gistId: best.id,
+        message: `已切换 Gist：从 ${previousId} → ${best.id.slice(0, 8)}...（${best.personCount} 人，${best.uploadCount} 条记录，更新于 ${new Date(best.lastModified).toLocaleString('zh-CN')}）`,
+      };
     } catch (e) {
-      console.warn('[Gist] 查找已有 Gist 失败:', e);
-      return null;
+      console.warn('[Gist] 查找 Gist 失败:', e);
+      return { switched: false, gistId: this.gistId, message: `查找失败: ${e instanceof Error ? e.message : '未知错误'}` };
     }
+  }
+
+  /** 获取当前正在使用的 Gist ID */
+  getCurrentGistId(): string | null {
+    return this.gistId;
   }
 
   async testConnection(): Promise<{ ok: boolean; message: string }> {
@@ -420,17 +476,11 @@ class GistProvider implements CloudProvider {
         ? `剩余 ${user.rate.remaining} / ${user.rate.limit} 次请求`
         : '';
 
-      // 先尝试解析/查找 gistId
-      await this.resolveGistId();
+      // 先尝试解析/查找 gistId（非 force 模式）
+      const resolved = await this.resolveGistId(false);
 
-      if (this.gistId) {
-        // 验证 Gist 存在且可访问
-        const gist = await this.api('GET', `/${this.gistId}`);
-        const file = gist.files?.[this.filename];
-        if (!file) {
-          return { ok: true, message: `连接成功（用户 ${user.login}），但 Gist 中无 ${this.filename} 文件，将自动创建` };
-        }
-        return { ok: true, message: `连接成功！用户 ${user.login}，${rateInfo}` };
+      if (resolved.gistId) {
+        return { ok: true, message: `连接成功！用户 ${user.login}，当前 Gist: ${resolved.gistId.slice(0, 8)}...，${rateInfo}` };
       }
       return { ok: true, message: `连接成功！用户 ${user.login}，将自动创建新 Gist，${rateInfo}` };
     } catch (e: any) {
@@ -442,12 +492,12 @@ class GistProvider implements CloudProvider {
   }
 
   async getAllData(): Promise<AppData | null> {
-    // 跨设备同步核心：先解析 gistId（可能从另一台电脑的 Gist 自动发现）
-    await this.resolveGistId();
-    if (!this.gistId) return null;
+    // 跨设备同步核心：先解析 gistId（非 force 模式，日常同步用）
+    const resolved = await this.resolveGistId(false);
+    if (!resolved.gistId) return null;
 
     try {
-      const gist = await this.api('GET', `/${this.gistId}`);
+      const gist = await this.api('GET', `/${resolved.gistId}`);
       const file = gist.files?.[this.filename];
       if (!file) return null;
       const rawUrl = file.raw_url;
@@ -469,9 +519,9 @@ class GistProvider implements CloudProvider {
     };
 
     // 跨设备同步核心：先尝试查找已有 Gist，避免重复创建
-    await this.resolveGistId();
+    const resolved = await this.resolveGistId(false);
 
-    if (!this.gistId) {
+    if (!resolved.gistId) {
       // 创建新 Gist
       const gist = await this.api('POST', '', {
         description: this.description,
@@ -490,11 +540,11 @@ class GistProvider implements CloudProvider {
     }
 
     // 更新现有 Gist
-    await this.api('PATCH', `/${this.gistId}`, {
+    await this.api('PATCH', `/${resolved.gistId}`, {
       description: this.description,
       files,
     });
-    console.log('[Gist] 更新 Gist:', this.gistId);
+    console.log('[Gist] 更新 Gist:', resolved.gistId);
   }
 }
 
@@ -564,6 +614,37 @@ class CloudStorageService {
 
   isCloudEnabled(): boolean {
     return this.provider !== null;
+  }
+
+  // ---------- Gist 专用方法 ----------
+
+  /** 获取当前 Gist ID（仅当 Provider 为 Gist 时有效） */
+  getCurrentGistId(): string | null {
+    if (this.provider instanceof GistProvider) {
+      return this.provider.getCurrentGistId();
+    }
+    return null;
+  }
+
+  /**
+   * 强制重新扫描所有 Gist，选择数据最新的那个。
+   * 用于解决多台电脑创建了不同 Gist 的问题。
+   */
+  async forceResolveGistId(): Promise<{ ok: boolean; message: string }> {
+    if (!(this.provider instanceof GistProvider)) {
+      return { ok: false, message: '当前不是 Gist 同步模式' };
+    }
+    try {
+      const result = await this.provider.resolveGistId(true);
+      if (result.switched) {
+        // 切换后重新加载数据
+        await this.loadAllData();
+        return { ok: true, message: result.message + '（已自动重新加载最新数据）' };
+      }
+      return { ok: true, message: result.message };
+    } catch (e) {
+      return { ok: false, message: `切换失败: ${e instanceof Error ? e.message : '未知错误'}` };
+    }
   }
 
   // ---------- 连接测试 ----------
@@ -867,6 +948,14 @@ export function useCloudStorage() {
   const [isCloudEnabled, setIsCloudEnabled] = useState(() => cloudStorage.isCloudEnabled());
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<string>('');
+  const [currentGistId, setCurrentGistId] = useState<string | null>(() => cloudStorage.getCurrentGistId());
+
+  // 监听 provider 变化时更新 currentGistId
+  useEffect(() => {
+    return cloudStorage.onDataChange(() => {
+      setCurrentGistId(cloudStorage.getCurrentGistId());
+    });
+  }, []);
 
   const syncNow = useCallback(async () => {
     if (!cloudStorage.isCloudEnabled()) return;
@@ -875,6 +964,7 @@ export function useCloudStorage() {
       const data = cloudStorage.loadFromLocal();
       await cloudStorage.saveAllData(data);
       setLastSyncTime(new Date().toLocaleTimeString('zh-CN'));
+      setCurrentGistId(cloudStorage.getCurrentGistId());
     } catch (e) {
       console.error('Sync failed:', e);
     } finally {
@@ -896,24 +986,28 @@ export function useCloudStorage() {
       anonKey: anonKey || SUPABASE_BUILTIN.anonKey,
     });
     setIsCloudEnabled(true);
+    setCurrentGistId(cloudStorage.getCurrentGistId());
     syncNow();
   }, [syncNow]);
 
   const enableProvider = useCallback((config: ProviderConfigs) => {
     cloudStorage.setProviderConfig(config);
     setIsCloudEnabled(true);
+    setCurrentGistId(cloudStorage.getCurrentGistId());
     syncNow();
   }, [syncNow]);
 
   const enableGist = useCallback((config: GistConfig) => {
     cloudStorage.setProviderConfig(config);
     setIsCloudEnabled(true);
+    setCurrentGistId(cloudStorage.getCurrentGistId());
     syncNow();
   }, [syncNow]);
 
   const disableCloud = useCallback(() => {
     cloudStorage.setProviderConfig(null);
     setIsCloudEnabled(false);
+    setCurrentGistId(null);
   }, []);
 
   const forceUploadLocal = useCallback(async () => {
@@ -922,9 +1016,26 @@ export function useCloudStorage() {
     try {
       await cloudStorage.forceUploadLocal();
       setLastSyncTime(new Date().toLocaleTimeString('zh-CN'));
+      setCurrentGistId(cloudStorage.getCurrentGistId());
     } catch (e) {
       console.error('Force upload failed:', e);
       throw e;
+    } finally {
+      setIsSyncing(false);
+    }
+  }, []);
+
+  const forceResolveGistId = useCallback(async () => {
+    setIsSyncing(true);
+    try {
+      const result = await cloudStorage.forceResolveGistId();
+      if (result.ok) {
+        setCurrentGistId(cloudStorage.getCurrentGistId());
+        setLastSyncTime(new Date().toLocaleTimeString('zh-CN'));
+      }
+      return result;
+    } catch (e) {
+      return { ok: false, message: `操作失败: ${e instanceof Error ? e.message : '未知错误'}` };
     } finally {
       setIsSyncing(false);
     }
@@ -934,12 +1045,14 @@ export function useCloudStorage() {
     isCloudEnabled,
     isSyncing,
     lastSyncTime,
+    currentGistId,
     syncNow,
     enableCloud,
     enableProvider,
     enableGist,
     disableCloud,
     forceUploadLocal,
+    forceResolveGistId,
     testConnection: () => cloudStorage.testConnection(),
     exportData: () => cloudStorage.exportToJSON(),
     importData: (json: string) => cloudStorage.importFromJSON(json),

@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import {
   Settings, Users, Pencil, Save, X, GraduationCap, FlaskConical, BookOpen, UserCog, CheckCircle2, Archive,
-  Cloud, CloudOff, Upload, Download, Database, RefreshCw, CheckCircle, AlertTriangle, ExternalLink,
+  Cloud, CloudOff, Upload, Download, Database, RefreshCw, CheckCircle, AlertTriangle, ExternalLink, Search,
   Lock, LogOut, Eye, EyeOff, BrainCircuit, Cpu, Zap, Trash2, Coins
 } from 'lucide-react';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
@@ -74,7 +74,7 @@ function CloudSyncPanel() {
   const {
     isCloudEnabled, isSyncing, lastSyncTime,
     syncNow, enableCloud, enableGist, disableCloud, testConnection,
-    forceUploadLocal,
+    forceUploadLocal, forceResolveGistId,
   } = useCloudStorage();
 
   // Supabase state
@@ -203,6 +203,35 @@ function CloudSyncPanel() {
               >
                 <Upload className="w-3 h-3 mr-1" />
                 强制上传
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs text-purple-600 border-purple-300 hover:bg-purple-50 hover:text-purple-700"
+                onClick={async () => {
+                  if (!window.confirm(
+                    '🔍 强制查找已有 Gist\n\n' +
+                    '此操作会扫描您的 GitHub 账户下所有 Gist，\n' +
+                    '自动找到包含 qlab-data.json 且数据最新的那个，\n' +
+                    '并切换到该 Gist。\n\n' +
+                    '如果当前 Gist 不是最新的，将被弃用。\n\n' +
+                    '确定要执行查找吗？'
+                  )) return;
+                  try {
+                    const result = await forceResolveGistId();
+                    if (result.ok) {
+                      window.alert('✅ ' + result.message);
+                    } else {
+                      window.alert('❌ ' + result.message);
+                    }
+                  } catch {
+                    window.alert('❌ 查找失败，请检查网络连接或 Token 是否有效。');
+                  }
+                }}
+                disabled={isSyncing}
+              >
+                <Search className="w-3 h-3 mr-1" />
+                强制查找 Gist
               </Button>
               <Button
                 size="sm"
