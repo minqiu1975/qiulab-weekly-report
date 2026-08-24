@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { notifyPersonsUpdated } from '../hooks/usePersons';
 import { useCloudStorage, cloudStorage } from '../services/cloudStorage';
-import type { GistConfig } from '../services/cloudStorage';
+import type { GistConfig, GistCandidate } from '../services/cloudStorage';
 import { logout, changePassword } from '../components/AuthGuard';
 import { DEFAULT_SETTINGS_MEMBERS } from '../data/mockPersons';
 import type { TeamMember } from '../data/mockPersons';
@@ -72,9 +72,9 @@ type ProviderTab = 'supabase' | 'rest_api' | 'gist';
 
 function CloudSyncPanel() {
   const {
-    isCloudEnabled, isSyncing, lastSyncTime,
+    isCloudEnabled, isSyncing, lastSyncTime, currentGistId,
     syncNow, enableCloud, enableGist, disableCloud, testConnection,
-    forceUploadLocal, forceResolveGistId,
+    forceUploadLocal, forceResolveGistId, switchToGistId,
   } = useCloudStorage();
 
   // Supabase state
@@ -96,6 +96,8 @@ function CloudSyncPanel() {
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [gistError, setGistError] = useState<string | null>(null);
+  const [gistCandidates, setGistCandidates] = useState<GistCandidate[]>([]);
+  const [showGistCandidates, setShowGistCandidates] = useState(false);
 
   const handleTest = async () => {
     setTestResult(null);
@@ -209,20 +211,13 @@ function CloudSyncPanel() {
                 variant="outline"
                 className="text-xs text-purple-600 border-purple-300 hover:bg-purple-50 hover:text-purple-700"
                 onClick={async () => {
-                  if (!window.confirm(
-                    '🔍 强制查找已有 Gist\n\n' +
-                    '此操作会扫描您的 GitHub 账户下所有 Gist，\n' +
-                    '自动找到包含 qlab-data.json 且数据最新的那个，\n' +
-                    '并切换到该 Gist。\n\n' +
-                    '如果当前 Gist 不是最新的，将被弃用。\n\n' +
-                    '确定要执行查找吗？'
-                  )) return;
                   try {
                     const result = await forceResolveGistId();
-                    if (result.ok) {
-                      window.alert('✅ ' + result.message);
+                    if (result.candidates && result.candidates.length > 1) {
+                      setGistCandidates(result.candidates);
+                      setShowGistCandidates(true);
                     } else {
-                      window.alert('❌ ' + result.message);
+                      window.alert(result.ok ? '✅ ' + result.message : '❌ ' + result.message);
                     }
                   } catch {
                     window.alert('❌ 查找失败，请检查网络连接或 Token 是否有效。');
@@ -434,6 +429,93 @@ function CloudSyncPanel() {
           </>
         )}
       </CardContent>
+      {/* 候选 Gist 选择弹窗 */}
+      {showGistCandidates && gistCandidates.length > 1 && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-auto">
+            <div className="p-4 border-b border-slate-200">
+              <h3 className="text-base font-semibold text-slate-800">选择要使用的 Gist</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                检测到多个 Gist 包含数据。系统推荐的是按"最后修改时间"排序的第一个，但您可以根据实际内容选择最合适的。
+              </p>
+            </div>
+            <div className="p-4 space-y-3">
+              {gistCandidates.map((c: GistCandidate, idx: number) => (
+                <div
+                  key={c.id}
+                  className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                    idx === 0
+                      ? 'border-purple-300 bg-purple-50 hover:bg-purple-100'
+                      : 'border-slate-200 hover:border-purple-300 hover:bg-slate-50'
+                  }`}
+                  onClick={async () => {
+                    if (c.id === currentGistId) {
+                      window.alert('您选择的已是当前使用的 Gist，无需切换。');
+                      setShowGistCandidates(false);
+                      return;
+                    }
+                    if (!window.confirm(
+                      `确定要切换到以下 Gist 吗？\n\n` +
+                      `ID: ${c.id.slice(0, 12)}...\n` +
+                      `人员: ${c.personCount} 人\n` +
+                      `上传: ${c.uploadCount} 条\n` +
+                      `更新: ${new Date(c.lastModified).toLocaleString('zh-CN')}\n\n` +
+                      `切换后将重新加载该 Gist 的数据，本地数据将被合并。`
+                    )) return;
+                    setShowGistCandidates(false);
+                    try {
+                      const result = await switchToGistId(c.id);
+                      if (result.ok) {
+                        window.alert('✅ ' + result.message);
+                      } else {
+                        window.alert('❌ ' + result.message);
+                      }
+                    } catch {
+                      window.alert('❌ 切换失败');
+                    }
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs font-mono px-1.5 py-0.5 rounded ${
+                        idx === 0 ? 'bg-purple-200 text-purple-800' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {c.id.slice(0, 8)}...
+                      </span>
+                      {idx === 0 && (
+                        <Badge className="bg-purple-100 text-purple-700 text-[10px]">
+                          系统推荐
+                        </Badge>
+                      )}
+                      {c.id === currentGistId && (
+                        <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">
+                          当前使用
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-slate-400">
+                      {new Date(c.lastModified).toLocaleDateString('zh-CN')}
+                    </span>
+                  </div>
+                  <div className="flex gap-4 mt-2 text-xs text-slate-600">
+                    <span>{c.personCount} 人</span>
+                    <span>{c.uploadCount} 条上传</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 border-t border-slate-200 flex justify-end gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowGistCandidates(false)}
+              >
+                取消
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
