@@ -363,6 +363,23 @@ function compareFreshness(a: GistCandidate, b: GistCandidate): number {
   return b.lastModified.localeCompare(a.lastModified);
 }
 
+/**
+ * 计算数据新鲜度分数（数值越高越新鲜）。
+ * 用于跨设备同步时判断哪份数据真正最新，不依赖 lastModified（因为 lastModified
+ * 只记录"上次同步操作"时间，不代表内容新鲜度）。
+ */
+function calcDataFreshness(data: AppData): number {
+  const uploads = data.uploads || [];
+  const persons = data.persons || [];
+  const latestUpload = uploads.length > 0
+    ? uploads.map(u => u.weekDate || u.uploadDate || '1970-01-01').sort((a, b) => b.localeCompare(a))[0]
+    : '1970-01-01';
+  // 分数 = 最新周报日期(YYYYMMDD) * 10000 + 人员数 * 100 + 上传数
+  // 这样最新周报日期是决定性因素，人员数和上传数作为辅助
+  const dateScore = parseInt(latestUpload.replace(/-/g, '')) || 0;
+  return dateScore * 10000 + persons.length * 100 + uploads.length;
+}
+
 class GistProvider implements CloudProvider {
   private token: string;
   private gistId: string | null;
@@ -805,10 +822,13 @@ class CloudStorageService {
       }
 
       // ===== 跨浏览器核心：始终合并双方数据，不丢失任何一方的内容 =====
-      // 人员数据：云端为主，本地补充（确保所有浏览器看到一致的最新人员数据）
-      const localModified = local.lastModified || '';
-      const cloudModified = cloud.lastModified || '';
-      const useCloud = cloudModified >= localModified;
+      // 判断哪边数据真正更新鲜（基于实际内容，不依赖 lastModified）
+      const cloudFreshness = calcDataFreshness(cloud);
+      const localFreshness = calcDataFreshness(local);
+      // 只有当云端数据在内容上确实更新时，才优先使用云端；否则保留本地（避免旧数据覆盖新数据）
+      const useCloud = cloudFreshness >= localFreshness;
+
+      console.log(`[DEBUG loadAllData] cloudFreshness=${cloudFreshness}, localFreshness=${localFreshness}, useCloud=${useCloud}`);
       const persons = (() => {
         // 构建 id → person 的映射
         const localMap = new Map((local.persons || []).map((p: any) => [p.id, p]));
@@ -879,7 +899,7 @@ class CloudStorageService {
           : { ...cloudPerson, ...localPerson };
       }
 
-      console.log(`[DEBUG loadAllData] useCloud=${useCloud}, cloudMod=${cloudModified}, localMod=${localModified}, trendsWeeks=[${Object.keys(mergedTrends).slice(-3).join(',')}], historyPersons=${Object.keys(mergedHistory).length}`);
+      console.log(`[DEBUG loadAllData] useCloud=${useCloud}, cloudFresh=${cloudFreshness}, localFresh=${localFreshness}, trendsWeeks=[${Object.keys(mergedTrends).slice(-3).join(',')}], historyPersons=${Object.keys(mergedHistory).length}`);
 
       const mergedDynamic = {
         trends: mergedTrends,
@@ -906,8 +926,8 @@ class CloudStorageService {
         dynamic: mergedDynamic,  // ← 使用合并后的 dynamic（双方并集）
         version: '1.0',
         lastSync: new Date().toISOString(),
-        // lastModified 取最新的那方
-        lastModified: cloudModified > localModified ? cloudModified : localModified,
+        // lastModified 取较新的那方（基于内容新鲜度）
+        lastModified: useCloud ? (cloud.lastModified || local.lastModified || '') : (local.lastModified || cloud.lastModified || ''),
       };
 
       // 保存到本地
