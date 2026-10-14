@@ -58,7 +58,7 @@ export default function KimiVersionDisplay() {
     runCheck();
   }, [runCheck]);
 
-  const isKimi28 = provider === 'kimi28';
+  const isKimiCode = provider === 'kimi-code';
   const isKimi30 = provider === 'kimi30';
   const isDeepSeekFlash = provider === 'deepseek-flash';
   const isDeepSeekPro = provider === 'deepseek-pro';
@@ -115,7 +115,7 @@ export default function KimiVersionDisplay() {
             <div className="flex justify-between">
               <span>当前 Provider</span>
               <span className="font-mono text-slate-600">
-                {isDeepSeekPro ? 'DeepSeek-V4-Pro' : isDeepSeekFlash ? 'DeepSeek-V4-Flash' : isKimi30 ? 'Kimi-K3' : isKimi28 ? 'Kimi-K2.8' : 'Kimi-K2.6'}
+                {isDeepSeekPro ? 'DeepSeek-V4-Pro' : isDeepSeekFlash ? 'DeepSeek-V4-Flash' : isKimi30 ? 'Kimi-K3' : isKimiCode ? 'Kimi Code (K2.8)' : 'Kimi-K2.6'}
               </span>
             </div>
             <div className="flex justify-between">

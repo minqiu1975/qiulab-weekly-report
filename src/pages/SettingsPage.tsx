@@ -528,9 +528,13 @@ const DEFAULT_MOONSHOT_URL = 'https://api.moonshot.cn/v1';
 function LLMConfigPanel() {
   const [provider, setProviderState] = useState<LLMProvider>(getProvider);
 
-  // Kimi state (shared between k2.6 and k3.0)
+  // Kimi 开放平台 state (K2.6 / K3)
   const [kimiApiKey, setKimiApiKey] = useState(() => localStorage.getItem('qlab_moonshot_api_key') || '');
   const [kimiApiUrl, setKimiApiUrl] = useState(() => localStorage.getItem('qlab_moonshot_api_url') || DEFAULT_MOONSHOT_URL);
+
+  // Kimi Code state (K2.8 Preview)
+  const [kimiCodeApiKey, setKimiCodeApiKey] = useState(() => localStorage.getItem('qlab_kimicode_api_key') || '');
+  const [kimiCodeApiUrl, setKimiCodeApiUrl] = useState(() => localStorage.getItem('qlab_kimicode_api_url') || 'https://api.kimi.com/coding/v1');
 
   // DeepSeek state
   const [dsApiKey, setDsApiKey] = useState(() => getDeepSeekApiKey());
@@ -539,16 +543,19 @@ function LLMConfigPanel() {
   const [showKey, setShowKey] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const hasKimiKey = !!kimiApiKey;
-  const isCustomKimiUrl = !!kimiApiUrl && kimiApiUrl !== DEFAULT_MOONSHOT_URL;
-  const hasDsKey = !!dsApiKey;
-  const isKimi28 = provider === 'kimi28';
+  const isKimiCode = provider === 'kimi-code';
   const isKimi26 = provider === 'kimi26';
   const isKimi30 = provider === 'kimi30';
   const isDeepSeekFlash = provider === 'deepseek-flash';
   const isDeepSeekPro = provider === 'deepseek-pro';
   const isDeepSeek = isDeepSeekFlash || isDeepSeekPro;
-  const isKimi = isKimi28 || isKimi26 || isKimi30;
+  const isKimi = isKimiCode || isKimi26 || isKimi30;
+
+  const hasKimiKey = isKimiCode ? !!kimiCodeApiKey : !!kimiApiKey;
+  const isCustomKimiUrl = isKimiCode
+    ? !!kimiCodeApiUrl && kimiCodeApiUrl !== 'https://api.kimi.com/coding/v1'
+    : !!kimiApiUrl && kimiApiUrl !== DEFAULT_MOONSHOT_URL;
+  const hasDsKey = !!dsApiKey;
 
   const switchProvider = (p: LLMProvider) => {
     setProvider(p);          // 保存到 localStorage
@@ -557,7 +564,7 @@ function LLMConfigPanel() {
   };
 
   const handleSave = () => {
-    // Save Kimi config
+    // Save Kimi 开放平台 config
     if (kimiApiKey.trim()) {
       localStorage.setItem('qlab_moonshot_api_key', kimiApiKey.trim());
     } else {
@@ -569,6 +576,19 @@ function LLMConfigPanel() {
     } else {
       localStorage.removeItem('qlab_moonshot_api_url');
       setKimiApiUrl(DEFAULT_MOONSHOT_URL);
+    }
+    // Save Kimi Code config
+    if (kimiCodeApiKey.trim()) {
+      localStorage.setItem('qlab_kimicode_api_key', kimiCodeApiKey.trim());
+    } else {
+      localStorage.removeItem('qlab_kimicode_api_key');
+      setKimiCodeApiKey('');
+    }
+    if (kimiCodeApiUrl.trim()) {
+      localStorage.setItem('qlab_kimicode_api_url', kimiCodeApiUrl.trim());
+    } else {
+      localStorage.removeItem('qlab_kimicode_api_url');
+      setKimiCodeApiUrl('https://api.kimi.com/coding/v1');
     }
     // Save DeepSeek config
     setDeepSeekApiKey(dsApiKey.trim());
@@ -583,6 +603,11 @@ function LLMConfigPanel() {
     setKimiApiUrl(DEFAULT_MOONSHOT_URL);
     localStorage.removeItem('qlab_moonshot_api_key');
     localStorage.removeItem('qlab_moonshot_api_url');
+
+    setKimiCodeApiKey('');
+    setKimiCodeApiUrl('https://api.kimi.com/coding/v1');
+    localStorage.removeItem('qlab_kimicode_api_key');
+    localStorage.removeItem('qlab_kimicode_api_url');
 
     setDsApiKey('');
     setDsApiUrl('https://api.deepseek.com/v1');
@@ -611,19 +636,19 @@ function LLMConfigPanel() {
           <label className="text-xs font-medium text-slate-700">选择 AI 模型</label>
           <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => switchProvider('kimi28')}
+              onClick={() => switchProvider('kimi-code')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
-                isKimi28
+                isKimiCode
                   ? 'border-cyan-300 bg-cyan-50 text-cyan-800'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Cpu className={`w-4 h-4 ${isKimi28 ? 'text-cyan-600' : 'text-slate-400'}`} />
+              <Cpu className={`w-4 h-4 ${isKimiCode ? 'text-cyan-600' : 'text-slate-400'}`} />
               <div className="text-left">
-                <div className="font-medium">Kimi-K2.8</div>
-                <div className="text-[10px] opacity-70">性价比推荐</div>
+                <div className="font-medium">Kimi Code (K2.8)</div>
+                <div className="text-[10px] opacity-70">需 Kimi Code 订阅</div>
               </div>
-              {isKimi28 && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
+              {isKimiCode && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
             </button>
 
             <button
@@ -713,9 +738,9 @@ function LLMConfigPanel() {
                 定价说明
               </div>
               <ul className="list-disc list-outside ml-3.5 space-y-1">
-                <li><strong>Kimi-K2.8</strong>: 缓存命中 ¥0.50/M · 输入 ¥2.00/M · 输出 ¥8.00/M（推荐，性价比最高）</li>
-                <li><strong>Kimi-K2.6</strong>: 缓存命中 ¥1.10/M · 输入 ¥6.50/M · 输出 ¥27.00/M</li>
-                <li><strong>Kimi-K3</strong>: 缓存命中 ¥2.00/M · 输入 ¥20.00/M · 输出 ¥100.00/M</li>
+                <li><strong>Kimi Code (K2.8)</strong>: 输入约 $1/M · 输出约 $4/M（需 Kimi Code 订阅，端点 api.kimi.com）</li>
+                <li><strong>Kimi-K2.6</strong>: 缓存命中 ¥1.10/M · 输入 ¥6.50/M · 输出 ¥27.00/M（开放平台）</li>
+                <li><strong>Kimi-K3</strong>: 缓存命中 ¥2.00/M · 输入 ¥20.00/M · 输出 ¥100.00/M（开放平台）</li>
               </ul>
             </div>
 
@@ -732,49 +757,86 @@ function LLMConfigPanel() {
                   </Badge>
                 )}
                 <Badge className={`flex items-center gap-1 ${isCustomKimiUrl ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
-                  {kimiApiUrl.includes('.ai') ? '国际站' : '中国站'}
+                  {isKimiCode ? (kimiCodeApiUrl.includes('.ai') ? '海外' : '国内') : (kimiApiUrl.includes('.ai') ? '国际站' : '中国站')}
                 </Badge>
                 <Badge className={`flex items-center gap-1 ${
                   isKimi30 ? 'bg-teal-100 text-teal-700 border-teal-200' :
-                  isKimi28 ? 'bg-cyan-100 text-cyan-700 border-cyan-200' :
+                  isKimiCode ? 'bg-cyan-100 text-cyan-700 border-cyan-200' :
                   'bg-sky-100 text-sky-700 border-sky-200'
                 }`}>
-                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi-K3' : isKimi28 ? 'Kimi-K2.8' : 'Kimi-K2.6'}
+                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi-K3' : isKimiCode ? 'Kimi Code (K2.8)' : 'Kimi-K2.6'}
                 </Badge>
               </div>
             </div>
 
-            <div>
-              <label className="text-xs text-slate-600 mb-1 block">Kimi API 端点</label>
-              <select
-                value={kimiApiUrl}
-                onChange={(e) => setKimiApiUrl(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
-              >
-                <option value="https://api.moonshot.cn/v1">https://api.moonshot.cn/v1（中国站）</option>
-                <option value="https://api.moonshot.ai/v1">https://api.moonshot.ai/v1（国际站）</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs text-slate-600 mb-1 block">Moonshot API Key</label>
-              <div className="relative">
-                <input
-                  type={showKey ? 'text' : 'password'}
-                  value={kimiApiKey}
-                  onChange={(e) => setKimiApiKey(e.target.value)}
-                  placeholder="sk-... 从 platform.moonshot.cn 获取"
-                  className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowKey(!showKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
+            {isKimiCode ? (
+              <>
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Kimi Code API 端点</label>
+                  <select
+                    value={kimiCodeApiUrl}
+                    onChange={(e) => setKimiCodeApiUrl(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                  >
+                    <option value="https://api.kimi.com/coding/v1">https://api.kimi.com/coding/v1（国内）</option>
+                    <option value="https://api.kimi.ai/coding/v1">https://api.kimi.ai/coding/v1（海外）</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Kimi Code API Key</label>
+                  <div className="relative">
+                    <input
+                      type={showKey ? 'text' : 'password'}
+                      value={kimiCodeApiKey}
+                      onChange={(e) => setKimiCodeApiKey(e.target.value)}
+                      placeholder="从 Kimi Code 设置中获取"
+                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowKey(!showKey)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">Kimi Code 的 Key 与 Moonshot 开放平台不互通</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Kimi API 端点</label>
+                  <select
+                    value={kimiApiUrl}
+                    onChange={(e) => setKimiApiUrl(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                  >
+                    <option value="https://api.moonshot.cn/v1">https://api.moonshot.cn/v1（中国站）</option>
+                    <option value="https://api.moonshot.ai/v1">https://api.moonshot.ai/v1（国际站）</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Moonshot API Key</label>
+                  <div className="relative">
+                    <input
+                      type={showKey ? 'text' : 'password'}
+                      value={kimiApiKey}
+                      onChange={(e) => setKimiApiKey(e.target.value)}
+                      placeholder="sk-... 从 platform.moonshot.cn 获取"
+                      className="w-full px-3 py-2 pr-10 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowKey(!showKey)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
