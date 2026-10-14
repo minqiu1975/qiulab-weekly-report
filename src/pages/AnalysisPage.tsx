@@ -8,6 +8,7 @@ import AssessmentPanel from '../components/AssessmentPanel';
 import DeepAnalysisPanel from '../components/DeepAnalysisPanel';
 import { getLatestAssessmentMerged, MOCK_ASSESSMENTS } from '../data/mockAssessments';
 import { ROLE_LABEL_MAP, ROLE_ORDER } from '../data/mockPersons';
+import { getLatestWeekLabel } from '../data/mockTrends';
 import { getMergedPersonHistory } from '../lib/dynamicStorage';
 import { usePersons, notifyPersonsUpdated } from '../hooks/usePersons';
 import { cloudStorage } from '../services/cloudStorage';
@@ -779,7 +780,30 @@ PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室�
     const activePersons = ALL_PERSONS.filter((p) => p.status !== 'graduated' && p.status !== 'left');
     const nameMap = new Map(activePersons.map((p) => [p.id, p.name]));
 
-    // 为每个在职成员找到最新的一条评估
+    // 优先从动态分析数据构建分数分布（覆盖静态mock）
+    const excellentNames: string[] = [];
+    const goodNames: string[] = [];
+    const needsImprovementNames: string[] = [];
+    try {
+      const dynTrends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}') as Record<string, Record<string, { progress: number | string; riskLevel?: string }>>;
+      const latestWeek = getLatestWeekLabel();
+      const weekData = dynTrends[latestWeek];
+      if (weekData && Object.keys(weekData).length > 0) {
+        for (const [personId, data] of Object.entries(weekData)) {
+          const name = nameMap.get(personId) || personId;
+          const score = typeof data.progress === 'number' ? data.progress : 75; // 字符串类型时默认75分
+          if (score >= 80) excellentNames.push(name);
+          else if (score >= 60) goodNames.push(name);
+          else needsImprovementNames.push(name);
+        }
+        return [
+          { name: '优秀(80-100)', value: excellentNames.length, members: excellentNames },
+          { name: '良好(60-80)', value: goodNames.length, members: goodNames },
+          { name: '需改进(<60)', value: needsImprovementNames.length, members: needsImprovementNames },
+        ];
+      }
+    } catch { /* fallback to mock */ }
+    // 兜底：使用静态 mock 数据
     const latestByPerson = new Map<string, typeof MOCK_ASSESSMENTS[0]>();
     for (const a of MOCK_ASSESSMENTS) {
       const existing = latestByPerson.get(a.personId);
@@ -787,9 +811,6 @@ PAINT Lab（Photonics And Instrumentation for NanoTechnology）仇旻实验室�
         latestByPerson.set(a.personId, a);
       }
     }
-    const excellentNames: string[] = [];
-    const goodNames: string[] = [];
-    const needsImprovementNames: string[] = [];
     for (const [, a] of latestByPerson) {
       const name = nameMap.get(a.personId) || a.personName || a.personId;
       if (a.overallScore >= 80) excellentNames.push(name);

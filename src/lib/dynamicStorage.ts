@@ -102,6 +102,8 @@ export function saveDynamicTrends(
   all[weekDate] = personTrends;
   lsSet(KEYS.TRENDS, all);
   addWeekLabel(weekDate);
+  // 更新 lastModified 让本地数据在后续同步中优先于云端
+  localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
   console.log(`[DEBUG saveDynamicTrends] weekDate=${weekDate}, prevCount=${prevCount}, newCount=${newCount}, keys=[${Object.keys(personTrends).slice(0,5).join(',')}${Object.keys(personTrends).length > 5 ? '...' : ''}]`);
 }
 
@@ -158,6 +160,8 @@ export function saveDynamicHistory(
   }
   lsSet(KEYS.HISTORY, all);
   addWeekLabel(weekDate);
+  // 更新 lastModified 让本地数据在后续同步中优先于云端
+  localStorage.setItem('qlab_last_modified', JSON.stringify(new Date().toISOString()));
   console.log(`[DEBUG saveDynamicHistory] weekDate=${weekDate}, count=${names.length}, keys=[${names.slice(0,5).join(',')}${names.length > 5 ? '...' : ''}]`);
 }
 

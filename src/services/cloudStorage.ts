@@ -826,7 +826,8 @@ class CloudStorageService {
       const cloudFreshness = calcDataFreshness(cloud);
       const localFreshness = calcDataFreshness(local);
       // 只有当云端数据在内容上确实更新时，才优先使用云端；否则保留本地（避免旧数据覆盖新数据）
-      const useCloud = cloudFreshness >= localFreshness;
+      // 注意：用 > 而不是 >=，相等时优先保留本地（用户刚操作完本地大概率最新）
+      const useCloud = cloudFreshness > localFreshness;
 
       console.log(`[DEBUG loadAllData] cloudFreshness=${cloudFreshness}, localFreshness=${localFreshness}, useCloud=${useCloud}`);
       const persons = (() => {

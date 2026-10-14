@@ -8,6 +8,7 @@ import { getUploadHistory } from '../lib/dynamicStorage';
 import { usePersons } from '../hooks/usePersons';
 import { ROLE_LABEL_MAP } from '../data/mockPersons';
 import { MOCK_ASSESSMENTS } from '../data/mockAssessments';
+import type { Assessment } from '../types';
 import { getLatestWeekLabel, TREND_LABELS } from '../data/mockTrends';
 
 import {
@@ -211,10 +212,47 @@ export default function Dashboard() {
   // 使用静态TREND_LABELS长度计算期数（避免动态标签中的重复/脏数据干扰）
   const latestWeekNumber = TREND_LABELS.length;
 
-  const latestAssessments = [...MOCK_ASSESSMENTS]
-    .filter((a) => a.weekNumber === latestWeekNumber)
-    .sort((a, b) => b.overallScore - a.overallScore)
-    .slice(0, 3);
+  // 从动态分析数据中构建最新一周的研判摘要（优先使用用户实际分析结果，而非静态mock）
+  const latestAssessments = (() => {
+    try {
+      const dynTrends = JSON.parse(localStorage.getItem('qlab_dynamic_trends') || '{}') as Record<string, Record<string, { progress: number; problems: number; characterTag: string; riskLevel?: 'low' | 'medium' | 'high'; summary?: string; analysis?: string }>>;
+      const latestWeek = getLatestWeekLabel();
+      const weekData = dynTrends[latestWeek];
+      if (weekData && Object.keys(weekData).length > 0) {
+        // 从动态数据构建 Assessment 兼容对象
+        return Object.entries(weekData)
+          .map(([personId, data]) => {
+            // 查找人员信息以获取名字
+            const person = ALL_PERSONS.find((p) => p.id === personId || p.name === personId);
+            return {
+              id: `${personId}-${latestWeek}`,
+              personId: person?.id || personId,
+              personName: person?.name || personId,
+              weekNumber: latestWeekNumber,
+              weekLabel: latestWeek,
+              generatedAt: new Date().toISOString(),
+              progressAssessment: { score: data.progress || 0, evaluation: '', strengths: [], weaknesses: [] },
+              problemDiagnosis: { count: data.problems || 0, severity: 'low', issues: [], rootCauses: [] },
+              pathAnalysis: { trajectory: 'stable', factors: [], confidence: 0.8 },
+              actionRecommendations: { immediate: [], shortTerm: [], longTerm: [] },
+              overallScore: data.progress || 0,
+              riskLevel: data.riskLevel || (data.problems > 0 ? 'medium' : 'low'),
+              summary: data.summary || data.analysis || data.characterTag || '暂无分析',
+              literatureSurvey: { papers: [], insights: '', relevance: '' },
+              outcomePrediction: { expectedOutcome: '', confidence: 0.8, timeline: '' },
+            } as unknown as Assessment;
+          })
+          .filter((a) => a.personName !== '未提交' && !a.summary.includes('未提交周报'))
+          .sort((a, b) => b.overallScore - a.overallScore)
+          .slice(0, 3);
+      }
+    } catch { /* fallback to mock */ }
+    // 兜底：使用静态 mock 数据
+    return [...MOCK_ASSESSMENTS]
+      .filter((a) => a.weekNumber === latestWeekNumber)
+      .sort((a, b) => b.overallScore - a.overallScore)
+      .slice(0, 3);
+  })();
 
   // Person dynamics
   const currentWeekLabel = `2026年第${latestWeekNumber}期 (${latestWeekLabel})`;
