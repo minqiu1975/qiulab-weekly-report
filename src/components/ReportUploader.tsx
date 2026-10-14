@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import mammoth from 'mammoth';
+import { getProviderConfig } from '../lib/llmApi';
 import { ACTIVE_PERSONS, ALL_PERSONS } from '../data/mockPersons';
 import { usePersons } from '../hooks/usePersons';
 import { Card, CardContent } from './ui/card';
@@ -1192,7 +1193,7 @@ export default function ReportUploader() {
                 personId: person.id,
                 personName: person.name,
                 analysisDate: new Date().toISOString(),
-                model: 'kimi-k2.6',
+                model: getProviderConfig().modelId,
                 researchProgress: result.researchProgress,
                 researchHotspots: result.researchHotspots,
                 suggestedDirections: result.suggestedDirections,

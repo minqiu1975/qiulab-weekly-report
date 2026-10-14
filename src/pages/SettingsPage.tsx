@@ -542,12 +542,13 @@ function LLMConfigPanel() {
   const hasKimiKey = !!kimiApiKey;
   const isCustomKimiUrl = !!kimiApiUrl && kimiApiUrl !== DEFAULT_MOONSHOT_URL;
   const hasDsKey = !!dsApiKey;
+  const isKimi28 = provider === 'kimi28';
   const isKimi26 = provider === 'kimi26';
   const isKimi30 = provider === 'kimi30';
   const isDeepSeekFlash = provider === 'deepseek-flash';
   const isDeepSeekPro = provider === 'deepseek-pro';
   const isDeepSeek = isDeepSeekFlash || isDeepSeekPro;
-  const isKimi = isKimi26 || isKimi30;
+  const isKimi = isKimi28 || isKimi26 || isKimi30;
 
   const switchProvider = (p: LLMProvider) => {
     setProvider(p);          // 保存到 localStorage
@@ -610,19 +611,19 @@ function LLMConfigPanel() {
           <label className="text-xs font-medium text-slate-700">选择 AI 模型</label>
           <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => switchProvider('kimi26')}
+              onClick={() => switchProvider('kimi28')}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
-                isKimi26
+                isKimi28
                   ? 'border-cyan-300 bg-cyan-50 text-cyan-800'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Cpu className={`w-4 h-4 ${isKimi26 ? 'text-cyan-600' : 'text-slate-400'}`} />
+              <Cpu className={`w-4 h-4 ${isKimi28 ? 'text-cyan-600' : 'text-slate-400'}`} />
               <div className="text-left">
-                <div className="font-medium">Kimi-K2.6</div>
-                <div className="text-[10px] opacity-70">需配置 API Key</div>
+                <div className="font-medium">Kimi-K2.8</div>
+                <div className="text-[10px] opacity-70">性价比推荐</div>
               </div>
-              {isKimi26 && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
+              {isKimi28 && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
             </button>
 
             <button
@@ -636,9 +637,25 @@ function LLMConfigPanel() {
               <Cpu className={`w-4 h-4 ${isKimi30 ? 'text-teal-600' : 'text-slate-400'}`} />
               <div className="text-left">
                 <div className="font-medium">Kimi-K3</div>
-                <div className="text-[10px] opacity-70">需配置 API Key</div>
+                <div className="text-[10px] opacity-70">最强能力</div>
               </div>
               {isKimi30 && <CheckCircle className="w-4 h-4 text-teal-600 ml-auto" />}
+            </button>
+
+            <button
+              onClick={() => switchProvider('kimi26')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-all ${
+                isKimi26
+                  ? 'border-sky-300 bg-sky-50 text-sky-800'
+                  : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+              }`}
+            >
+              <Cpu className={`w-4 h-4 ${isKimi26 ? 'text-sky-600' : 'text-slate-400'}`} />
+              <div className="text-left">
+                <div className="font-medium">Kimi-K2.6</div>
+                <div className="text-[10px] opacity-70">旧版兼容</div>
+              </div>
+              {isKimi26 && <CheckCircle className="w-4 h-4 text-sky-600 ml-auto" />}
             </button>
 
             <button
@@ -696,9 +713,9 @@ function LLMConfigPanel() {
                 定价说明
               </div>
               <ul className="list-disc list-outside ml-3.5 space-y-1">
+                <li><strong>Kimi-K2.8</strong>: 缓存命中 ¥0.50/M · 输入 ¥2.00/M · 输出 ¥8.00/M（推荐，性价比最高）</li>
                 <li><strong>Kimi-K2.6</strong>: 缓存命中 ¥1.10/M · 输入 ¥6.50/M · 输出 ¥27.00/M</li>
                 <li><strong>Kimi-K3</strong>: 缓存命中 ¥2.00/M · 输入 ¥20.00/M · 输出 ¥100.00/M</li>
-                <li>K3 价格显著高于 K2.6，请根据分析精度需求选择</li>
               </ul>
             </div>
 
@@ -717,8 +734,12 @@ function LLMConfigPanel() {
                 <Badge className={`flex items-center gap-1 ${isCustomKimiUrl ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                   {kimiApiUrl.includes('.ai') ? '国际站' : '中国站'}
                 </Badge>
-                <Badge className={`flex items-center gap-1 ${isKimi30 ? 'bg-teal-100 text-teal-700 border-teal-200' : 'bg-cyan-100 text-cyan-700 border-cyan-200'}`}>
-                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi-K3' : 'Kimi-K2.6'}
+                <Badge className={`flex items-center gap-1 ${
+                  isKimi30 ? 'bg-teal-100 text-teal-700 border-teal-200' :
+                  isKimi28 ? 'bg-cyan-100 text-cyan-700 border-cyan-200' :
+                  'bg-sky-100 text-sky-700 border-sky-200'
+                }`}>
+                  <Cpu className="w-3 h-3" /> {isKimi30 ? 'Kimi-K3' : isKimi28 ? 'Kimi-K2.8' : 'Kimi-K2.6'}
                 </Badge>
               </div>
             </div>

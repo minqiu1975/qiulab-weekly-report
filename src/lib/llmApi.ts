@@ -9,7 +9,7 @@ import { getDatePrefix } from './dateContext';
 // ============================================================
 // Provider 类型定义
 // ============================================================
-export type LLMProvider = 'kimi26' | 'kimi30' | 'deepseek-flash' | 'deepseek-pro';
+export type LLMProvider = 'kimi28' | 'kimi26' | 'kimi30' | 'deepseek-flash' | 'deepseek-pro';
 
 export interface ProviderConfig {
   provider: LLMProvider;
@@ -25,6 +25,7 @@ export interface ProviderConfig {
 const KIMI_API_KEY_KEY = 'qlab_moonshot_api_key';
 const KIMI_URL_KEY = 'qlab_moonshot_api_url';
 const KIMI_DEFAULT_URL = 'https://api.moonshot.cn/v1';
+const KIMI28_MODEL = 'kimi-k2.8';
 const KIMI26_MODEL = 'kimi-k2.6';
 const KIMI30_MODEL = 'kimi-k3'; // Kimi 3.0
 
@@ -43,7 +44,7 @@ const DEEPSEEK_PRO_MODEL = 'deepseek-v4-pro';       // DeepSeek-V4-Pro-0813
 const PROVIDER_KEY = 'qlab_llm_provider';
 
 export function getProvider(): LLMProvider {
-  return (localStorage.getItem(PROVIDER_KEY) as LLMProvider) || 'kimi26';
+  return (localStorage.getItem(PROVIDER_KEY) as LLMProvider) || 'kimi28';
 }
 
 export function setProvider(provider: LLMProvider): void {
@@ -82,11 +83,20 @@ export function getProviderConfig(): ProviderConfig {
       baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
     };
   }
-  // 默认 Kimi 2.6
+  if (provider === 'kimi26') {
+    return {
+      provider: 'kimi26',
+      displayName: 'Kimi-K2.6',
+      modelId: KIMI26_MODEL,
+      apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
+      baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
+    };
+  }
+  // 默认 Kimi 2.8（性价比最高）
   return {
-    provider: 'kimi26',
-    displayName: 'Kimi-K2.6',
-    modelId: KIMI26_MODEL,
+    provider: 'kimi28',
+    displayName: 'Kimi-K2.8',
+    modelId: KIMI28_MODEL,
     apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
     baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
   };
@@ -110,7 +120,9 @@ export function getBaseUrl(): string {
 
 export function getKimiModel(): string {
   const provider = getProvider();
-  return provider === 'kimi30' ? KIMI30_MODEL : KIMI26_MODEL;
+  if (provider === 'kimi30') return KIMI30_MODEL;
+  if (provider === 'kimi26') return KIMI26_MODEL;
+  return KIMI28_MODEL;
 }
 
 // ============================================================
@@ -156,15 +168,18 @@ export function getModelPricing(): ModelPricing {
     case 'kimi30':
       // Kimi-K3: 缓存命中 ¥2.00/M, 输入 ¥20.00/M, 输出 ¥100.00/M
       return { inputPrice: 20.00, cacheHitPrice: 2.00, outputPrice: 100.00, name: 'Kimi-K3' };
+    case 'kimi26':
+      // Kimi-K2.6: 缓存命中 ¥1.10/M, 输入 ¥6.50/M, 输出 ¥27.00/M
+      return { inputPrice: 6.50, cacheHitPrice: 1.10, outputPrice: 27.00, name: 'Kimi-K2.6' };
     case 'deepseek-flash':
       // 闲时价格（高峰为 2 倍）
       return { inputPrice: 1.50, cacheHitPrice: 0.50, outputPrice: 4.50, name: 'DeepSeek-V4-Flash' };
     case 'deepseek-pro':
       return { inputPrice: 4.50, cacheHitPrice: 0.50, outputPrice: 13.50, name: 'DeepSeek-V4-Pro' };
-    case 'kimi26':
+    case 'kimi28':
     default:
-      // Kimi-K2.6: 缓存命中 ¥1.10/M, 输入 ¥6.50/M, 输出 ¥27.00/M
-      return { inputPrice: 6.50, cacheHitPrice: 1.10, outputPrice: 27.00, name: 'Kimi-K2.6' };
+      // Kimi-K2.8: 缓存命中 ¥0.50/M, 输入 ¥2.00/M, 输出 ¥8.00/M（性价比最高）
+      return { inputPrice: 2.00, cacheHitPrice: 0.50, outputPrice: 8.00, name: 'Kimi-K2.8' };
   }
 }
 // ============================================================
