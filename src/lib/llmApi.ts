@@ -9,7 +9,7 @@ import { getDatePrefix } from './dateContext';
 // ============================================================
 // Provider 类型定义
 // ============================================================
-export type LLMProvider = 'kimi-code' | 'kimi26' | 'kimi30' | 'deepseek-flash' | 'deepseek-pro';
+export type LLMProvider = 'kimi26' | 'kimi30' | 'deepseek-flash' | 'deepseek-pro';
 
 export interface ProviderConfig {
   provider: LLMProvider;
@@ -28,12 +28,6 @@ const KIMI_DEFAULT_URL = 'https://api.moonshot.cn/v1';
 const KIMI26_MODEL = 'kimi-k2.6';
 const KIMI30_MODEL = 'kimi-k3'; // Kimi 3.0
 
-// Kimi Code (K2.8 Preview) - 独立端点，需 Kimi Code 订阅
-const KIMI_CODE_API_KEY_KEY = 'qlab_kimicode_api_key';
-const KIMI_CODE_URL_KEY = 'qlab_kimicode_api_url';
-const KIMI_CODE_DEFAULT_URL = 'https://api.kimi.com/coding/v1';
-const KIMI_CODE_MODEL = 'kimi-for-coding'; // K2.8 Preview
-
 // ============================================================
 // DeepSeek 默认配置
 // ============================================================
@@ -49,7 +43,10 @@ const DEEPSEEK_PRO_MODEL = 'deepseek-v4-pro';       // DeepSeek-V4-Pro-0813
 const PROVIDER_KEY = 'qlab_llm_provider';
 
 export function getProvider(): LLMProvider {
-  return (localStorage.getItem(PROVIDER_KEY) as LLMProvider) || 'kimi26';
+  const stored = localStorage.getItem(PROVIDER_KEY);
+  // 向后兼容：旧版保存的 kimi-code 已移除，自动降级为 kimi26
+  if (stored === 'kimi-code') return 'kimi26';
+  return (stored as LLMProvider) || 'kimi26';
 }
 
 export function setProvider(provider: LLMProvider): void {
@@ -86,15 +83,6 @@ export function getProviderConfig(): ProviderConfig {
       modelId: KIMI30_MODEL,
       apiKey: localStorage.getItem(KIMI_API_KEY_KEY) || '',
       baseUrl: localStorage.getItem(KIMI_URL_KEY) || KIMI_DEFAULT_URL,
-    };
-  }
-  if (provider === 'kimi-code') {
-    return {
-      provider: 'kimi-code',
-      displayName: 'Kimi Code (K2.8)',
-      modelId: KIMI_CODE_MODEL,
-      apiKey: localStorage.getItem(KIMI_CODE_API_KEY_KEY) || '',
-      baseUrl: localStorage.getItem(KIMI_CODE_URL_KEY) || KIMI_CODE_DEFAULT_URL,
     };
   }
   if (provider === 'kimi26') {
@@ -135,7 +123,6 @@ export function getBaseUrl(): string {
 export function getKimiModel(): string {
   const provider = getProvider();
   if (provider === 'kimi30') return KIMI30_MODEL;
-  if (provider === 'kimi-code') return KIMI_CODE_MODEL;
   return KIMI26_MODEL;
 }
 
@@ -182,9 +169,6 @@ export function getModelPricing(): ModelPricing {
     case 'kimi30':
       // Kimi-K3: 缓存命中 ¥2.00/M, 输入 ¥20.00/M, 输出 ¥100.00/M
       return { inputPrice: 20.00, cacheHitPrice: 2.00, outputPrice: 100.00, name: 'Kimi-K3' };
-    case 'kimi-code':
-      // Kimi Code K2.8 Preview: 参考第三方网关价格约 $1/M 输入, $4/M 输出
-      return { inputPrice: 7.00, cacheHitPrice: 1.50, outputPrice: 28.00, name: 'Kimi Code (K2.8)' };
     case 'deepseek-flash':
       // 闲时价格（高峰为 2 倍）
       return { inputPrice: 1.50, cacheHitPrice: 0.50, outputPrice: 4.50, name: 'DeepSeek-V4-Flash' };
@@ -249,7 +233,6 @@ async function _callKimiApiInternal(
   maxTokens: number,
   enableThinking?: boolean
 ): Promise<string> {
-  const isKimiCode = config.provider === 'kimi-code';
   const body: Record<string, unknown> = {
     model: config.modelId,
     messages: [
@@ -259,14 +242,8 @@ async function _callKimiApiInternal(
     max_tokens: maxTokens,
   };
 
-  // thinking 参数是 Moonshot 开放平台特有的扩展字段，Kimi Code (api.kimi.com) 不支持
-  if (!enableThinking && !isKimiCode) {
+  if (!enableThinking) {
     body.thinking = { type: 'disabled' };
-  }
-
-  // Kimi Code 使用标准 OpenAI 兼容格式，需要 stream: false
-  if (isKimiCode) {
-    body.stream = false;
   }
 
   let resp: Response;
@@ -281,13 +258,6 @@ async function _callKimiApiInternal(
     });
   } catch (fetchErr) {
     const errMsg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
-    if (isKimiCode) {
-      throw new Error(
-        `Kimi Code API 暂不支持浏览器直接调用（CORS 未开放）。` +
-        `Kimi Code (api.kimi.com) 与 Moonshot 开放平台是两个独立的系统。` +
-        `请在「设置」中切换为 Kimi-K2.6 或 Kimi-K3（开放平台模型，支持浏览器调用）。`
-      );
-    }
     throw new Error(`网络请求失败，无法连接到 ${config.baseUrl}。请检查网络连接或端点配置。详情: ${errMsg}`);
   }
 
@@ -302,10 +272,7 @@ async function _callKimiApiInternal(
     }
 
     if (status === 401) {
-      const hint = isKimiCode
-        ? 'Kimi Code Key 与 Moonshot 开放平台 Key 不互通，请确认在 Kimi Code 设置中获取的 Key。'
-        : '中国站 Key 用 api.moonshot.cn，国际站用 api.moonshot.ai。';
-      throw new Error(`Kimi API Key 无效 (${status})。当前端点: ${config.baseUrl}。${hint}可在「设置」页面修改。详情: ${detail}`);
+      throw new Error(`Kimi API Key 无效 (${status})。当前端点: ${config.baseUrl}。中国站 Key 用 api.moonshot.cn，国际站用 api.moonshot.ai。可在「设置」页面修改。详情: ${detail}`);
     }
     if (status === 404) {
       throw new Error(`Kimi 模型不存在 (${status})。当前模型: ${config.modelId}。详情: ${detail}`);
