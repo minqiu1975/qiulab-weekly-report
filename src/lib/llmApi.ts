@@ -249,6 +249,7 @@ async function _callKimiApiInternal(
   maxTokens: number,
   enableThinking?: boolean
 ): Promise<string> {
+  const isKimiCode = config.provider === 'kimi-code';
   const body: Record<string, unknown> = {
     model: config.modelId,
     messages: [
@@ -258,18 +259,30 @@ async function _callKimiApiInternal(
     max_tokens: maxTokens,
   };
 
-  if (!enableThinking) {
+  // thinking 参数是 Moonshot 开放平台特有的扩展字段，Kimi Code (api.kimi.com) 不支持
+  if (!enableThinking && !isKimiCode) {
     body.thinking = { type: 'disabled' };
   }
 
-  const resp = await fetch(`${config.baseUrl}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${config.apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  // Kimi Code 使用标准 OpenAI 兼容格式，需要 stream: false
+  if (isKimiCode) {
+    body.stream = false;
+  }
+
+  let resp: Response;
+  try {
+    resp = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (fetchErr) {
+    const errMsg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
+    throw new Error(`网络请求失败，无法连接到 ${config.baseUrl}。请检查网络连接或端点配置。详情: ${errMsg}`);
+  }
 
   if (!resp.ok) {
     const status = resp.status;
@@ -282,7 +295,10 @@ async function _callKimiApiInternal(
     }
 
     if (status === 401) {
-      throw new Error(`Kimi API Key 无效 (${status})。当前端点: ${config.baseUrl}。中国站 Key 用 api.moonshot.cn，国际站用 api.moonshot.ai。可在「设置」页面修改。详情: ${detail}`);
+      const hint = isKimiCode
+        ? 'Kimi Code Key 与 Moonshot 开放平台 Key 不互通，请确认在 Kimi Code 设置中获取的 Key。'
+        : '中国站 Key 用 api.moonshot.cn，国际站用 api.moonshot.ai。';
+      throw new Error(`Kimi API Key 无效 (${status})。当前端点: ${config.baseUrl}。${hint}可在「设置」页面修改。详情: ${detail}`);
     }
     if (status === 404) {
       throw new Error(`Kimi 模型不存在 (${status})。当前模型: ${config.modelId}。详情: ${detail}`);
