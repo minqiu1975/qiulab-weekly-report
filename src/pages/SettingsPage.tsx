@@ -642,11 +642,12 @@ function LLMConfigPanel() {
                   ? 'border-cyan-300 bg-cyan-50 text-cyan-800'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               }`}
+              title="Kimi Code API 未开放浏览器 CORS，暂无法使用"
             >
               <Cpu className={`w-4 h-4 ${isKimiCode ? 'text-cyan-600' : 'text-slate-400'}`} />
               <div className="text-left">
                 <div className="font-medium">Kimi Code (K2.8)</div>
-                <div className="text-[10px] opacity-70">需 Kimi Code 订阅</div>
+                <div className="text-[10px] opacity-70">🔒 未开放浏览器 CORS</div>
               </div>
               {isKimiCode && <CheckCircle className="w-4 h-4 text-cyan-600 ml-auto" />}
             </button>
@@ -720,6 +721,16 @@ function LLMConfigPanel() {
         {/* Kimi 配置 */}
         {isKimi && (
           <div className="space-y-3">
+            <div className="p-2 rounded bg-red-50 border border-red-200 text-red-800 text-xs leading-relaxed">
+              <div className="font-semibold mb-1 flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                Kimi Code (K2.8) 暂不可用
+              </div>
+              <p>Kimi Code 的 API 端点 (api.kimi.com / api.kimi.ai) <strong>未开放浏览器 CORS</strong>，GitHub Pages 部署的网站无法直接调用，会出现「Failed to fetch」网络错误。</p>
+              <p className="mt-1">Kimi Code 与 Moonshot 开放平台是两个独立的认证系统，Key 不互通。</p>
+              <p className="mt-1 font-medium">建议改用 Kimi-K2.6 或 Kimi-K3（开放平台模型，支持浏览器调用）。</p>
+            </div>
+
             <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs leading-relaxed">
               <div className="font-semibold mb-1 flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5" />

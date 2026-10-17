@@ -281,6 +281,13 @@ async function _callKimiApiInternal(
     });
   } catch (fetchErr) {
     const errMsg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
+    if (isKimiCode) {
+      throw new Error(
+        `Kimi Code API 暂不支持浏览器直接调用（CORS 未开放）。` +
+        `Kimi Code (api.kimi.com) 与 Moonshot 开放平台是两个独立的系统。` +
+        `请在「设置」中切换为 Kimi-K2.6 或 Kimi-K3（开放平台模型，支持浏览器调用）。`
+      );
+    }
     throw new Error(`网络请求失败，无法连接到 ${config.baseUrl}。请检查网络连接或端点配置。详情: ${errMsg}`);
   }
 
