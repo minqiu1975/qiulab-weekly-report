@@ -220,6 +220,9 @@ export async function callLLMApi(
     maxTokens = 4000,
   } = options;
 
+  // DEBUG: 输出实际调用配置，方便排查 provider 切换问题
+  console.log(`[LLM Call] provider=${config.provider}, model=${config.modelId}, baseUrl=${config.baseUrl}, keyPrefix=${config.apiKey ? config.apiKey.slice(0, 8) + '...' : 'EMPTY'}`);
+
   // 前置检查：API Key 是否已配置
   if (!config.apiKey) {
     const providerName = config.provider.startsWith('deepseek') ? 'DeepSeek' : 'Kimi';

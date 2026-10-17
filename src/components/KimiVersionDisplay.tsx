@@ -58,6 +58,27 @@ export default function KimiVersionDisplay() {
     runCheck();
   }, [runCheck]);
 
+  // 监听其他标签页/组件修改 provider 后自动刷新显示
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'qlab_llm_provider') {
+        const current = getProvider();
+        setProvider(current);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  // 每 3 秒自动同步一次 provider 状态（防止本地修改后显示滞后）
+  useEffect(() => {
+    const id = setInterval(() => {
+      const current = getProvider();
+      setProvider(prev => (prev !== current ? current : prev));
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+
   const isKimiCode = provider === 'kimi-code';
   const isKimi30 = provider === 'kimi30';
   const isDeepSeekFlash = provider === 'deepseek-flash';
